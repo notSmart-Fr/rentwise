@@ -9,9 +9,9 @@ from app.core.security import decode_token
 from app.modules.auth.schemas import RegisterRequest, LoginRequest, TokenResponse, MeResponse
 from app.modules.auth.service import AuthService
 from app.modules.auth.model import User
+from app.modules.auth.deps import oauth2_scheme, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 service = AuthService()
 
@@ -40,19 +40,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         return TokenResponse(access_token=token)
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
-
-def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> User:
-    try:
-        payload = decode_token(token)
-        user_id = uuid.UUID(payload["sub"]).bytes
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    stmt = select(User).where(User.id == user_id)
-    user = db.execute(stmt).scalar_one_or_none()
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-    return user
 
 @router.get("/me", response_model=MeResponse)
 def me(current: User = Depends(get_current_user)):

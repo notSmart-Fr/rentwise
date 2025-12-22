@@ -1,0 +1,33 @@
+import uuid
+from datetime import datetime
+
+from sqlalchemy import String, Boolean, DateTime, Integer
+from sqlalchemy.dialects.sqlite import BLOB
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db.base import Base
+
+def _uuid_blob() -> bytes:
+    return uuid.uuid4().bytes
+
+class Property(Base):
+    __tablename__ = "properties"
+
+    id: Mapped[bytes] = mapped_column(BLOB, primary_key=True, default=_uuid_blob)
+
+    owner_id: Mapped[bytes] = mapped_column(BLOB, index=True, nullable=False)
+
+    title: Mapped[str] = mapped_column(String(120), nullable=False)
+    description: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+
+    city: Mapped[str] = mapped_column(String(80), nullable=False)
+    area: Mapped[str] = mapped_column(String(80), nullable=False)
+    address_text: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+    rent_amount: Mapped[int] = mapped_column(Integer, nullable=False)
+    bedrooms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    bathrooms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    is_available: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
