@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-
+from fastapi.security import OAuth2PasswordRequestForm
 from app.db.deps import get_db
 from app.core.security import decode_token
 from app.modules.auth.schemas import RegisterRequest, LoginRequest, TokenResponse, MeResponse
@@ -30,10 +30,13 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
+
 @router.post("/login", response_model=TokenResponse)
-def login(payload: LoginRequest, db: Session = Depends(get_db)):
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     try:
-        token = service.login(db, payload.email, payload.password)
+        # Swagger calls this "username", we treat it as email
+        token = service.login(db, form_data.username, form_data.password)
         return TokenResponse(access_token=token)
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))

@@ -9,7 +9,7 @@ JWT_SECRET = "CHANGE_ME_IN_ENV"
 JWT_ALG = "HS256"
 ACCESS_TOKEN_MINUTES = 60 * 24  # 1 day
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
