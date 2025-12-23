@@ -7,9 +7,10 @@ from sqlalchemy.orm import Session
 from app.core.security import decode_token
 from app.db.deps import get_db
 from app.modules.auth.model import User
+from app.modules.auth.repository import UserRepository
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
+repo=UserRepository()
 def get_current_user(
     db: Session = Depends(get_db),
     token: str = Depends(oauth2_scheme),
@@ -20,8 +21,7 @@ def get_current_user(
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    stmt = select(User).where(User.id == user_id)
-    user = db.execute(stmt).scalar_one_or_none()
+    user= repo.get_by_id(db, user_id)
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
 
@@ -30,4 +30,8 @@ def get_current_user(
 def require_owner(user: User = Depends(get_current_user)) -> User:
     if user.role != "OWNER":
         raise HTTPException(status_code=403, detail="Owner access required")
+    return user
+def require_tenant(user: User = Depends(get_current_user)) -> User:
+    if user.role != "TENANT":
+        raise HTTPException(status_code=403, detail="Tenant access required")
     return user

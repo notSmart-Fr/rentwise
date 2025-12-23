@@ -13,3 +13,6 @@ class UserRepository:
         db.commit()
         db.refresh(user)
         return user
+    def get_by_id(self, db: Session, user_id: bytes) -> User | None:
+        stmt = select(User).where(User.id == user_id)
+        return db.execute(stmt).scalar_one_or_none()

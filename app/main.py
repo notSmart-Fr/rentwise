@@ -10,8 +10,13 @@ from app.modules.properties.model import Property  # noqa: F401
 
 from app.modules.auth.router import router as auth_router
 from app.modules.properties.router import owner_router, public_router
+from app.modules.requests.model import RentalRequest  # noqa: F401
+from app.modules.requests.router import router as request_router
+
+
 
 app = FastAPI(title=settings.app_name)
+app.include_router(request_router)
 
 Base.metadata.create_all(bind=engine)
 
