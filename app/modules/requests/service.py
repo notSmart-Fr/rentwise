@@ -16,6 +16,9 @@ class RequestService:
         owner_id: bytes,
         message: str | None,
     ) -> RentalRequest:
+        existing = self.repo.get_active_request(db, property_id, tenant_id)
+        if existing:
+            raise ValueError("An active request already exists for this property and tenant")
         req = RentalRequest(
             property_id=property_id,
             tenant_id=tenant_id,

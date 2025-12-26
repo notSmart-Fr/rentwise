@@ -12,17 +12,23 @@ from app.modules.auth.router import router as auth_router
 from app.modules.properties.router import owner_router, public_router
 from app.modules.requests.model import RentalRequest  # noqa: F401
 from app.modules.requests.router import router as request_router
+from app.modules.payments.model import Payment  # noqa: F401
+from app.modules.payments.owner_router import router as payments_router
+from app.modules.payments.tenant_router import router as tenant_payments_router
 
 
 
 app = FastAPI(title=settings.app_name)
-app.include_router(request_router)
+
 
 Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router)
 app.include_router(owner_router)
 app.include_router(public_router)
+app.include_router(request_router)
+app.include_router(payments_router)
+app.include_router(tenant_payments_router)
 
 @app.get("/")
 def root():

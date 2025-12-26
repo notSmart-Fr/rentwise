@@ -17,3 +17,16 @@ class RequestRepository:
     def list_for_owner(self, db: Session, owner_id: bytes) -> list[RentalRequest]:
         stmt = select(RentalRequest).where(RentalRequest.owner_id == owner_id)
         return list(db.execute(stmt).scalars().all())
+    def list_for_tenant(self, db: Session, tenant_id: bytes) -> list[RentalRequest]:
+        stmt = select(RentalRequest).where(RentalRequest.tenant_id == tenant_id)
+        return list(db.execute(stmt).scalars().all())
+    def get_active_request(self, db: Session, property_id: bytes, tenant_id: bytes) -> RentalRequest | None:
+        stmt = select(RentalRequest).where(
+            RentalRequest.property_id == property_id,
+            RentalRequest.tenant_id == tenant_id,
+            RentalRequest.status == "PENDING"
+        )
+        return db.execute(stmt).scalar_one_or_none()
+    def delete(self, db: Session, req: RentalRequest) -> None:
+        db.delete(req)
+        db.commit()

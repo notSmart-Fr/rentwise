@@ -15,12 +15,11 @@ service = RequestService()
 repo = RequestRepository()
 prop_repo = PropertyRepository()
 
-@router.post("/properties/{property_id}/requests", response_model=RequestResponse)
+@router.post("tenant/properties/{property_id}/requests", response_model=RequestResponse)
 def create_request(
     property_id: str,
     payload: RequestCreate,
     db: Session = Depends(get_db),
-    user: User = Depends(get_current_user),
     tenant: User = Depends(require_tenant),
 ):
     prop_id = uuid.UUID(property_id).bytes
@@ -31,7 +30,7 @@ def create_request(
     req = service.create(
         db,
         property_id=prop.id,
-        tenant_id=user.id,
+        tenant_id=tenant.id,
         owner_id=prop.owner_id,
         message=payload.message,
     )
@@ -74,3 +73,40 @@ def reject_request(
         return service.to_response(req)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+@router.get("/tenant/requests", response_model=list[RequestResponse])
+def tenant_requests(
+    db: Session = Depends(get_db),
+    tenant: User = Depends(require_tenant),
+):
+    reqs = repo.list_for_tenant(db, tenant.id)
+    return [service.to_response(r) for r in reqs]
+@router.get("/tenant/requests/{request_id}", response_model=RequestResponse)
+def get_tenant_request(
+    request_id: str,
+    db: Session = Depends(get_db),
+    tenant: User = Depends(require_tenant),
+):
+    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    if not req or req.tenant_id != tenant.id:
+        raise HTTPException(status_code=404, detail="Request not found")
+    return service.to_response(req)
+@router.get("/owner/requests/{request_id}", response_model=RequestResponse)
+def get_owner_request(
+    request_id: str,
+    db: Session = Depends(get_db),
+    owner: User = Depends(require_owner),
+):
+    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    if not req or req.owner_id != owner.id:
+        raise HTTPException(status_code=404, detail="Request not found")
+    return service.to_response(req)
+@router.delete("/tenant/requests/{request_id}", status_code=204)
+def delete_tenant_request(
+    request_id: str,
+    db: Session = Depends(get_db),
+    tenant: User = Depends(require_tenant),
+):
+    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    if not req or req.tenant_id != tenant.id:
+        raise HTTPException(status_code=404, detail="Request not found")
+    repo.delete(db, req)    
