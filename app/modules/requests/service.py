@@ -27,12 +27,13 @@ class RequestService:
             status="PENDING",
         )
         return self.repo.create(db, req)
+    
 
     def approve(self, db: Session, req: RentalRequest) -> RentalRequest:
         if req.status != "PENDING":
             raise ValueError("Only pending requests can be approved")
         req.status = "APPROVED"
-        return self.repo.create(db, req)
+        return self.repo.update(db, req)
 
     def reject(self, db: Session, req: RentalRequest) -> RentalRequest:
         if req.status != "PENDING":

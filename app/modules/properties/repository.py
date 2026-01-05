@@ -41,6 +41,11 @@ class PropertyRepository:
             stmt = stmt.where(Property.bedrooms == beds)
 
         return list(db.execute(stmt).scalars().all())
+    def mark_as_unavailable(self, db: Session, prop_id: bytes) -> None:
+        prop = self.get_by_id(db, prop_id)
+        if prop:
+            prop.is_available = False
+            self.save(db, prop)
 
     def save(self, db: Session, prop: Property) -> Property:
         db.add(prop)

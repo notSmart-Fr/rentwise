@@ -27,6 +27,14 @@ class RequestRepository:
             RentalRequest.status == "PENDING"
         )
         return db.execute(stmt).scalar_one_or_none()
+    def get_property_id(self, db: Session, request_id: bytes) -> bytes:
+        stmt = select(RentalRequest.property_id).where(RentalRequest.id == request_id)
+        result = db.execute(stmt).scalar_one()
+        return result
     def delete(self, db: Session, req: RentalRequest) -> None:
         db.delete(req)
         db.commit()
+    def update(self, db: Session, req: RentalRequest) -> RentalRequest:
+        db.commit()
+        db.refresh(req)
+        return req    

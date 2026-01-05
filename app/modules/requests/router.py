@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.deps import get_db
-from app.modules.auth.deps import get_current_user, require_owner, require_tenant
+from app.modules.auth.deps import require_owner, require_tenant
 from app.modules.auth.model import User
 from app.modules.properties.repository import PropertyRepository
 from app.modules.requests.schemas import RequestCreate, RequestResponse
@@ -15,7 +15,7 @@ service = RequestService()
 repo = RequestRepository()
 prop_repo = PropertyRepository()
 
-@router.post("tenant/properties/{property_id}/requests", response_model=RequestResponse)
+@router.post("/tenant/properties/{property_id}/requests", response_model=RequestResponse)
 def create_request(
     property_id: str,
     payload: RequestCreate,

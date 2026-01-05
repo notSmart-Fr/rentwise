@@ -1,12 +1,18 @@
 import uuid
 from sqlalchemy.orm import Session
 
+from app.modules.payments.enums import PaymentStatus
 from app.modules.payments.model import Payment
 from app.modules.payments.repository import PaymentRepository
+from app.modules.properties.repository import PropertyRepository
+from app.modules.requests.repository import RequestRepository
+
 
 class PaymentService:
     def __init__(self) -> None:
         self.repo = PaymentRepository()
+        self.property_repo = PropertyRepository()
+        self.request_repo = RequestRepository()
         
     
     def create(
@@ -18,7 +24,7 @@ class PaymentService:
         amount: int,
         method: str,
         reference: str | None,
-        status: str,
+        status: PaymentStatus,
     ) -> Payment:
         existing = self.repo.get_by_request_id(db, request_id)
         if existing:
@@ -31,8 +37,10 @@ class PaymentService:
             amount=amount,
             method=method,
             reference=reference,
-            status=status,
+            status=status.value,
         )
+        property_id = self.request_repo.get_property_id(db, request_id)
+        self.property_repo.mark_as_unavailable(db, property_id)
         return self.repo.create(db, payment)
 
     def to_response(self, p: Payment) -> dict:

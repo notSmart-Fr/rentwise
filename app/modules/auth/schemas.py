@@ -2,8 +2,10 @@ from pydantic import BaseModel, EmailStr, Field
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.modules.auth.enums import UserRole
+
 class RegisterRequest(BaseModel):
-    role: str = Field(pattern="^(OWNER|TENANT)$")
+    role: UserRole
     full_name: str = Field(min_length=2, max_length=100)
     email: EmailStr
     phone: str | None = None

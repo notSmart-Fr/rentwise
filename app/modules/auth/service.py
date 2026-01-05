@@ -2,6 +2,8 @@ import uuid
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password, verify_password, create_access_token
+from app.modules.auth.enums import UserRole
+from app.modules.auth.enums import UserRole
 from app.modules.auth.model import User
 from app.modules.auth.repository import UserRepository
 
