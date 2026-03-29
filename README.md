@@ -19,4 +19,13 @@ This is a RESTful API designed to manage property rentals, tenant information, a
 
 ## 📦 Getting Started (Docker)
 To run this project locally without manual dependency installation:
-
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/NotSmart-Fr/rentManagementSystem.git](https://github.com/NotSmart-Fr/rentManagementSystem.git)
+   cd rentManagementSystem
+2. Build run with docker:
+docker build -t rent-api .
+docker run -d -p 8000:8000 rent-api
+3. Access the API:
+​API Root: http://localhost:8000
+​Interactive Docs: http://localhost:8000/docs
