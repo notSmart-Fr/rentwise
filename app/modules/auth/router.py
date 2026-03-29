@@ -20,7 +20,7 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     try:
         user = service.register(db, payload.role, payload.full_name, payload.email, payload.phone, payload.password)
         return MeResponse(
-            id=str(uuid.UUID(bytes=user.id)),
+            id=str(user.id),
             role=user.role,
             full_name=user.full_name,
             email=user.email,
@@ -44,7 +44,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @router.get("/me", response_model=MeResponse)
 def me(current: User = Depends(get_current_user)):
     return MeResponse(
-        id=str(uuid.UUID(bytes=current.id)),
+        id=str(current.id),
         role=current.role,
         full_name=current.full_name,
         email=current.email,

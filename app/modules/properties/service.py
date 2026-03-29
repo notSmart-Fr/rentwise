@@ -30,8 +30,8 @@ class PropertyService:
 
     def to_response(self, prop: Property) -> dict:
         return {
-            "id": str(uuid.UUID(bytes=prop.id)),
-            "owner_id": str(uuid.UUID(bytes=prop.owner_id)),
+            "id": str(prop.id),
+            "owner_id": str(prop.owner_id),
             "title": prop.title,
             "description": prop.description,
             "city": prop.city,

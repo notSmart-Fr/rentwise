@@ -32,5 +32,5 @@ class AuthService:
             raise ValueError("Invalid credentials")
 
         # subject is user id as string
-        subject = str(uuid.UUID(bytes=user.id))
+        subject = str(user.id)
         return create_access_token(subject=subject)

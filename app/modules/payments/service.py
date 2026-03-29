@@ -45,10 +45,10 @@ class PaymentService:
 
     def to_response(self, p: Payment) -> dict:
         return {
-            "id": str(uuid.UUID(bytes=p.id)),
-            "request_id": str(uuid.UUID(bytes=p.request_id)),
-            "owner_id": str(uuid.UUID(bytes=p.owner_id)),
-            "tenant_id": str(uuid.UUID(bytes=p.tenant_id)),
+            "id": str(p.id),
+            "request_id": str(p.request_id),
+            "owner_id": str(p.owner_id),
+            "tenant_id": str(p.tenant_id),
             "amount": p.amount,
             "method": p.method,
             "reference": p.reference,

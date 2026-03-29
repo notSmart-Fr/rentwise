@@ -43,10 +43,10 @@ class RequestService:
 
     def to_response(self, r: RentalRequest) -> dict:
         return {
-            "id": str(uuid.UUID(bytes=r.id)),
-            "property_id": str(uuid.UUID(bytes=r.property_id)),
-            "tenant_id": str(uuid.UUID(bytes=r.tenant_id)),
-            "owner_id": str(uuid.UUID(bytes=r.owner_id)),
+            "id": str(r.id),
+            "property_id": str(r.property_id),
+            "tenant_id": str(r.tenant_id),
+            "owner_id": str(r.owner_id),
             "status": r.status,
             "message": r.message,
         }
