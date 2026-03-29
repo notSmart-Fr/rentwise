@@ -4,10 +4,11 @@ from typing import Optional
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-# For V1 keep these simple; later move to config/env
-JWT_SECRET = "CHANGE_ME_IN_ENV"
-JWT_ALG = "HS256"
-ACCESS_TOKEN_MINUTES = 60 * 24  # 1 day
+from app.core.config import settings
+
+JWT_SECRET = settings.jwt_secret
+JWT_ALG = settings.jwt_alg
+ACCESS_TOKEN_MINUTES = settings.access_token_minutes
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 

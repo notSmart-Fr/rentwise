@@ -2,18 +2,21 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.dialects.sqlite import BLOB
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
-def _uuid_blob() -> bytes:
-    return uuid.uuid4().bytes
 
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[bytes] = mapped_column(BLOB, primary_key=True, default=_uuid_blob)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+
     role: Mapped[str] = mapped_column(String(10), nullable=False)  # OWNER / TENANT
     full_name: Mapped[str] = mapped_column(String(100), nullable=False)
 

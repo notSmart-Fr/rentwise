@@ -1,24 +1,26 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import String, Integer, DateTime
-from sqlalchemy.dialects.sqlite import BLOB
+from sqlalchemy import UUID, String, Integer, DateTime
+
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
-def _uuid_blob() -> bytes:
-    return uuid.uuid4().bytes
+
 
 class Payment(Base):
     __tablename__ = "payments"
 
-    id: Mapped[bytes] = mapped_column(BLOB, primary_key=True, default=_uuid_blob)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
 
-    request_id: Mapped[bytes] = mapped_column(BLOB, unique=True, index=True, nullable=False)
-    owner_id: Mapped[bytes] = mapped_column(BLOB, index=True, nullable=False)
-    tenant_id: Mapped[bytes] = mapped_column(BLOB, index=True, nullable=False)
-
+    request_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), unique=True, index=True, nullable=False)
+    owner_id:   Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    tenant_id:  Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
     amount: Mapped[int] = mapped_column(Integer, nullable=False)
 
     method: Mapped[str] = mapped_column(String(10), nullable=False)  # CASH/BKASH/NAGAD/BANK

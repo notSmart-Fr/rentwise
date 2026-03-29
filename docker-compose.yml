@@ -1,10 +1,26 @@
 services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rentwise
+      POSTGRES_PASSWORD: rentwise
+      POSTGRES_DB: rentwise
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   api:
     build: .
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-      - ./data:/app/data
     environment:
-      - DATABASE_URL=sqlite:////app/data/rentwise.db
+      - DATABASE_URL=postgresql+psycopg://rentwise:rentwise@db:5432/rentwise
+      - JWT_SECRET=super-long-random-secret
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

@@ -5,14 +5,10 @@ from app.db.session import engine
 from app.db.base import Base
 
 # IMPORTANT: import models so SQLAlchemy knows them
-from app.modules.auth.model import User  # noqa: F401
-from app.modules.properties.model import Property  # noqa: F401
 
 from app.modules.auth.router import router as auth_router
 from app.modules.properties.router import owner_router, public_router
-from app.modules.requests.model import RentalRequest  # noqa: F401
 from app.modules.requests.router import router as request_router
-from app.modules.payments.model import Payment  # noqa: F401
 from app.modules.payments.owner_router import router as payments_router
 from app.modules.payments.tenant_router import router as tenant_payments_router
 
