@@ -1,7 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
 
-from pydantic import BaseModel, EmailStr, Field
-
 from app.modules.auth.enums import UserRole
 
 class RegisterRequest(BaseModel):
