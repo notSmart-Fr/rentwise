@@ -17,7 +17,7 @@ def get_current_user(
 ) -> User:
     try:
         payload = decode_token(token)
-        user_id = uuid.UUID(payload["sub"]).bytes
+        user_id = uuid.UUID(payload["sub"])
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid token")
 
