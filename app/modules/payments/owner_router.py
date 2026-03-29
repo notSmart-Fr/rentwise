@@ -23,7 +23,7 @@ def record_payment(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    req = req_repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = req_repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Request not found")
 
@@ -51,7 +51,7 @@ def get_payment(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    req = req_repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = req_repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Request not found")
 
@@ -66,7 +66,7 @@ def get_payment_by_id(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    payment = repo.get_by_id(db, uuid.UUID(payment_id).bytes)
+    payment = repo.get_by_id(db, uuid.UUID(payment_id))
     if not payment or payment.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Payment not found")
 
@@ -85,7 +85,7 @@ def update_payment(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    payment = repo.get_by_id(db, uuid.UUID(payment_id).bytes)
+    payment = repo.get_by_id(db, uuid.UUID(payment_id))
     if not payment or payment.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Payment not found")
 

@@ -22,7 +22,7 @@ def create_request(
     db: Session = Depends(get_db),
     tenant: User = Depends(require_tenant),
 ):
-    prop_id = uuid.UUID(property_id).bytes
+    prop_id = uuid.UUID(property_id)
     prop = prop_repo.get_by_id(db, prop_id)
     if not prop or not prop.is_available:
         raise HTTPException(status_code=404, detail="Property not available")
@@ -50,7 +50,7 @@ def approve_request(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Request not found")
     try:
@@ -65,7 +65,7 @@ def reject_request(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Request not found")
     try:
@@ -86,7 +86,7 @@ def get_tenant_request(
     db: Session = Depends(get_db),
     tenant: User = Depends(require_tenant),
 ):
-    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.tenant_id != tenant.id:
         raise HTTPException(status_code=404, detail="Request not found")
     return service.to_response(req)
@@ -96,7 +96,7 @@ def get_owner_request(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Request not found")
     return service.to_response(req)
@@ -106,7 +106,7 @@ def delete_tenant_request(
     db: Session = Depends(get_db),
     tenant: User = Depends(require_tenant),
 ):
-    req = repo.get_by_id(db, uuid.UUID(request_id).bytes)
+    req = repo.get_by_id(db, uuid.UUID(request_id))
     if not req or req.tenant_id != tenant.id:
         raise HTTPException(status_code=404, detail="Request not found")
     repo.delete(db, req)    

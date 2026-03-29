@@ -45,7 +45,7 @@ def update_property(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    prop_id = uuid.UUID(property_id).bytes
+    prop_id = uuid.UUID(property_id)
     prop = repo.get_by_id(db, prop_id)
     if not prop or prop.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Property not found")
@@ -59,7 +59,7 @@ def set_availability(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    prop_id = uuid.UUID(property_id).bytes
+    prop_id = uuid.UUID(property_id)
     prop = repo.get_by_id(db, prop_id)
     if not prop or prop.owner_id != owner.id:
         raise HTTPException(status_code=404, detail="Property not found")
@@ -84,7 +84,7 @@ def browse_properties(
 
 @public_router.get("/{property_id}", response_model=PropertyResponse)
 def get_property(property_id: str, db: Session = Depends(get_db)):
-    prop_id = uuid.UUID(property_id).bytes
+    prop_id = uuid.UUID(property_id)
     prop = repo.get_by_id(db, prop_id)
     if not prop:
         raise HTTPException(status_code=404, detail="Property not found")
