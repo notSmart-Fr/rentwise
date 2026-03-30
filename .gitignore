@@ -10,3 +10,16 @@ __pycache__/
 
 # SQLite database
 *.db
+
+# Frontend Node/JS
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env*
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.next/
+frontend/.vercel/
+frontend/out/
+frontend/public/vite.svg (optional?)
