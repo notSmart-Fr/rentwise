@@ -42,10 +42,11 @@ class RequestService:
         return self.repo.create(db, req)
 
     def to_response(self, r: RentalRequest) -> dict:
-        return {
+        data = {
             "id": str(r.id),
             "property_id": str(r.property_id),
             "property_title": r.property.title if r.property else "Unknown Property",
+            "property_rent": r.property.rent_amount if r.property else 0,
             "tenant_id": str(r.tenant_id),
             "tenant_name": r.tenant.full_name if r.tenant else "Unknown Tenant",
             "tenant_email": r.tenant.email if r.tenant else None,
@@ -54,3 +55,15 @@ class RequestService:
             "message": r.message,
             "created_at": r.created_at,
         }
+        
+        # Add payment info if it exists
+        if hasattr(r, 'payment') and r.payment:
+            data["payment"] = {
+                "id": str(r.payment.id),
+                "status": r.payment.status,
+                "amount": r.payment.amount,
+                "method": r.payment.method,
+                "transaction_id": r.payment.transaction_id,
+            }
+        
+        return data

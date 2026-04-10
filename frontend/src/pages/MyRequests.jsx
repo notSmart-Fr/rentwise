@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { requestsApi } from '../services/api';
 import RequestRow from '../components/RequestRow';
 import PaymentReceipt from '../components/PaymentReceipt';
+import CheckoutOverlay from '../components/CheckoutOverlay';
 import './MyRequests.css';
 
 const MyRequests = () => {
@@ -12,6 +13,7 @@ const MyRequests = () => {
   const [error, setError] = useState(null);
   
   const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
@@ -33,6 +35,20 @@ const MyRequests = () => {
   const handleViewReceipt = (request) => {
     setSelectedRequest(request);
     setIsReceiptModalOpen(true);
+  };
+
+  const handlePayRent = (request) => {
+    setSelectedRequest(request);
+    setIsCheckoutOpen(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    // Refresh the list to show updated payment status
+    const fetchRequests = async () => {
+      const data = await requestsApi.getTenantRequests();
+      setRequests(data);
+    };
+    fetchRequests();
   };
 
   if (loading) {
@@ -59,6 +75,14 @@ const MyRequests = () => {
         request={selectedRequest}
       />
 
+      <CheckoutOverlay 
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        requestId={selectedRequest?.id}
+        rentAmount={selectedRequest?.property_rent || 0}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
+
       <div className="requests-list">
         {requests.length > 0 ? (
           requests.map(req => (
@@ -67,6 +91,7 @@ const MyRequests = () => {
               request={req} 
               isOwner={false} 
               onViewReceipt={handleViewReceipt}
+              onPayRent={handlePayRent}
             />
           ))
         ) : (

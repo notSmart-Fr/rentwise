@@ -1,0 +1,170 @@
+.checkout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.checkout-container {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  color: #1e293b;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.checkout-header {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.checkout-header h2 {
+  font-size: 18px;
+  color: #64748b;
+  margin: 0;
+}
+
+.close-checkout {
+  font-size: 24px;
+  cursor: pointer;
+  color: #94a3b8;
+}
+
+.checkout-content {
+  padding: 32px;
+}
+
+/* Method Grid */
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.method-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 10px;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.method-card:hover {
+  border-color: #3b82f6;
+  background: #f0f7ff;
+  transform: translateY(-2px);
+}
+
+.method-logo {
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bkash { background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/8e/Bkash_logo.png'); }
+.nagad { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Nagad_logo.png'); }
+
+.method-icon {
+  font-size: 32px;
+}
+
+/* Simulation UIs */
+.mobile-simulation {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.simulation-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.simulation-header.bkash { background: #E2136E; }
+.simulation-header.nagad { background: #F37021; }
+
+.simulation-body {
+  padding: 24px;
+}
+
+/* Receipt Style */
+.receipt-preview {
+  padding: 24px;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.receipt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+  margin: 16px 0;
+}
+
+.receipt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.success-banner {
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+/* Print Only Styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .receipt-preview, .receipt-preview * {
+    visibility: visible;
+  }
+  .receipt-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    background: white;
+  }
+}

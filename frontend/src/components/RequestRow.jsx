@@ -1,7 +1,7 @@
 import React from 'react';
 import './RequestRow.css';
 
-const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewReceipt, isOwner = false }) => {
+const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewReceipt, onPayRent, isOwner = false }) => {
   const getStatusClass = (status) => {
     switch (status) {
       case 'APPROVED': return 'status-approved';
@@ -16,6 +16,8 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const hasPayment = request.payment && (request.payment.status === 'PAID' || request.payment.status === 'SUCCESS');
+
   return (
     <div className="request-row">
       <div className="request-info">
@@ -29,7 +31,7 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
           {isOwner ? (
             <span className="request-user">Tenant: <strong>{request.tenant_name}</strong> ({request.tenant_email})</span>
           ) : (
-            <span className="request-date">Applied on: {formatDate(request.created_at)}</span>
+            <span className="request-user"><strong>৳ {request.property_rent?.toLocaleString()}</strong> / month</span>
           )}
         </div>
         {request.message && (
@@ -73,17 +75,27 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
       
       {!isOwner && (
         <div className="request-actions-tenant">
-           <div className="request-date-compact">
-              {formatDate(request.created_at)}
-           </div>
-           {request.status === 'APPROVED' && onViewReceipt && (
+           {request.status === 'APPROVED' && !hasPayment && onPayRent && (
              <button 
-               className="btn btn-xs btn-outline-primary m-top-1"
+               className="btn btn-sm btn-primary animate-pulse"
+               onClick={() => onPayRent(request)}
+             >
+               Pay Rent
+             </button>
+           )}
+           
+           {hasPayment && onViewReceipt && (
+             <button 
+               className="btn btn-xs btn-outline-success m-top-1"
                onClick={() => onViewReceipt(request)}
              >
                View Receipt
              </button>
            )}
+           
+           <div className="request-date-compact m-top-1">
+              Applied on: {formatDate(request.created_at)}
+           </div>
         </div>
       )}
     </div>

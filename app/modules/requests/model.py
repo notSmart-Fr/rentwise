@@ -28,6 +28,7 @@ class RentalRequest(Base):
     property: Mapped["Property"] = relationship(foreign_keys=[property_id])
     tenant: Mapped["User"] = relationship(foreign_keys=[tenant_id])
     owner: Mapped["User"] = relationship(foreign_keys=[owner_id])
+    payment: Mapped["Payment"] = relationship("Payment", back_populates="request", uselist=False)
 
     status: Mapped[str] = mapped_column(
         String(20), default="PENDING", nullable=False

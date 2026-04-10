@@ -48,3 +48,61 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Perfect Print Formatting */
+@media print {
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Reset background for print */
+  body, html {
+    background: transparent !important;
+  }
+  
+  .print-only-receipt, .print-only-receipt * {
+    visibility: visible;
+  }
+  
+  .no-print-modal .modal-header .close-btn,
+  .no-print-modal .modal-footer {
+    display: none !important;
+  }
+
+  .print-only-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    background: white;
+    box-shadow: none;
+    padding: 20px;
+  }
+  
+  .receipt-details {
+    margin: auto;
+    max-width: 600px;
+    border: 2px dashed #cbd5e1;
+    padding: 40px;
+    border-radius: 12px;
+  }
+
+  .receipt-row {
+    font-size: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .badge {
+     border: none; 
+     /* Browsers strip background colors in print by default */
+     -webkit-print-color-adjust: exact; 
+     print-color-adjust: exact;
+  }
+}

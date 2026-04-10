@@ -126,4 +126,13 @@ export const paymentsApi = {
     method: 'PATCH',
     body: data,
   }),
+  
+  // Tenant actions
+  getTenantByRequest: (requestId) => apiRequest(`/tenant/requests/${requestId}/payments`, { method: 'GET' }),
+  
+  // Automated Checkout (Simulation)
+  initializeAutomated: (requestId, method) => 
+    apiRequest(`/tenant/payments/initialize?request_id=${requestId}&method=${method}`, { method: 'POST' }),
+  verifyAutomated: (paymentId) => 
+    apiRequest(`/tenant/payments/${paymentId}/verify`, { method: 'POST' }),
 };
