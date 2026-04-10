@@ -45,8 +45,12 @@ class RequestService:
         return {
             "id": str(r.id),
             "property_id": str(r.property_id),
+            "property_title": r.property.title if r.property else "Unknown Property",
             "tenant_id": str(r.tenant_id),
+            "tenant_name": r.tenant.full_name if r.tenant else "Unknown Tenant",
+            "tenant_email": r.tenant.email if r.tenant else None,
             "owner_id": str(r.owner_id),
             "status": r.status,
             "message": r.message,
+            "created_at": r.created_at,
         }

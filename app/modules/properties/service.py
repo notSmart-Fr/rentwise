@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy.orm import Session
 
-from app.modules.properties.model import Property
+from app.modules.properties.model import Property, PropertyImage
 from app.modules.properties.repository import PropertyRepository
 
 class PropertyService:
@@ -21,11 +21,24 @@ class PropertyService:
             bathrooms=data.bathrooms,
             is_available=True,
         )
+        
+        # Handle images
+        if hasattr(data, 'image_urls') and data.image_urls:
+            prop.images = [PropertyImage(url=url) for url in data.image_urls]
+            
         return self.repo.create(db, prop)
 
     def update(self, db: Session, prop: Property, data) -> Property:
-        for field, value in data.model_dump(exclude_unset=True).items():
+        update_data = data.model_dump(exclude_unset=True)
+        
+        # Handle image updates separately if present
+        if 'image_urls' in update_data:
+            urls = update_data.pop('image_urls')
+            prop.images = [PropertyImage(url=url) for url in urls]
+            
+        for field, value in update_data.items():
             setattr(prop, field, value)
+            
         return self.repo.save(db, prop)
 
     def to_response(self, prop: Property) -> dict:
@@ -41,4 +54,5 @@ class PropertyService:
             "bedrooms": prop.bedrooms,
             "bathrooms": prop.bathrooms,
             "is_available": prop.is_available,
+            "images": [{"id": str(img.id), "url": img.url} for img in prop.images]
         }

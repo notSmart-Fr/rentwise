@@ -102,21 +102,28 @@ export const propertiesApi = {
 
 export const requestsApi = {
   // Tenant actions
-  create: (propertyId, message) => apiRequest(`/properties/${propertyId}/requests`, {
+  create: (propertyId, message) => apiRequest(`/tenant/properties/${propertyId}/requests`, {
     method: 'POST',
-    body: { message }, // Assuming API takes body like this, needs to be verified against backend schemas
+    body: { message },
   }),
+  getTenantRequests: () => apiRequest('/tenant/requests', { method: 'GET' }),
   
   // Owner actions
-  getOwnerRequests: () => apiRequest(`/owner/requests`, { method: 'GET' }),
+  getOwnerRequests: () => apiRequest('/owner/requests', { method: 'GET' }),
   approve: (requestId) => apiRequest(`/owner/requests/${requestId}/approve`, { method: 'PATCH' }),
   reject: (requestId) => apiRequest(`/owner/requests/${requestId}/reject`, { method: 'PATCH' }),
 };
 
 export const paymentsApi = {
+  // Owner actions
   record: (requestId, data) => apiRequest(`/owner/requests/${requestId}/payments`, {
     method: 'POST',
     body: data,
   }),
   getByRequest: (requestId) => apiRequest(`/owner/requests/${requestId}/payments`, { method: 'GET' }),
+  listOwnerPayments: () => apiRequest('/owner/payments', { method: 'GET' }),
+  updatePayment: (paymentId, data) => apiRequest(`/owner/payments/${paymentId}`, {
+    method: 'PATCH',
+    body: data,
+  }),
 };

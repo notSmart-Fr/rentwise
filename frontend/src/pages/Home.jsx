@@ -1,36 +1,67 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropertyCard from '../components/PropertyCard';
 import './Home.css';
 import { propertiesApi } from '../services/api';
+import SearchBar from '../components/SearchBar';
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams, setSearchParams] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const fetchProperties = useCallback(async (params = {}) => {
+    setLoading(true);
+    try {
+      const data = await propertiesApi.getAll(params);
+      const isSearchOrFilter = Object.keys(params).length > 0;
+
+      // Fallback to dummy data ONLY on initial load if backend is completely empty
+      if (data.length === 0 && !isSearchOrFilter) {
+         setProperties([
+           null, null, null, null, null, null // Render 6 dummy cards
+         ]);
+      } else {
+         setProperties(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch properties', error);
+      // Only show dummy if we don't have any parameters (initial failure)
+      if (Object.keys(params).length === 0) {
+        setProperties([null, null, null, null, null, null]);
+      } else {
+        setProperties([]);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    // Fetch properties from the backend
-    const fetchProperties = async () => {
-      try {
-        const data = await propertiesApi.getAll();
-        // Fallback to dummy data if backend is empty for UI demonstration
-        if (data.length === 0) {
-           setProperties([
-             null, null, null, null, null, null // Render 6 dummy cards
-           ]);
-        } else {
-           setProperties(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch properties', error);
-        // Fallback to dummy
-        setProperties([null, null, null, null, null, null]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchProperties(searchParams);
+  }, [fetchProperties, searchParams]);
 
-    fetchProperties();
-  }, []);
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const newParams = { ...searchParams, search: query };
+    if (!query) delete newParams.search;
+    setSearchParams(newParams);
+  };
+
+  const handleFilterChange = (type, value) => {
+    const newParams = { ...searchParams };
+    if (value && value !== 'All Cities') {
+      newParams[type] = value;
+    } else {
+      delete newParams[type];
+    }
+    setSearchParams(newParams);
+  };
+
+  const clearAllSearch = () => {
+    setSearchQuery('');
+    setSearchParams({});
+  };
 
   return (
     <div className="home-page animate-fade-in">
@@ -38,16 +69,33 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-bg-glow"></div>
         <div className="container hero-content">
-          <h1 className="hero-title">
+          <h1 className="hero-title animate-fade-in-down">
             Find Your Next <br />
             <span className="text-gradient">Perfect Home</span>
           </h1>
-          <p className="hero-subtitle">
+          <p className="hero-subtitle animate-fade-in-up">
             RentWise makes it effortless for tenants to find beautiful rentals and for owners to manage them with zero stress.
           </p>
-          <div className="hero-actions">
-            <button className="btn btn-primary hero-btn">Explore Properties</button>
-            <button className="btn btn-secondary hero-btn">List Your Property</button>
+          
+          <div className="hero-search-wrapper">
+             <SearchBar 
+                value={searchQuery} 
+                onChange={setSearchQuery} 
+                onSearch={handleSearch} 
+             />
+          </div>
+          
+          <div className="hero-quick-actions flex-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <span className="text-muted">Popular: </span>
+            <button className="btn btn-text px-2" onClick={() => handleSearch('Dhaka')}>Dhaka</button>
+            <button className="btn btn-text px-2" onClick={() => handleSearch('Flat')}>Flat</button>
+            <button className="btn btn-text px-2" onClick={() => handleSearch('Dhanmondi')}>Dhanmondi</button>
+            
+            {(searchQuery || Object.keys(searchParams).length > 0) && (
+              <button className="btn-clear-all" onClick={clearAllSearch}>
+                Clear All <span>×</span>
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -55,12 +103,19 @@ const Home = () => {
       {/* Featured Properties Section */}
       <section className="properties-section container">
         <div className="section-header flex-between">
-          <h2 className="section-title">Latest Listings</h2>
+          <h2 className="section-title">
+            {searchParams.search ? `Search Results for "${searchParams.search}"` : 'Latest Listings'}
+          </h2>
           <div className="filter-group">
-            <select className="input-field select-filter">
+            <select 
+              className="input-field select-filter"
+              onChange={(e) => handleFilterChange('city', e.target.value)}
+              value={searchParams.city || 'All Cities'}
+            >
               <option>All Cities</option>
               <option>Dhaka</option>
               <option>Chittagong</option>
+              <option>Sylhet</option>
             </select>
           </div>
         </div>
@@ -71,11 +126,21 @@ const Home = () => {
             <p>Finding the best properties...</p>
           </div>
         ) : (
-          <div className="properties-grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-            {properties.map((prop, index) => (
-              <PropertyCard key={prop?.id || index} property={prop} />
-            ))}
-          </div>
+          <>
+            {properties.length > 0 ? (
+              <div className="properties-grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+                {properties.map((prop, index) => (
+                  <PropertyCard key={prop?.id || index} property={prop} />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <h3>No properties found</h3>
+                <p>Try adjusting your search or filters.</p>
+                <button className="btn btn-secondary" onClick={clearAllSearch}>Clear All</button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>

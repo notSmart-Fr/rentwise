@@ -4,6 +4,9 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import OwnerDashboard from './pages/OwnerDashboard';
+import MyRequests from './pages/MyRequests';
+import PropertyDetails from './pages/PropertyDetails';
 import './App.css';
 
 // Protected Route Wrapper Component
@@ -66,17 +69,17 @@ function App() {
           {/* We will build these properly in the next phases */}
           <Route path="/owner-dashboard" element={
             <ProtectedRoute requiredRole="OWNER">
-              <div className="container p-top-5"><h1>Owner Dashboard</h1></div>
+              <OwnerDashboard />
             </ProtectedRoute>
           } />
           
           <Route path="/properties/:id" element={
-             <div className="container p-top-5">Property Details Coming Soon</div>
+            <PropertyDetails />
           } />
           
           <Route path="/my-requests" element={
             <ProtectedRoute requiredRole="TENANT">
-              <div className="container p-top-5"><h1>Tenant Requests</h1></div>
+              <MyRequests />
             </ProtectedRoute>
           } />
         </Routes>

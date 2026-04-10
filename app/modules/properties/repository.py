@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 
 from app.modules.properties.model import Property
@@ -21,13 +21,25 @@ class PropertyRepository:
     def list_public(
         self,
         db: Session,
-        city: str | None,
-        area: str | None,
-        min_rent: int | None,
-        max_rent: int | None,
-        beds: int | None,
+        city: str | None = None,
+        area: str | None = None,
+        min_rent: int | None = None,
+        max_rent: int | None = None,
+        beds: int | None = None,
+        search: str | None = None,
     ) -> list[Property]:
         stmt = select(Property).where(Property.is_available == True)  # noqa: E712
+
+        if search:
+            search_filter = f"%{search}%"
+            stmt = stmt.where(
+                or_(
+                    Property.title.ilike(search_filter),
+                    Property.description.ilike(search_filter),
+                    Property.city.ilike(search_filter),
+                    Property.area.ilike(search_filter),
+                )
+            )
 
         if city:
             stmt = stmt.where(Property.city == city)

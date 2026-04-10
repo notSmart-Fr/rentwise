@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { requestsApi } from '../services/api';
 import './PropertyCard.css';
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, isOwner = false }) => {
+  const { isAuthenticated, isTenant } = useAuth();
+  const [requestStatus, setRequestStatus] = useState('idle'); // idle, loading, success, error
+  
   // If no property is passed, use placeholder data for UI demonstration
   const data = property || {
     id: 'placeholder',
@@ -14,16 +20,34 @@ const PropertyCard = ({ property }) => {
     is_available: true,
   };
 
+  const handleRequestLease = async () => {
+    if (!isAuthenticated) {
+      window.location.href = '/login';
+      return;
+    }
+    
+    setRequestStatus('loading');
+    try {
+      await requestsApi.create(data.id, `I am interested in leasing ${data.title}.`);
+      setRequestStatus('success');
+      setTimeout(() => setRequestStatus('idle'), 3000);
+    } catch (err) {
+      console.error('Request failed:', err);
+      setRequestStatus('error');
+      setTimeout(() => setRequestStatus('idle'), 5000);
+    }
+  };
+
+  const mainImage = data.images && data.images.length > 0 
+    ? data.images[0].url 
+    : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80'; // Modern house placeholder
+
   return (
-    <div className="property-card glass-panel hover-card-lift">
+    <div className={`property-card glass-panel hover-card-lift ${isOwner ? 'owner-card' : ''}`}>
       <div className="card-image-wrapper">
-        <div className="card-image-placeholder animate-pulse-slow">
-           <svg viewBox="0 0 24 24" fill="none" width="48" height="48" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-             <polyline points="9 22 9 12 15 12 15 22"></polyline>
-           </svg>
-        </div>
+        <img src={mainImage} alt={data.title} className="card-image" />
         <div className="card-badges">
+          {isOwner && <span className="badge badge-primary">Management</span>}
           {data.is_available ? (
             <span className="badge badge-success">Available</span>
           ) : (
@@ -68,9 +92,15 @@ const PropertyCard = ({ property }) => {
       </div>
       
       <div className="card-footer bg-glass">
-         <Link to={`/properties/${data.id}`} className="btn btn-primary w-full">
+        {isOwner ? (
+          <Link to={`/owner/properties/${data.id}`} className="btn btn-outline-primary w-full">
+            Manage Property
+          </Link>
+        ) : (
+          <Link to={`/properties/${data.id}`} className="btn btn-primary w-full">
             View Details
-         </Link>
+          </Link>
+        )}
       </div>
     </div>
   );

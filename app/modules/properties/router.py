@@ -78,8 +78,9 @@ def browse_properties(
     min_rent: int | None = Query(default=None, ge=0),
     max_rent: int | None = Query(default=None, ge=0),
     beds: int | None = Query(default=None, ge=0),
+    search: str | None = None,
 ):
-    props = repo.list_public(db, city, area, min_rent, max_rent, beds)
+    props = repo.list_public(db, city, area, min_rent, max_rent, beds, search)
     return [service.to_response(p) for p in props]
 
 @public_router.get("/{property_id}", response_model=PropertyResponse)

@@ -1,13 +1,10 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import UUID, String, Boolean, DateTime, Integer
-
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import UUID, String, Boolean, DateTime, Integer, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-
-
 
 class Property(Base):
     __tablename__ = "properties"
@@ -34,3 +31,25 @@ class Property(Base):
     is_available: Mapped[bool] = mapped_column(Boolean, default=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # Relationship to images
+    images: Mapped[list["PropertyImage"]] = relationship(
+        "PropertyImage", back_populates="property", cascade="all, delete-orphan", lazy="selectin"
+    )
+
+
+class PropertyImage(Base):
+    __tablename__ = "property_images"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    property_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("properties.id", ondelete="CASCADE"), nullable=False
+    )
+    url: Mapped[str] = mapped_column(String(500), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    property: Mapped["Property"] = relationship("Property", back_populates="images")

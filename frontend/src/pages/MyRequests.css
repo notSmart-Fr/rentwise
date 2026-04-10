@@ -1,0 +1,44 @@
+.requests-page {
+  padding: 100px 0 40px 0;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px dashed #e2e8f0;
+  color: #64748b;
+}
+
+.empty-state p {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.m-top-2 {
+  margin-top: 16px;
+}

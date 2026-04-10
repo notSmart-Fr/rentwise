@@ -1,5 +1,9 @@
 from pydantic import BaseModel, Field
 
+class PropertyImageResponse(BaseModel):
+    id: str
+    url: str
+
 class PropertyCreateRequest(BaseModel):
     title: str = Field(min_length=3, max_length=120)
     description: str | None = Field(default=None, max_length=1000)
@@ -9,6 +13,7 @@ class PropertyCreateRequest(BaseModel):
     rent_amount: int = Field(ge=0)
     bedrooms: int | None = Field(default=None, ge=0)
     bathrooms: int | None = Field(default=None, ge=0)
+    image_urls: list[str] = Field(default_factory=list)
 
 class PropertyUpdateRequest(BaseModel):
     title: str | None = Field(default=None, min_length=3, max_length=120)
@@ -19,6 +24,7 @@ class PropertyUpdateRequest(BaseModel):
     rent_amount: int | None = Field(default=None, ge=0)
     bedrooms: int | None = Field(default=None, ge=0)
     bathrooms: int | None = Field(default=None, ge=0)
+    image_urls: list[str] | None = None
 
 class AvailabilityRequest(BaseModel):
     is_available: bool
@@ -35,3 +41,4 @@ class PropertyResponse(BaseModel):
     bedrooms: int | None
     bathrooms: int | None
     is_available: bool
+    images: list[PropertyImageResponse] = Field(default_factory=list)

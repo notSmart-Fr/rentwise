@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import UUID, String, DateTime
+from sqlalchemy import UUID, String, DateTime, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from sqlalchemy.orm import Mapped, mapped_column
+from app.modules.auth.model import User
+from app.modules.properties.model import Property
 
 from app.db.base import Base
 
@@ -18,9 +20,14 @@ class RentalRequest(Base):
         default=uuid.uuid4,
     )
 
-    property_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
-    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
-    owner_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    property_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("properties.id"), index=True, nullable=False)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False)
+    owner_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False)
+
+    # Relationships
+    property: Mapped["Property"] = relationship(foreign_keys=[property_id])
+    tenant: Mapped["User"] = relationship(foreign_keys=[tenant_id])
+    owner: Mapped["User"] = relationship(foreign_keys=[owner_id])
 
     status: Mapped[str] = mapped_column(
         String(20), default="PENDING", nullable=False
