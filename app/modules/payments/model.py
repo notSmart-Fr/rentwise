@@ -23,8 +23,10 @@ class Payment(Base):
     tenant_id:  Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
     amount: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    method: Mapped[str] = mapped_column(String(10), nullable=False)  # CASH/BKASH/NAGAD/BANK
-    reference: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    transaction_id:     Mapped[str | None] = mapped_column(String(50), unique=True, index=True, nullable=True)
+    method:             Mapped[str] = mapped_column(String(20), nullable=False)  # CASH/BKASH/NAGAD/BANK/SSLCOMMERZ
+    provider_reference: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    reference:          Mapped[str | None] = mapped_column(String(100), nullable=True)
 
-    status: Mapped[str] = mapped_column(String(10), default="PAID", nullable=False)  # PENDING/PAID
+    status: Mapped[str] = mapped_column(String(15), default="INITIATED", nullable=False)  # INITIATED/SUCCESS/FAILED/CANCELLED
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
