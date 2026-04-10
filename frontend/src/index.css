@@ -171,6 +171,7 @@ input, select, textarea {
 .btn-primary:hover {
   box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
   transform: translateY(-2px);
+  color: white !important;
 }
 
 .btn-secondary {

@@ -77,7 +77,7 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
         <div className="request-actions-tenant">
            {request.status === 'APPROVED' && !hasPayment && onPayRent && (
              <button 
-               className="btn btn-sm btn-primary animate-pulse"
+               className="btn btn-sm btn-payment hover-card-lift"
                onClick={() => onPayRent(request)}
              >
                Pay Rent

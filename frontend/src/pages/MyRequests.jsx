@@ -63,7 +63,7 @@ const MyRequests = () => {
   return (
     <div className="requests-page container animate-fade-in">
       <header className="page-header">
-        <h1 className="page-title">My Rental Requests</h1>
+        <h1 className="page-title">Tenant Dashboard</h1>
         <p className="page-subtitle">Track the status of your rental applications.</p>
       </header>
 

@@ -15,6 +15,13 @@ The fastest way to run the entire stack (Backend, Frontend, and Database) is usi
 
 ---
 
+## 🔑 Test Credentials
+Use the following demo accounts to explore the platform without registering:
+- **Owner Account**: `owner@test.com` / `password123`
+- **Tenant Account**: `tenant_real@test.com` / `password123`
+
+---
+
 ## 🛠 Tech Stack
 * **Frontend**: React + Vite + Vanilla CSS (Glassmorphism UI)
 * **Backend**: FastAPI (Python 3.12)
