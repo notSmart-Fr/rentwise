@@ -1,11 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import { ChatProvider, useChat } from './context/ChatContext';
 import Navbar from './components/Navbar';
+import ChatModal from './components/ChatModal';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import OwnerDashboard from './pages/OwnerDashboard';
 import MyRequests from './pages/MyRequests';
+import MyTickets from './pages/MyTickets';
 import PropertyDetails from './pages/PropertyDetails';
 import './App.css';
 
@@ -46,7 +49,8 @@ const PublicOnlyRoute = ({ children }) => {
   return children;
 };
 
-function App() {
+function AppInner() {
+  const { chat, closeChat } = useChat();
   return (
     <div className="app-container">
       <Navbar />
@@ -66,7 +70,6 @@ function App() {
             </PublicOnlyRoute>
           } />
           
-          {/* We will build these properly in the next phases */}
           <Route path="/owner-dashboard" element={
             <ProtectedRoute requiredRole="OWNER">
               <OwnerDashboard />
@@ -82,9 +85,35 @@ function App() {
               <MyRequests />
             </ProtectedRoute>
           } />
+
+          <Route path="/my-tickets" element={
+            <ProtectedRoute requiredRole="TENANT">
+              <MyTickets />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
+
+      {/* Global persistent chat widget - survives page navigation */}
+      {chat && (
+        <ChatModal
+          isOpen={true}
+          onClose={closeChat}
+          contextType={chat.contextType}
+          contextId={chat.contextId}
+          title={chat.title}
+          subtitle={chat.subtitle}
+        />
+      )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ChatProvider>
+      <AppInner />
+    </ChatProvider>
   );
 }
 

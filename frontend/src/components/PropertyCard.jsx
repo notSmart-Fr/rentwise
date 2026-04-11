@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { requestsApi } from '../services/api';
 import './PropertyCard.css';
 
-const PropertyCard = ({ property, isOwner = false }) => {
+const PropertyCard = ({ property, isOwner = false, onEdit }) => {
   const { isAuthenticated, isTenant } = useAuth();
   const [requestStatus, setRequestStatus] = useState('idle'); // idle, loading, success, error
   
@@ -93,9 +93,20 @@ const PropertyCard = ({ property, isOwner = false }) => {
       
       <div className="card-footer bg-glass">
         {isOwner ? (
-          <Link to={`/owner/properties/${data.id}`} className="btn btn-outline-primary w-full">
-            Manage Property
-          </Link>
+          <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
+            <Link to={`/properties/${data.id}`} className="btn btn-secondary" style={{ flex: 1 }}>
+              View
+            </Link>
+            {onEdit && (
+              <button
+                className="btn btn-primary"
+                style={{ flex: 1 }}
+                onClick={(e) => { e.preventDefault(); onEdit(data); }}
+              >
+                ✏️ Edit
+              </button>
+            )}
+          </div>
         ) : (
           <Link to={`/properties/${data.id}`} className="btn btn-primary w-full">
             View Details

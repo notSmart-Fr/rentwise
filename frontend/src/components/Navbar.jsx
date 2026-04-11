@@ -55,7 +55,10 @@ const Navbar = () => {
               {role === 'OWNER' ? (
                 <Link to="/owner-dashboard" className="nav-link">Owner Dashboard</Link>
               ) : (
-                <Link to="/my-requests" className="nav-link">Tenant Dashboard</Link>
+                <>
+                  <Link to="/my-requests" className="nav-link">Tenant Dashboard</Link>
+                  <Link to="/my-tickets" className="nav-link">Maintenance</Link>
+                </>
               )}
               <div className="nav-divider" />
               <button className="btn btn-secondary nav-btn" onClick={() => { logout(); navigate('/login'); }}>Log Out</button>
@@ -89,7 +92,10 @@ const Navbar = () => {
                 {role === 'OWNER' ? (
                   <Link to="/owner-dashboard" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Owner Dashboard</Link>
                 ) : (
-                  <Link to="/my-requests" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Tenant Dashboard</Link>
+                  <>
+                    <Link to="/my-requests" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Tenant Dashboard</Link>
+                    <Link to="/my-tickets" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Maintenance</Link>
+                  </>
                 )}
                 <button className="btn btn-secondary m-top-4" onClick={() => { logout(); navigate('/login'); setIsMenuOpen(false); }}>Log Out</button>
               </>

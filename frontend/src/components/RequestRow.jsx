@@ -1,7 +1,9 @@
 import React from 'react';
+import { useChat } from '../context/ChatContext';
 import './RequestRow.css';
 
 const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewReceipt, onPayRent, isOwner = false }) => {
+  const { openChat } = useChat();
   const getStatusClass = (status) => {
     switch (status) {
       case 'APPROVED': return 'status-approved';
@@ -19,7 +21,8 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
   const hasPayment = request.payment && (request.payment.status === 'PAID' || request.payment.status === 'SUCCESS');
 
   return (
-    <div className="request-row">
+    <>
+      <div className="request-row">
       <div className="request-info">
         <div className="request-main">
           <span className="request-property">{request.property_title}</span>
@@ -42,6 +45,14 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
       </div>
 
       <div className="request-actions">
+        <button 
+          className="btn btn-sm btn-outline-primary" 
+          style={{ marginRight: '8px' }}
+          onClick={() => openChat('RENTAL_REQUEST', request.id, request.property_title, isOwner ? request.tenant_name : 'Property Owner')}
+        >
+          💬 Chat
+        </button>
+
         {isOwner && request.status === 'PENDING' && (
           <>
             <button 
@@ -75,6 +86,12 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
       
       {!isOwner && (
         <div className="request-actions-tenant">
+           <button 
+             className="btn btn-sm btn-outline-primary m-bottom-1 hover-card-lift" 
+             onClick={() => openChat('RENTAL_REQUEST', request.id, request.property_title, 'Property Owner')}
+           >
+             💬 Chat
+           </button>
            {request.status === 'APPROVED' && !hasPayment && onPayRent && (
              <button 
                className="btn btn-sm btn-payment hover-card-lift"
@@ -98,7 +115,9 @@ const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewRecei
            </div>
         </div>
       )}
-    </div>
+
+      </div>
+    </>
   );
 };
 
