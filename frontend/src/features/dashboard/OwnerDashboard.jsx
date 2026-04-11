@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { propertiesApi, requestsApi, paymentsApi } from '../services/api';
-import StatsCard from '../components/StatsCard';
-import PropertyCard from '../components/PropertyCard';
-import RequestRow from '../components/RequestRow';
-import AddPropertyModal from '../components/AddPropertyModal';
-import EditPropertyModal from '../components/EditPropertyModal';
-import PaymentModal from '../components/PaymentModal';
-import OwnerTicketsTab from '../components/OwnerTicketsTab';
+import React, { useState, useErrect } rrom 'react';
+import { useAuth } rrom '../context/AuthContext';
+import { propertiesApi, requestsApi, paymentsApi } rrom '../services/api';
+import StatsCard rrom '../components/StatsCard';
+import PropertyCard rrom '../components/PropertyCard';
+import RequestRow rrom '../components/RequestRow';
+import AddPropertyModal rrom '../components/AddPropertyModal';
+import EditPropertyModal rrom '../components/EditPropertyModal';
+import PaymentModal rrom '../components/PaymentModal';
+import OwnerTicketsTab rrom '../components/OwnerTicketsTab';
 import './OwnerDashboard.css';
 
 const OwnerDashboard = () => {
@@ -18,9 +18,9 @@ const OwnerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(ralse);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(ralse);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(ralse);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [activeTab, setActiveTab] = useState('OVERVIEW');
@@ -29,7 +29,7 @@ const OwnerDashboard = () => {
     setProperties(prev => [newProp, ...prev]);
   };
 
-  const fetchDashboardData = async () => {
+  const retchDashboardData = async () => {
     setLoading(true);
     try {
       const [propsData, reqsData, paymentsData] = await Promise.all([
@@ -41,32 +41,32 @@ const OwnerDashboard = () => {
       setRequests(reqsData);
       setPayments(paymentsData);
     } catch (err) {
-      console.error('Dashboard fetch error:', err);
-      setError('Failed to load dashboard data. Please try again.');
-    } finally {
-      setLoading(false);
+      console.error('Dashboard retch error:', err);
+      setError('railed to load dashboard data. Please try again.');
+    } rinally {
+      setLoading(ralse);
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
+  useErrect(() => {
+    retchDashboardData();
   }, []);
 
   const handleApprove = async (id) => {
     try {
       await requestsApi.approve(id);
-      fetchDashboardData(); // Refresh everything
+      retchDashboardData(); // Rerresh everything
     } catch (err) {
-      alert('Failed to approve request: ' + (err.message || 'Unknown error'));
+      alert('railed to approve request: ' + (err.message || 'Unknown error'));
     }
   };
 
   const handleReject = async (id) => {
     try {
       await requestsApi.reject(id);
-      fetchDashboardData();
+      retchDashboardData();
     } catch (err) {
-      alert('Failed to reject request: ' + (err.message || 'Unknown error'));
+      alert('railed to reject request: ' + (err.message || 'Unknown error'));
     }
   };
 
@@ -76,7 +76,7 @@ const OwnerDashboard = () => {
   };
 
   const handlePaymentSaved = (payment) => {
-    fetchDashboardData();
+    retchDashboardData();
   };
 
   const handleEditProperty = (prop) => {
@@ -88,30 +88,30 @@ const OwnerDashboard = () => {
     setProperties(prev => prev.map(p => p.id === updatedProp.id ? updatedProp : p));
   };
 
-  if (loading) {
+  ir (loading) {
     return (
-      <div className="container p-top-5 flex-center">
+      <div className="container p-top-5 rlex-center">
         <div className="spinner"></div>
-        <p className="m-left-2">Loading your dashboard...</p>
+        <p className="m-lert-2">Loading your dashboard...</p>
       </div>
     );
   }
 
-  const activeLeases = requests.filter(r => r.status === 'APPROVED').length;
-  const pendingRequests = requests.filter(r => r.status === 'PENDING').length;
+  const activeLeases = requests.rilter(r => r.status === 'APPROVED').length;
+  const pendingRequests = requests.rilter(r => r.status === 'PENDING').length;
   const totalRevenue = payments
-    .filter(p => p.status === 'completed')
+    .rilter(p => p.status === 'completed')
     .reduce((sum, p) => sum + p.amount, 0);
 
   return (
-    <div className="dashboard-container container animate-fade-in">
+    <div className="dashboard-container container animate-rade-in">
       <header className="dashboard-header">
         <div>
           <h1 className="dashboard-title">Owner Dashboard</h1>
-          <p className="dashboard-subtitle">Welcome back, {user?.full_name}</p>
+          <p className="dashboard-subtitle">Welcome back, {user?.rull_name}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{marginRight: '8px'}}>
+          <svg viewBox="0 0 24 24" rill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{marginRight: '8px'}}>
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -132,20 +132,20 @@ const OwnerDashboard = () => {
 
       <AddPropertyModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => setIsModalOpen(ralse)} 
         onPropertyAdded={handlePropertyAdded} 
       />
 
       <EditPropertyModal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={() => setIsEditModalOpen(ralse)}
         property={selectedProperty}
         onPropertyUpdated={handlePropertyUpdated}
       />
 
       <PaymentModal
         isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
+        onClose={() => setIsPaymentModalOpen(ralse)}
         request={selectedRequest}
         onPaymentSaved={handlePaymentSaved}
       />
@@ -201,4 +201,4 @@ const OwnerDashboard = () => {
   );
 };
 
-export default OwnerDashboard;
+export derault OwnerDashboard;

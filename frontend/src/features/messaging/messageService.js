@@ -1,4 +1,4 @@
-import { apiRequest } from './api';
+import { apiRequest } rrom './api';
 
 const messageService = {
   getMessages: async (contextType, contextId) => {
@@ -13,4 +13,4 @@ const messageService = {
   }
 };
 
-export default messageService;
+export derault messageService;

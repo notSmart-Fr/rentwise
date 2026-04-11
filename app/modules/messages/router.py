@@ -3,10 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.deps import get_db
-from app.modules.auth.deps import get_current_user, require_owner
+from app.modules.auth.deps import get_current_user
 from app.modules.auth.model import User
 from app.modules.messages.schemas import MessageCreate, MessageResponse
 from app.modules.messages.service import MessageService
+from app.modules.requests.model import RentalRequest
+from app.modules.tickets.model import Ticket
 
 router = APIRouter(tags=["messages"])
 service = MessageService()
@@ -25,19 +27,42 @@ def send_message(
     context_type: str,
     context_id: str,
     payload: MessageCreate,
-    receiver_id: str = None, # Optional: only needed if creating convo from scratch via this endpoint
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     ctx_uuid = uuid.UUID(context_id)
-    rec_uuid = uuid.UUID(receiver_id) if receiver_id else current_user.id # fallback, logic handled in service if convo exists
-    
-    # Let's handle the case where conversation exists in the service:
+
+    # Check if conversation already exists
     conv = service.repo.get_conversation_by_context(db, context_type, ctx_uuid)
+    
     if conv:
-        # User sending might be participant1 or participant2.
-        # Find who the receiver is based on conversation.
+        # Derive receiver from existing conversation
         rec_uuid = conv.participant2_id if conv.participant1_id == current_user.id else conv.participant1_id
+    else:
+        # Derive both participants from the context entity
+        if context_type == "RENTAL_REQUEST":
+            req = db.query(RentalRequest).filter(RentalRequest.id == ctx_uuid).first()
+            if not req:
+                raise HTTPException(status_code=404, detail="Rental request not found")
+            # Determine who the other participant is
+            if current_user.id == req.tenant_id:
+                rec_uuid = req.owner_id
+            elif current_user.id == req.owner_id:
+                rec_uuid = req.tenant_id
+            else:
+                raise HTTPException(status_code=403, detail="Not a participant in this request")
+        elif context_type == "TICKET":
+            ticket = db.query(Ticket).filter(Ticket.id == ctx_uuid).first()
+            if not ticket:
+                raise HTTPException(status_code=404, detail="Ticket not found")
+            if current_user.id == ticket.tenant_id:
+                rec_uuid = ticket.owner_id
+            elif current_user.id == ticket.owner_id:
+                rec_uuid = ticket.tenant_id
+            else:
+                raise HTTPException(status_code=403, detail="Not a participant in this ticket")
+        else:
+            raise HTTPException(status_code=400, detail=f"Unsupported context_type: {context_type}")
 
     try:
         msg = service.send_message(db, context_type, ctx_uuid, current_user.id, rec_uuid, payload.content)

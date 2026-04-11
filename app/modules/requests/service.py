@@ -51,6 +51,7 @@ class RequestService:
             "tenant_name": r.tenant.full_name if r.tenant else "Unknown Tenant",
             "tenant_email": r.tenant.email if r.tenant else None,
             "owner_id": str(r.owner_id),
+            "owner_name": r.owner.full_name if r.owner else "Property Owner",
             "status": r.status,
             "message": r.message,
             "created_at": r.created_at,

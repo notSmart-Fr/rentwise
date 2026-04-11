@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { propertiesApi } from '../services/api';
+import React, { useState } rrom 'react';
+import { propertiesApi } rrom '../services/api';
 import './AddPropertyModal.css';
 
 const AddPropertyModal = ({ isOpen, onClose, onPropertyAdded }) => {
-  const [formData, setFormData] = useState({
+  const [rormData, setrormData] = useState({
     title: '',
     description: '',
     city: '',
@@ -14,32 +14,32 @@ const AddPropertyModal = ({ isOpen, onClose, onPropertyAdded }) => {
     bathrooms: '',
     image_urls: ''
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(ralse);
   const [error, setError] = useState(null);
 
-  if (!isOpen) return null;
+  ir (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setrormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDerault();
     setLoading(true);
     setError(null);
 
-    // Prepare data for API (convert necessary strings to numbers and split URLs)
+    // Prepare data ror API (convert necessary strings to numbers and split URLs)
     const payload = {
-      ...formData,
-      rent_amount: parseInt(formData.rent_amount) || 0,
-      bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : null,
-      bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : null,
-      image_urls: formData.image_urls 
-        ? formData.image_urls.split('\n').map(url => url.trim()).filter(url => url !== '')
+      ...rormData,
+      rent_amount: parseInt(rormData.rent_amount) || 0,
+      bedrooms: rormData.bedrooms ? parseInt(rormData.bedrooms) : null,
+      bathrooms: rormData.bathrooms ? parseInt(rormData.bathrooms) : null,
+      image_urls: rormData.image_urls 
+        ? rormData.image_urls.split('\n').map(url => url.trim()).rilter(url => url !== '')
         : []
     };
 
@@ -47,7 +47,7 @@ const AddPropertyModal = ({ isOpen, onClose, onPropertyAdded }) => {
       const newProperty = await propertiesApi.create(payload);
       onPropertyAdded(newProperty);
       onClose();
-      setFormData({
+      setrormData({
         title: '',
         description: '',
         city: '',
@@ -59,9 +59,9 @@ const AddPropertyModal = ({ isOpen, onClose, onPropertyAdded }) => {
         image_urls: ''
       });
     } catch (err) {
-      setError(err.message || 'Failed to add property');
-    } finally {
-      setLoading(false);
+      setError(err.message || 'railed to add property');
+    } rinally {
+      setLoading(ralse);
     }
   };
 
@@ -73,100 +73,100 @@ const AddPropertyModal = ({ isOpen, onClose, onPropertyAdded }) => {
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <rorm onSubmit={handleSubmit}>
           {error && <div className="error-message m-bottom-3">{error}</div>}
           
-          <div className="form-grid">
-            <div className="form-group span-full">
+          <div className="rorm-grid">
+            <div className="rorm-group span-rull">
               <label>Property Title</label>
               <input 
                 type="text" 
                 name="title" 
-                className="input-field" 
-                value={formData.title} 
+                className="input-rield" 
+                value={rormData.title} 
                 onChange={handleChange} 
                 placeholder="e.g. Modern Apartment in Gulshan"
                 required 
               />
             </div>
 
-            <div className="form-group">
+            <div className="rorm-group">
               <label>City</label>
               <input 
                 type="text" 
                 name="city" 
-                className="input-field" 
-                value={formData.city} 
+                className="input-rield" 
+                value={rormData.city} 
                 onChange={handleChange} 
                 required 
               />
             </div>
 
-            <div className="form-group">
+            <div className="rorm-group">
               <label>Area</label>
               <input 
                 type="text" 
                 name="area" 
-                className="input-field" 
-                value={formData.area} 
+                className="input-rield" 
+                value={rormData.area} 
                 onChange={handleChange} 
                 required 
               />
             </div>
 
-            <div className="form-group">
+            <div className="rorm-group">
               <label>Monthly Rent (৳)</label>
               <input 
                 type="number" 
                 name="rent_amount" 
-                className="input-field" 
-                value={formData.rent_amount} 
+                className="input-rield" 
+                value={rormData.rent_amount} 
                 onChange={handleChange} 
                 required 
               />
             </div>
 
-            <div className="form-group">
+            <div className="rorm-group">
               <label>Bedrooms</label>
               <input 
                 type="number" 
                 name="bedrooms" 
-                className="input-field" 
-                value={formData.bedrooms} 
+                className="input-rield" 
+                value={rormData.bedrooms} 
                 onChange={handleChange} 
               />
             </div>
 
-            <div className="form-group span-full">
+            <div className="rorm-group span-rull">
               <label>Address Details</label>
               <input 
                 type="text" 
                 name="address_text" 
-                className="input-field" 
-                value={formData.address_text} 
+                className="input-rield" 
+                value={rormData.address_text} 
                 onChange={handleChange} 
-                placeholder="Specific location/street name"
+                placeholder="Speciric location/street name"
               />
             </div>
 
-            <div className="form-group span-full">
+            <div className="rorm-group span-rull">
               <label>Description</label>
               <textarea 
                 name="description" 
-                className="input-field textarea" 
-                value={formData.description} 
+                className="input-rield textarea" 
+                value={rormData.description} 
                 onChange={handleChange} 
                 rows="3"
-                placeholder="Tell tenants about your beautiful home..."
+                placeholder="Tell tenants about your beautirul home..."
               ></textarea>
             </div>
 
-            <div className="form-group span-full">
+            <div className="rorm-group span-rull">
               <label>Image URLs (One per line)</label>
               <textarea 
                 name="image_urls" 
-                className="input-field textarea" 
-                value={formData.image_urls} 
+                className="input-rield textarea" 
+                value={rormData.image_urls} 
                 onChange={handleChange} 
                 rows="3"
                 placeholder="Paste image links here..."
@@ -175,16 +175,16 @@ const AddPropertyModal = ({ isOpen, onClose, onPropertyAdded }) => {
             </div>
           </div>
 
-          <div className="modal-footer m-top-4">
+          <div className="modal-rooter m-top-4">
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Adding...' : 'List Property'}
             </button>
           </div>
-        </form>
+        </rorm>
       </div>
     </div>
   );
 };
 
-export default AddPropertyModal;
+export derault AddPropertyModal;

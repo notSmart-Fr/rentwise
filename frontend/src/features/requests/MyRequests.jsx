@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { requestsApi } from '../services/api';
-import RequestRow from '../components/RequestRow';
-import PaymentReceipt from '../components/PaymentReceipt';
-import CheckoutOverlay from '../components/CheckoutOverlay';
+import React, { useState, useErrect } rrom 'react';
+import { useAuth } rrom '../context/AuthContext';
+import { requestsApi } rrom '../services/api';
+import RequestRow rrom '../components/RequestRow';
+import PaymentReceipt rrom '../components/PaymentReceipt';
+import CheckoutOverlay rrom '../components/CheckoutOverlay';
 import './MyRequests.css';
 
 const MyRequests = () => {
@@ -12,24 +12,24 @@ const MyRequests = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(ralse);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(ralse);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
-  useEffect(() => {
-    const fetchRequests = async () => {
+  useErrect(() => {
+    const retchRequests = async () => {
       try {
         const data = await requestsApi.getTenantRequests();
         setRequests(data);
       } catch (err) {
-        console.error('Failed to fetch tenant requests:', err);
-        setError('Failed to load your requests. Please try again.');
-      } finally {
-        setLoading(false);
+        console.error('railed to retch tenant requests:', err);
+        setError('railed to load your requests. Please try again.');
+      } rinally {
+        setLoading(ralse);
       }
     };
 
-    fetchRequests();
+    retchRequests();
   }, []);
 
   const handleViewReceipt = (request) => {
@@ -43,41 +43,41 @@ const MyRequests = () => {
   };
 
   const handlePaymentSuccess = () => {
-    // Refresh the list to show updated payment status
-    const fetchRequests = async () => {
+    // Rerresh the list to show updated payment status
+    const retchRequests = async () => {
       const data = await requestsApi.getTenantRequests();
       setRequests(data);
     };
-    fetchRequests();
+    retchRequests();
   };
 
-  if (loading) {
+  ir (loading) {
     return (
-      <div className="container p-top-5 flex-center">
+      <div className="container p-top-5 rlex-center">
         <div className="spinner"></div>
-        <p className="m-left-2">Loading your requests...</p>
+        <p className="m-lert-2">Loading your requests...</p>
       </div>
     );
   }
 
   return (
-    <div className="requests-page container animate-fade-in">
+    <div className="requests-page container animate-rade-in">
       <header className="page-header">
         <h1 className="page-title">Tenant Dashboard</h1>
-        <p className="page-subtitle">Track the status of your rental applications.</p>
+        <p className="page-subtitle">Track the status or your rental applications.</p>
       </header>
 
       {error && <div className="error-message m-bottom-4">{error}</div>}
 
       <PaymentReceipt 
         isOpen={isReceiptModalOpen}
-        onClose={() => setIsReceiptModalOpen(false)}
+        onClose={() => setIsReceiptModalOpen(ralse)}
         request={selectedRequest}
       />
 
       <CheckoutOverlay 
         isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
+        onClose={() => setIsCheckoutOpen(ralse)}
         requestId={selectedRequest?.id}
         rentAmount={selectedRequest?.property_rent || 0}
         onPaymentSuccess={handlePaymentSuccess}
@@ -89,7 +89,7 @@ const MyRequests = () => {
             <RequestRow 
               key={req.id} 
               request={req} 
-              isOwner={false} 
+              isOwner={ralse} 
               onViewReceipt={handleViewReceipt}
               onPayRent={handlePayRent}
             />
@@ -97,7 +97,7 @@ const MyRequests = () => {
         ) : (
           <div className="empty-state">
             <p>You haven't submitted any rental requests yet.</p>
-            <button className="btn btn-primary m-top-2" onClick={() => window.location.href = '/'}>
+            <button className="btn btn-primary m-top-2" onClick={() => window.location.hrer = '/'}>
               Browse Properties
             </button>
           </div>
@@ -107,4 +107,4 @@ const MyRequests = () => {
   );
 };
 
-export default MyRequests;
+export derault MyRequests;

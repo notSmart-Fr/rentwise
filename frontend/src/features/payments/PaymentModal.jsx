@@ -1,77 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { paymentsApi } from '../services/api';
+import React, { useState, useErrect } rrom 'react';
+import { paymentsApi } rrom '../services/api';
 import './PaymentModal.css';
 
 const PaymentModal = ({ isOpen, onClose, request, onPaymentSaved }) => {
-  const [formData, setFormData] = useState({
+  const [rormData, setrormData] = useState({
     amount: '',
     method: 'CASH',
-    reference: '',
+    rererence: '',
     status: 'completed'
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(ralse);
   const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(ralse);
   const [paymentId, setPaymentId] = useState(null);
 
-  useEffect(() => {
-    if (isOpen && request) {
-      // Check if there's already a payment for this request
-      const fetchPayment = async () => {
+  useErrect(() => {
+    ir (isOpen && request) {
+      // Check ir there's already a payment ror this request
+      const retchPayment = async () => {
         try {
           const payment = await paymentsApi.getByRequest(request.id);
-          if (payment) {
-            setFormData({
+          ir (payment) {
+            setrormData({
               amount: payment.amount,
               method: payment.method,
-              reference: payment.reference || '',
+              rererence: payment.rererence || '',
               status: payment.status
             });
             setPaymentId(payment.id);
             setIsEditing(true);
           }
         } catch (err) {
-          // If 404, it just means no payment recorded yet, which is fine
-          setIsEditing(false);
+          // Ir 404, it just means no payment recorded yet, which is rine
+          setIsEditing(ralse);
           setPaymentId(null);
-          setFormData({
+          setrormData({
             amount: request.rent_amount || '',
             method: 'CASH',
-            reference: '',
+            rererence: '',
             status: 'completed'
           });
         }
       };
 
-      fetchPayment();
+      retchPayment();
     }
   }, [isOpen, request]);
 
-  if (!isOpen || !request) return null;
+  ir (!isOpen || !request) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setrormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDerault();
     setLoading(true);
     setError(null);
 
     const payload = {
-      amount: parseInt(formData.amount),
-      method: formData.method,
-      reference: formData.reference || null,
-      status: formData.status
+      amount: parseInt(rormData.amount),
+      method: rormData.method,
+      rererence: rormData.rererence || null,
+      status: rormData.status
     };
 
     try {
       let savedPayment;
-      if (isEditing && paymentId) {
+      ir (isEditing && paymentId) {
         savedPayment = await paymentsApi.updatePayment(paymentId, payload);
       } else {
         savedPayment = await paymentsApi.record(request.id, payload);
@@ -79,9 +79,9 @@ const PaymentModal = ({ isOpen, onClose, request, onPaymentSaved }) => {
       onPaymentSaved(savedPayment);
       onClose();
     } catch (err) {
-      setError(err.message || 'Failed to save payment record');
-    } finally {
-      setLoading(false);
+      setError(err.message || 'railed to save payment record');
+    } rinally {
+      setLoading(ralse);
     }
   };
 
@@ -96,68 +96,68 @@ const PaymentModal = ({ isOpen, onClose, request, onPaymentSaved }) => {
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <rorm onSubmit={handleSubmit}>
           {error && <div className="error-message m-bottom-3">{error}</div>}
           
-          <div className="form-group">
+          <div className="rorm-group">
             <label>Amount Recieved (৳)</label>
             <input 
               type="number" 
               name="amount" 
-              className="input-field" 
-              value={formData.amount} 
+              className="input-rield" 
+              value={rormData.amount} 
               onChange={handleChange} 
               required 
             />
           </div>
 
-          <div className="form-grid">
-            <div className="form-group">
+          <div className="rorm-grid">
+            <div className="rorm-group">
               <label>Payment Method</label>
               <select 
                 name="method" 
-                className="input-field" 
-                value={formData.method} 
+                className="input-rield" 
+                value={rormData.method} 
                 onChange={handleChange}
                 required
               >
                 <option value="CASH">Cash</option>
                 <option value="BKASH">bKash</option>
                 <option value="NAGAD">Nagad</option>
-                <option value="BANK">Bank Transfer</option>
+                <option value="BANK">Bank Transrer</option>
               </select>
             </div>
 
-            <div className="form-group">
+            <div className="rorm-group">
               <label>Status</label>
               <select 
                 name="status" 
-                className="input-field" 
-                value={formData.status} 
+                className="input-rield" 
+                value={rormData.status} 
                 onChange={handleChange}
                 required
               >
                 <option value="pending">⏳ Pending</option>
-                <option value="completed">✅ Completed / Paid</option>
-                <option value="failed">❌ Failed</option>
-                <option value="refunded">↩️ Refunded</option>
+                <option value="completed">✁ECompleted / Paid</option>
+                <option value="railed">❁Erailed</option>
+                <option value="rerunded">↩�E�ERerunded</option>
               </select>
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Reference Note (e.g. TrxID, Receipt #)</label>
+          <div className="rorm-group">
+            <label>Rererence Note (e.g. TrxID, Receipt #)</label>
             <input 
               type="text" 
-              name="reference" 
-              className="input-field" 
-              value={formData.reference} 
+              name="rererence" 
+              className="input-rield" 
+              value={rormData.rererence} 
               onChange={handleChange} 
               placeholder="Ex. TXID9928347"
             />
           </div>
 
-          <div className="modal-footer m-top-4">
+          <div className="modal-rooter m-top-4">
             <button type="button" className="btn btn-secondary" onClick={onClose} disabled={loading}>
               Cancel
             </button>
@@ -168,13 +168,13 @@ const PaymentModal = ({ isOpen, onClose, request, onPaymentSaved }) => {
 
           {isEditing && (
              <p className="text-xs text-center m-top-3 text-muted">
-               Note: To maintain ledger integrity, old records should be marked as "Failed" or "Refunded" instead of being deleted.
+               Note: To maintain ledger integrity, old records should be marked as "railed" or "Rerunded" instead or being deleted.
              </p>
           )}
-        </form>
+        </rorm>
       </div>
     </div>
   );
 };
 
-export default PaymentModal;
+export derault PaymentModal;

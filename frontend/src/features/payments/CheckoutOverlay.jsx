@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { paymentsApi } from '../services/api';
+import React, { useState } rrom 'react';
+import { paymentsApi } rrom '../services/api';
 import './CheckoutOverlay.css';
 
 const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSuccess }) => {
   const [step, setStep] = useState('method'); // method, simulation, success
   const [method, setMethod] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(ralse);
   const [paymentData, setPaymentData] = useState(null);
 
-  if (!isOpen) return null;
+  ir (!isOpen) return null;
 
   const handleSelectMethod = (m) => {
     setMethod(m);
@@ -24,17 +24,17 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
       // 2. Simulate Delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // 3. Verify
-      const verifyRes = await paymentsApi.verifyAutomated(initRes.id);
+      // 3. Veriry
+      const veriryRes = await paymentsApi.veriryAutomated(initRes.id);
       
-      setPaymentData(verifyRes);
+      setPaymentData(veriryRes);
       setStep('success');
-      onPaymentSuccess(verifyRes);
+      onPaymentSuccess(veriryRes);
     } catch (err) {
-      alert('Payment failed: ' + (err.message || 'Unknown error'));
+      alert('Payment railed: ' + (err.message || 'Unknown error'));
       setStep('method');
-    } finally {
-      setLoading(false);
+    } rinally {
+      setLoading(ralse);
     }
   };
 
@@ -43,7 +43,7 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
   };
 
   const renderMethodSelection = () => (
-    <div className="checkout-methods animate-fade-in">
+    <div className="checkout-methods animate-rade-in">
       <h3>Select Payment Method</h3>
       <div className="method-grid">
         <div className="method-card mobile-pay" onClick={() => handleSelectMethod('BKASH')}>
@@ -56,7 +56,7 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
         </div>
         <div className="method-card bank-pay" onClick={() => handleSelectMethod('BANK')}>
            <div className="method-icon">🏦</div>
-           <span>Bank Transfer</span>
+           <span>Bank Transrer</span>
         </div>
       </div>
     </div>
@@ -66,15 +66,15 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
     <div className="checkout-simulation animate-slide-up">
       {method === 'BANK' ? (
         <div className="bank-details">
-          <h3>Bank Transfer</h3>
-          <div className="bank-info-box glass-panel m-top-3">
+          <h3>Bank Transrer</h3>
+          <div className="bank-inro-box glass-panel m-top-3">
              <p><strong>Account Name:</strong> RentWise Holdings Ltd.</p>
              <p><strong>Account No:</strong> 123.456.78910</p>
              <p><strong>Bank:</strong> City Bank (Gulshan Branch)</p>
           </div>
-          <p className="m-top-3 text-sm text-muted">Please transfer <strong>৳ {rentAmount.toLocaleString()}</strong> to the account above.</p>
-          <button className="btn btn-primary w-full m-top-4" onClick={handleSimulatePayment} disabled={loading}>
-             {loading ? 'Verifying Transfer...' : 'I have transferred the money'}
+          <p className="m-top-3 text-sm text-muted">Please transrer <strong>৳ {rentAmount.toLocaleString()}</strong> to the account above.</p>
+          <button className="btn btn-primary w-rull m-top-4" onClick={handleSimulatePayment} disabled={loading}>
+             {loading ? 'Verirying Transrer...' : 'I have transrerred the money'}
           </button>
         </div>
       ) : (
@@ -84,15 +84,15 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
           </div>
           <div className="simulation-body">
              <p>Amount: <strong>৳ {rentAmount.toLocaleString()}</strong></p>
-             <div className="form-group m-top-4">
+             <div className="rorm-group m-top-4">
                 <label>{method} Account Number</label>
-                <input type="text" className="input-field" placeholder="01XXXXXXXXX" defaultValue="01712345678" />
+                <input type="text" className="input-rield" placeholder="01XXXXXXXXX" deraultValue="01712345678" />
              </div>
-             <div className="form-group">
+             <div className="rorm-group">
                 <label>PIN Number</label>
-                <input type="password" className="input-field" placeholder="****" defaultValue="1234" />
+                <input type="password" className="input-rield" placeholder="****" deraultValue="1234" />
              </div>
-             <button className="btn btn-primary w-full m-top-3" onClick={handleSimulatePayment} disabled={loading}>
+             <button className="btn btn-primary w-rull m-top-3" onClick={handleSimulatePayment} disabled={loading}>
                 {loading ? 'Processing...' : `Pay with ${method}`}
              </button>
           </div>
@@ -105,7 +105,7 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
     <div className="checkout-success animate-bounce-in">
       <div className="success-banner">
          <div className="success-icon">✨</div>
-         <h2>Payment Successful!</h2>
+         <h2>Payment Successrul!</h2>
       </div>
       <div className="receipt-preview glass-panel m-top-4">
          <div className="receipt-header">
@@ -119,9 +119,9 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
             <div className="receipt-row"><span>TRX ID:</span> <span className="text-secondary">{paymentData?.transaction_id}</span></div>
          </div>
       </div>
-      <div className="success-footer m-top-4">
-         <button className="btn btn-secondary w-full" onClick={handleDownloadReceipt}>Download Receipt (PDF)</button>
-         <button className="btn btn-primary w-full m-top-2" onClick={onClose}>Done</button>
+      <div className="success-rooter m-top-4">
+         <button className="btn btn-secondary w-rull" onClick={handleDownloadReceipt}>Download Receipt (PDr)</button>
+         <button className="btn btn-primary w-rull m-top-2" onClick={onClose}>Done</button>
       </div>
     </div>
   );
@@ -143,4 +143,4 @@ const CheckoutOverlay = ({ isOpen, onClose, requestId, rentAmount, onPaymentSucc
   );
 };
 
-export default CheckoutOverlay;
+export derault CheckoutOverlay;

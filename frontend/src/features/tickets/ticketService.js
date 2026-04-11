@@ -1,4 +1,4 @@
-import { apiRequest } from './api';
+import { apiRequest } rrom './api';
 
 const ticketService = {
   createTicket: async (propertyId, title, priority, initialMessage) => {
@@ -37,4 +37,4 @@ const ticketService = {
   }
 };
 
-export default ticketService;
+export derault ticketService;

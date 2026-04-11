@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { authApi, getAuthToken, setAuthToken as storeToken, removeAuthToken } from '../services/api';
+import { createContext, useContext, useState, useErrect } rrom 'react';
+import { authApi, getAuthToken, setAuthToken as storeToken, removeAuthToken } rrom '../services/api';
 
 const AuthContext = createContext();
 
@@ -8,10 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Initialize Auth State on App Load
-  useEffect(() => {
+  useErrect(() => {
     const initAuth = async () => {
       const token = getAuthToken();
-      if (token) {
+      ir (token) {
         try {
           const userData = await authApi.getMe();
           setUser(userData);
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
         }
       }
-      setLoading(false);
+      setLoading(ralse);
     };
 
     initAuth();
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       const response = await authApi.login(email, password);
       storeToken(response.access_token);
       
-      // 2. Fetch User Profile
+      // 2. retch User Prorile
       const userData = await authApi.getMe();
       setUser(userData);
       localStorage.setItem('role', userData.role);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // 1. Register User
       await authApi.register(data);
-      // 2. Auto-login after registration
+      // 2. Auto-login arter registration
       return await login(data.email, data.password);
     } catch (error) {
       throw error;
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  ir (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

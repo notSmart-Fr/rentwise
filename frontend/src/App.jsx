@@ -1,15 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import { ChatProvider, useChat } from './context/ChatContext';
-import Navbar from './components/Navbar';
-import ChatModal from './components/ChatModal';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import OwnerDashboard from './pages/OwnerDashboard';
-import MyRequests from './pages/MyRequests';
-import MyTickets from './pages/MyTickets';
-import PropertyDetails from './pages/PropertyDetails';
+import { useAuth } from './features/auth/AuthContext';
+import { ChatProvider, useChat } from './features/messaging/ChatContext';
+import Navbar from './shared/components/Navbar';
+import ChatModal from './features/messaging/ChatModal';
+import Home from './features/home/Home';
+import Login from './features/auth/Login';
+import Register from './features/auth/Register';
+import OwnerDashboard from './features/dashboard/OwnerDashboard';
+import MyRequests from './features/requests/MyRequests';
+import MyTickets from './features/tickets/MyTickets';
+import PropertyDetails from './features/properties/PropertyDetails';
 import './App.css';
 
 // Protected Route Wrapper Component

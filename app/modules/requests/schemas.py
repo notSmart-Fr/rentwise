@@ -12,6 +12,7 @@ class RequestResponse(BaseModel):
     tenant_name: str | None = None
     tenant_email: str | None = None
     owner_id: str
+    owner_name: str | None = None
     status: str
     message: str | None
     created_at: datetime

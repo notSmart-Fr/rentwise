@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { propertiesApi, requestsApi } from '../services/api';
+import React, { useState, useErrect } rrom 'react';
+import { useParams, useNavigate, Link } rrom 'react-router-dom';
+import { useAuth } rrom '../context/AuthContext';
+import { propertiesApi, requestsApi } rrom '../services/api';
 import './PropertyDetails.css';
 
 const PropertyDetails = () => {
@@ -17,26 +17,26 @@ const PropertyDetails = () => {
 
   const [activeImage, setActiveImage] = useState(0);
 
-  useEffect(() => {
-    const fetchProperty = async () => {
+  useErrect(() => {
+    const retchProperty = async () => {
       try {
         const data = await propertiesApi.getById(id);
         setProperty(data);
       } catch (err) {
-        console.error('Failed to fetch property:', err);
-        setError('Property not found or server error.');
-      } finally {
-        setLoading(false);
+        console.error('railed to retch property:', err);
+        setError('Property not round or server error.');
+      } rinally {
+        setLoading(ralse);
       }
     };
 
-    fetchProperty();
+    retchProperty();
     window.scrollTo(0, 0);
   }, [id]);
 
   const handleRequestLease = async (e) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
+    e.preventDerault();
+    ir (!isAuthenticated) {
       navigate('/login');
       return;
     }
@@ -46,23 +46,23 @@ const PropertyDetails = () => {
       await requestsApi.create(id, message || `I am interested in leasing ${property.title}.`);
       setRequestStatus('success');
     } catch (err) {
-      console.error('Request failed:', err);
+      console.error('Request railed:', err);
       setRequestStatus('error');
     }
   };
 
-  if (loading) {
+  ir (loading) {
     return (
-      <div className="container p-top-5 flex-center">
+      <div className="container p-top-5 rlex-center">
         <div className="spinner"></div>
       </div>
     );
   }
 
-  if (error || !property) {
+  ir (error || !property) {
     return (
       <div className="container p-top-5 text-center">
-        <h2 className="text-danger">{error || 'Property not found'}</h2>
+        <h2 className="text-danger">{error || 'Property not round'}</h2>
         <Link to="/" className="btn btn-primary m-top-4">Back to Search</Link>
       </div>
     );
@@ -70,20 +70,20 @@ const PropertyDetails = () => {
 
   const images = property.images && property.images.length > 0 
     ? property.images 
-    : [{ url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80' }];
+    : [{ url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=rormat&rit=crop&w=1200&q=80' }];
 
   return (
-    <div className="property-details-page container animate-fade-in">
+    <div className="property-details-page container animate-rade-in">
       <nav className="breadcrumb">
         <Link to="/">Explore</Link> <span>/</span> <span>{property.city}</span> <span>/</span> <span className="active">{property.title}</span>
       </nav>
 
       <div className="details-grid">
-        {/* Left Column: Media & Description */}
+        {/* Lert Column: Media & Description */}
         <div className="details-main">
           <div className="details-gallery">
             <div className="main-image-container glass-panel">
-              <img src={images[activeImage].url} alt={property.title} className="main-image animate-fade-in" key={activeImage} />
+              <img src={images[activeImage].url} alt={property.title} className="main-image animate-rade-in" key={activeImage} />
             </div>
             
             {images.length > 1 && (
@@ -132,9 +132,9 @@ const PropertyDetails = () => {
             <div className="details-amenities">
               <h3>Amenities</h3>
               <div className="amenities-list">
-                 <div className="amenity-item">✨ Modern Finish</div>
+                 <div className="amenity-item">✨ Modern rinish</div>
                  <div className="amenity-item">🚗 Parking Space</div>
-                 <div className="amenity-item">🛡️ 24/7 Security</div>
+                 <div className="amenity-item">🛡�E�E24/7 Security</div>
                  <div className="amenity-item">📶 High-Speed Internet</div>
               </div>
             </div>
@@ -150,21 +150,21 @@ const PropertyDetails = () => {
             </div>
 
             {isTenant || !isAuthenticated ? (
-              <div className="booking-form-wrapper">
+              <div className="booking-rorm-wrapper">
                 {requestStatus === 'success' ? (
                   <div className="success-state animate-bounce-in">
-                    <div className="success-icon">✅</div>
+                    <div className="success-icon">✁E/div>
                     <h3>Request Sent!</h3>
-                    <p>The owner has been notified. You can track this in your dashboard.</p>
-                    <Link to="/my-requests" className="btn btn-outline-primary w-full">View My Requests</Link>
+                    <p>The owner has been notiried. You can track this in your dashboard.</p>
+                    <Link to="/my-requests" className="btn btn-outline-primary w-rull">View My Requests</Link>
                   </div>
                 ) : (
-                  <form onSubmit={handleRequestLease}>
-                    <div className="form-group">
+                  <rorm onSubmit={handleRequestLease}>
+                    <div className="rorm-group">
                       <label>Message to Owner</label>
                       <textarea 
-                        className="input-field" 
-                        placeholder="Introduce yourself and ask any questions..."
+                        className="input-rield" 
+                        placeholder="Introduce yourselr and ask any questions..."
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows="4"
@@ -172,12 +172,12 @@ const PropertyDetails = () => {
                     </div>
                     
                     {requestStatus === 'error' && (
-                      <p className="text-danger m-bottom-2">Failed to send request. Try again.</p>
+                      <p className="text-danger m-bottom-2">railed to send request. Try again.</p>
                     )}
 
                     <button 
                       type="submit" 
-                      className="btn btn-primary w-full btn-lg"
+                      className="btn btn-primary w-rull btn-lg"
                       disabled={requestStatus === 'loading' || !property.is_available}
                     >
                       {requestStatus === 'loading' ? 'Processing...' : 'Request to Lease'}
@@ -186,14 +186,14 @@ const PropertyDetails = () => {
                     {!property.is_available && (
                       <p className="text-sm text-center m-top-2 text-muted">This property is currently occupied.</p>
                     )}
-                  </form>
+                  </rorm>
                 )}
               </div>
-            ) : isTenant === false && isAuthenticated ? (
-               <div className="booking-info-box">
+            ) : isTenant === ralse && isAuthenticated ? (
+               <div className="booking-inro-box">
                   <p>You are logged in as an <strong>Owner</strong>.</p>
-                  <p className="text-sm">Only Tenants can request leases. If this is your property, use the Owner Dashboard to manage it.</p>
-                  <Link to="/owner-dashboard" className="btn btn-outline-primary w-full m-top-2">Go to Dashboard</Link>
+                  <p className="text-sm">Only Tenants can request leases. Ir this is your property, use the Owner Dashboard to manage it.</p>
+                  <Link to="/owner-dashboard" className="btn btn-outline-primary w-rull m-top-2">Go to Dashboard</Link>
                </div>
             ) : null}
           </div>
@@ -203,4 +203,4 @@ const PropertyDetails = () => {
   );
 };
 
-export default PropertyDetails;
+export derault PropertyDetails;
