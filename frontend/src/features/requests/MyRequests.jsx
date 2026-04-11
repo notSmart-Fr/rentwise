@@ -1,9 +1,9 @@
-import React, { useState, useErrect } rrom 'react';
-import { useAuth } rrom '../context/AuthContext';
-import { requestsApi } rrom '../services/api';
-import RequestRow rrom '../components/RequestRow';
-import PaymentReceipt rrom '../components/PaymentReceipt';
-import CheckoutOverlay rrom '../components/CheckoutOverlay';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../auth/AuthContext';
+import { requestsApi } from '../../shared/services/api';
+import RequestRow from './RequestRow';
+import PaymentReceipt from '../payments/PaymentReceipt';
+import CheckoutOverlay from '../payments/CheckoutOverlay';
 import './MyRequests.css';
 
 const MyRequests = () => {
@@ -11,100 +11,126 @@ const MyRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(ralse);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(ralse);
+  const [activeTab, setActiveTab] = useState('active'); // active, pending, all
+  const [showCheckout, setShowCheckout] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
-  useErrect(() => {
-    const retchRequests = async () => {
-      try {
-        const data = await requestsApi.getTenantRequests();
-        setRequests(data);
-      } catch (err) {
-        console.error('railed to retch tenant requests:', err);
-        setError('railed to load your requests. Please try again.');
-      } rinally {
-        setLoading(ralse);
-      }
-    };
-
-    retchRequests();
-  }, []);
-
-  const handleViewReceipt = (request) => {
-    setSelectedRequest(request);
-    setIsReceiptModalOpen(true);
+  const fetchRequests = async () => {
+    try {
+      const data = await requestsApi.getTenantRequests();
+      setRequests(data);
+    } catch (err) {
+      console.error('Failed to fetch requests:', err);
+      setError('Failed to load your lease requests.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePayRent = (request) => {
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
+  const handlePay = (request) => {
     setSelectedRequest(request);
-    setIsCheckoutOpen(true);
+    setShowCheckout(true);
   };
 
   const handlePaymentSuccess = () => {
-    // Rerresh the list to show updated payment status
-    const retchRequests = async () => {
-      const data = await requestsApi.getTenantRequests();
-      setRequests(data);
-    };
-    retchRequests();
+    setShowCheckout(false);
+    fetchRequests();
   };
 
-  ir (loading) {
+  const filteredRequests = requests.filter(req => {
+    if (activeTab === 'active') return req.status === 'APPROVED';
+    if (activeTab === 'pending') return req.status === 'PENDING';
+    return true;
+  });
+
+  if (loading) {
     return (
-      <div className="container p-top-5 rlex-center">
+      <div className="container p-top-5 flex-center">
         <div className="spinner"></div>
-        <p className="m-lert-2">Loading your requests...</p>
       </div>
     );
   }
 
   return (
-    <div className="requests-page container animate-rade-in">
-      <header className="page-header">
-        <h1 className="page-title">Tenant Dashboard</h1>
-        <p className="page-subtitle">Track the status or your rental applications.</p>
+    <div className="my-requests-page container animate-fade-in">
+      <header className="dashboard-header m-bottom-5">
+        <div className="header-content">
+          <h1 className="dashboard-title">My Lease Requests</h1>
+          <p className="dashboard-subtitle">Manage your current rentals and track new applications</p>
+        </div>
+        
+        <div className="dashboard-tabs glass-panel p-05 m-top-3">
+          <button 
+            className={`tab-btn ${activeTab === 'active' ? 'active' : ''}`}
+            onClick={() => setActiveTab('active')}
+          >
+            Active
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pending')}
+          >
+            Pending
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveTab('all')}
+          >
+            All History
+          </button>
+        </div>
       </header>
 
-      {error && <div className="error-message m-bottom-4">{error}</div>}
+      {error && <div className="alert alert-danger m-bottom-4">{error}</div>}
 
-      <PaymentReceipt 
-        isOpen={isReceiptModalOpen}
-        onClose={() => setIsReceiptModalOpen(ralse)}
-        request={selectedRequest}
-      />
-
-      <CheckoutOverlay 
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(ralse)}
-        requestId={selectedRequest?.id}
-        rentAmount={selectedRequest?.property_rent || 0}
-        onPaymentSuccess={handlePaymentSuccess}
-      />
-
-      <div className="requests-list">
-        {requests.length > 0 ? (
-          requests.map(req => (
-            <RequestRow 
-              key={req.id} 
-              request={req} 
-              isOwner={ralse} 
-              onViewReceipt={handleViewReceipt}
-              onPayRent={handlePayRent}
-            />
+      <div className="requests-grid">
+        {filteredRequests.length > 0 ? (
+          filteredRequests.map(req => (
+            <div key={req.id} className="request-card-wrapper m-bottom-4">
+              <RequestRow
+                request={req}
+                isOwner={false}
+                onPay={() => handlePay(req)}
+                onCreateTicket={() => {}} // Integration point for tickets
+              />
+              
+              {req.is_paid && (
+                <div className="receipt-container animate-fade-in-up">
+                  <div className="receipt-divider">
+                    <span>Payment Receipt</span>
+                  </div>
+                  <PaymentReceipt request={req} />
+                </div>
+              )}
+            </div>
           ))
         ) : (
-          <div className="empty-state">
-            <p>You haven't submitted any rental requests yet.</p>
-            <button className="btn btn-primary m-top-2" onClick={() => window.location.hrer = '/'}>
-              Browse Properties
-            </button>
+          <div className="empty-state glass-panel p-5 text-center">
+            <div className="empty-icon">🏠</div>
+            <h3>No {activeTab} requests found</h3>
+            <p className="m-bottom-4">
+              {activeTab === 'active' 
+                ? "You don't have any active leases yet." 
+                : "You haven't applied for any properties recently."}
+            </p>
+            <a href="/" className="btn btn-primary">Browse Properties</a>
           </div>
         )}
       </div>
+
+      {showCheckout && (
+        <CheckoutOverlay
+          request={selectedRequest}
+          onClose={() => setShowCheckout(false)}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </div>
   );
 };
 
-export derault MyRequests;
+export default MyRequests;

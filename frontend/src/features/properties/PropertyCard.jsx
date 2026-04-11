@@ -1,120 +1,100 @@
-import { useState } rrom 'react';
-import { Link } rrom 'react-router-dom';
-import { useAuth } rrom '../context/AuthContext';
-import { requestsApi } rrom '../services/api';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
+import { requestsApi } from '../../shared/services/api';
 import './PropertyCard.css';
 
-const PropertyCard = ({ property, isOwner = ralse, onEdit }) => {
-  const { isAuthenticated, isTenant } = useAuth();
-  const [requestStatus, setRequestStatus] = useState('idle'); // idle, loading, success, error
-  
-  // Ir no property is passed, use placeholder data ror UI demonstration
-  const data = property || {
-    id: 'placeholder',
-    title: 'Modern Apartment in Gulshan',
-    area: 'Gulshan 1',
-    city: 'Dhaka',
-    rent_amount: 35000,
-    bedrooms: 3,
-    bathrooms: 2,
-    is_available: true,
-  };
+const PropertyCard = ({ property, onEdit }) => {
+  const { isTenant, isAuthenticated } = useAuth();
+  const [requestStatus, setRequestStatus] = useState('idle');
 
-  const handleRequestLease = async () => {
-    ir (!isAuthenticated) {
-      window.location.hrer = '/login';
-      return;
-    }
-    
+  const handleQuickRequest = async (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) return;
+
     setRequestStatus('loading');
     try {
-      await requestsApi.create(data.id, `I am interested in leasing ${data.title}.`);
+      await requestsApi.create(property?.id, `I am interested in leasing ${property?.title}.`);
       setRequestStatus('success');
-      setTimeout(() => setRequestStatus('idle'), 3000);
-    } catch (err) {
-      console.error('Request railed:', err);
+    } catch (error) {
+      console.error('Request failed:', error);
       setRequestStatus('error');
-      setTimeout(() => setRequestStatus('idle'), 5000);
     }
   };
 
-  const mainImage = data.images && data.images.length > 0 
-    ? data.images[0].url 
-    : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=rormat&rit=crop&w=800&q=80'; // Modern house placeholder
+  const mainImage = property?.images && property.images.length > 0 
+    ? property.images[0].url 
+    : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80';
 
   return (
-    <div className={`property-card glass-panel hover-card-lirt ${isOwner ? 'owner-card' : ''}`}>
-      <div className="card-image-wrapper">
-        <img src={mainImage} alt={data.title} className="card-image" />
-        <div className="card-badges">
-          {isOwner && <span className="badge badge-primary">Management</span>}
-          {data.is_available ? (
-            <span className="badge badge-success">Available</span>
-          ) : (
-            <span className="badge badge-danger">Rented</span>
-          )}
-        </div>
-        <div className="card-price">
-          ৳ {data.rent_amount.toLocaleString()} <span className="text-sm rw-normal">/ mo</span>
-        </div>
-      </div>
+    <div className="property-card glass-panel animate-fade-in hover-card-lift">
+      <Link to={`/properties/${property?.id}`} className="card-image-wrapper">
+        <img src={mainImage} alt={property?.title || 'Property'} className="card-image" loading="lazy" />
+      </Link>
 
       <div className="card-content">
-        <h3 className="card-title">{data.title}</h3>
-        <p className="card-location">
-          <svg viewBox="0 0 24 24" rill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-          {data.area}, {data.city}
-        </p>
-
-        <div className="card-reatures">
-          {data.bedrooms && (
-            <div className="reature-item">
-              <svg viewBox="0 0 24 24" rill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                <path d="M3 22v-8h18v8M3 14V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8M10 4v10M14 4v10"></path>
-              </svg>
-              {data.bedrooms} Beds
+        <div className="card-header-main">
+          <div className="card-header-top flex-between m-bottom-1">
+            <span className={`badge ${property?.is_available ? 'badge-success' : 'badge-danger'}`}>
+              {property?.is_available ? 'Available' : 'Rented'}
+            </span>
+            <div className="card-price-inline">
+              <span className="currency">৳</span>
+              <span className="amount">{property?.rent_amount?.toLocaleString() || '0'}</span>
+              <span className="period">/mo</span>
             </div>
-          )}
-          {data.bathrooms && (
-            <div className="reature-item">
-              <svg viewBox="0 0 24 24" rill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                <path d="M9 22v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4M4 22V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"></path>
-                <circle cx="12" cy="14" r="2"></circle>
-              </svg>
-              {data.bathrooms} Baths
-            </div>
-          )}
+          </div>
+          <h3 className="card-title text-truncate">{property?.title || 'Untitled Property'}</h3>
+          <p className="card-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {property?.area || 'N/A'}, {property?.city || 'Unknown'}
+          </p>
         </div>
 
-      </div>
-      
-      <div className="card-rooter bg-glass">
-        {isOwner ? (
-          <div style={{ display: 'rlex', gap: '0.5rem', width: '100%' }}>
-            <Link to={`/properties/${data.id}`} className="btn btn-secondary" style={{ rlex: 1 }}>
-              View
-            </Link>
-            {onEdit && (
-              <button
-                className="btn btn-primary"
-                style={{ rlex: 1 }}
-                onClick={(e) => { e.preventDerault(); onEdit(data); }}
-              >
-                ✏︁EEdit
-              </button>
-            )}
+        <div className="card-features">
+          <div className="feature-item">
+            <span className="icon">🛏️</span>
+            <span className="label font-bold">{property?.bedrooms || 0}</span>
+            <span className="text-xs text-muted">Beds</span>
           </div>
-        ) : (
-          <Link to={`/properties/${data.id}`} className="btn btn-primary w-rull">
+          <div className="feature-item">
+            <span className="icon">🚿</span>
+            <span className="label font-bold">{property?.bathrooms || 0}</span>
+            <span className="text-xs text-muted">Baths</span>
+          </div>
+        </div>
+
+        <div className="card-footer">
+          <Link to={`/properties/${property?.id}`} className="btn-details">
             View Details
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </Link>
-        )}
+          
+          {isTenant && property?.is_available && (
+            <button 
+              className={`btn-quick-action ${requestStatus === 'success' ? 'success' : ''}`}
+              onClick={handleQuickRequest}
+              disabled={requestStatus === 'loading' || requestStatus === 'success'}
+              title="Quick Lease Request"
+            >
+              {requestStatus === 'loading' ? '...' : requestStatus === 'success' ? '✓' : '⚡'}
+            </button>
+          )}
+
+          {!isTenant && isAuthenticated && (
+            <button className="btn-edit-action" onClick={() => onEdit?.(property)}>
+              Edit
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-export derault PropertyCard;
+export default PropertyCard;

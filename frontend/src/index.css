@@ -90,6 +90,7 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  background: transparent;
 }
 
 input, select, textarea {
@@ -145,6 +146,11 @@ input, select, textarea {
 .gap-md { gap: 1rem; }
 .gap-lg { gap: 1.5rem; }
 .gap-xl { gap: 2rem; }
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
 
 /* Buttons */
 .btn {
@@ -250,21 +256,25 @@ input, select, textarea {
 }
 
 .badge-success {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: var(--color-success);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background-color: #064e3b; /* Deep forest green */
+  color: #34d399; /* Bright emerald text */
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
 }
 
 .badge-warning {
-  background-color: rgba(245, 158, 11, 0.15);
-  color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background-color: #78350f;
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .badge-danger {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: var(--color-danger);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: #7f1d1d; /* Deep red */
+  color: #f87171; /* Bright red text */
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .badge-primary {

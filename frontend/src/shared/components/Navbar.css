@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 1100;
   background-color: transparent;
   transition: background-color var(--transition-normal), backdrop-filter var(--transition-normal);
   padding: 1rem 0;

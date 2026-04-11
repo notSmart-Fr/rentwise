@@ -1,3 +1,4 @@
+import uuid
 from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 
@@ -10,11 +11,11 @@ class PropertyRepository:
         db.refresh(prop)
         return prop
 
-    def get_by_id(self, db: Session, prop_id: bytes) -> Property | None:
+    def get_by_id(self, db: Session, prop_id: uuid.UUID) -> Property | None:
         stmt = select(Property).where(Property.id == prop_id)
         return db.execute(stmt).scalar_one_or_none()
 
-    def list_by_owner(self, db: Session, owner_id: bytes) -> list[Property]:
+    def list_by_owner(self, db: Session, owner_id: uuid.UUID) -> list[Property]:
         stmt = select(Property).where(Property.owner_id == owner_id)
         return list(db.execute(stmt).scalars().all())
 
@@ -53,7 +54,7 @@ class PropertyRepository:
             stmt = stmt.where(Property.bedrooms == beds)
 
         return list(db.execute(stmt).scalars().all())
-    def mark_as_unavailable(self, db: Session, prop_id: bytes) -> None:
+    def mark_as_unavailable(self, db: Session, prop_id: uuid.UUID) -> None:
         prop = self.get_by_id(db, prop_id)
         if prop:
             prop.is_available = False

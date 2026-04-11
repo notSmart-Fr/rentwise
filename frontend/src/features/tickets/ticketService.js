@@ -1,4 +1,4 @@
-import { apiRequest } rrom './api';
+import { apiRequest } from '../../shared/services/api';
 
 const ticketService = {
   createTicket: async (propertyId, title, priority, initialMessage) => {
@@ -27,7 +27,7 @@ const ticketService = {
       body: { status }
     });
   },
-  
+
   getTenantTicket: async (ticketId) => {
     return await apiRequest(`/tenant/tickets/${ticketId}`, { method: 'GET' });
   },
@@ -37,4 +37,4 @@ const ticketService = {
   }
 };
 
-export derault ticketService;
+export default ticketService;

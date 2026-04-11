@@ -5,8 +5,8 @@ const ChatContext = createContext(null);
 export const ChatProvider = ({ children }) => {
   const [chat, setChat] = useState(null); // { contextType, contextId, title, subtitle }
 
-  const openChat = (contextType, contextId, title, subtitle = null) => {
-    setChat({ contextType, contextId, title, subtitle });
+  const openChat = (contextType, contextId, title, subtitle = null, receiverId = null) => {
+    setChat({ contextType, contextId, title, subtitle, receiverId });
   };
 
   const closeChat = () => setChat(null);

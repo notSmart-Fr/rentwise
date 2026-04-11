@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.modules.requests.model import RentalRequest
 from app.modules.requests.repository import RequestRepository
+from app.modules.properties.repository import PropertyRepository
 
 class RequestService:
     def __init__(self) -> None:
@@ -32,6 +33,10 @@ class RequestService:
     def approve(self, db: Session, req: RentalRequest) -> RentalRequest:
         if req.status != "PENDING":
             raise ValueError("Only pending requests can be approved")
+        
+        # Mark property as unavailable
+        PropertyRepository().mark_as_unavailable(db, req.property_id)
+        
         req.status = "APPROVED"
         return self.repo.update(db, req)
 
@@ -47,6 +52,8 @@ class RequestService:
             "property_id": str(r.property_id),
             "property_title": r.property.title if r.property else "Unknown Property",
             "property_rent": r.property.rent_amount if r.property else 0,
+            "property_area": r.property.area if r.property else None,
+            "property_city": r.property.city if r.property else None,
             "tenant_id": str(r.tenant_id),
             "tenant_name": r.tenant.full_name if r.tenant else "Unknown Tenant",
             "tenant_email": r.tenant.email if r.tenant else None,

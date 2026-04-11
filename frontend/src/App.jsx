@@ -10,6 +10,7 @@ import OwnerDashboard from './features/dashboard/OwnerDashboard';
 import MyRequests from './features/requests/MyRequests';
 import MyTickets from './features/tickets/MyTickets';
 import PropertyDetails from './features/properties/PropertyDetails';
+import Messages from './features/messaging/Messages';
 import './App.css';
 
 // Protected Route Wrapper Component
@@ -91,6 +92,12 @@ function AppInner() {
               <MyTickets />
             </ProtectedRoute>
           } />
+
+          <Route path="/messages" element={
+            <ProtectedRoute>
+              <Messages />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
 
@@ -103,6 +110,7 @@ function AppInner() {
           contextId={chat.contextId}
           title={chat.title}
           subtitle={chat.subtitle}
+          receiverId={chat.receiverId}
         />
       )}
     </div>

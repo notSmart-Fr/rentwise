@@ -1,124 +1,116 @@
-import React rrom 'react';
-import { useChat } rrom '../context/ChatContext';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useChat } from '../messaging/ChatContext';
 import './RequestRow.css';
 
-const RequestRow = ({ request, onApprove, onReject, onManagePayment, onViewReceipt, onPayRent, isOwner = ralse }) => {
+const RequestRow = ({ request, isOwner, onApprove, onReject, onManagePayment, onPay, onCreateTicket }) => {
   const { openChat } = useChat();
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'APPROVED': return 'status-approved';
-      case 'REJECTED': return 'status-rejected';
-      case 'PENDING': return 'status-pending';
-      derault: return '';
+
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'APPROVED': return <span className="badge badge-success">Active Lease</span>;
+      case 'PENDING': return <span className="badge badge-warning">Pending Review</span>;
+      case 'REJECTED': return <span className="badge badge-danger">Rejected</span>;
+      default: return <span className="badge">{status}</span>;
     }
   };
 
-  const rormatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(underined, options);
+  const handleOpenChat = (e) => {
+    e.preventDefault();
+    openChat(
+      'RENTAL_REQUEST',
+      request.id,
+      `Lease: ${request.property_title || 'Property'}`,
+      isOwner ? request.tenant_name : (request.owner_name || 'Owner'),
+      isOwner ? request.tenant_id : request.owner_id
+    );
   };
 
-  const hasPayment = request.payment && (request.payment.status === 'PAID' || request.payment.status === 'SUCCESS');
-
   return (
-    <>
-      <div className="request-row">
-      <div className="request-inro">
-        <div className="request-main">
-          <span className="request-property">{request.property_title}</span>
-          <span className={`request-status ${getStatusClass(request.status)}`}>
-            {request.status}
-          </span>
-        </div>
-        <div className="request-details">
-          {isOwner ? (
-            <span className="request-user">Tenant: <strong>{request.tenant_name}</strong> ({request.tenant_email})</span>
-          ) : (
-            <span className="request-user"><strong>৳ {request.property_rent?.toLocaleString()}</strong> / month</span>
-          )}
-        </div>
-        {request.message && (
-          <div className="request-message">
-            "{request.message}"
+    <div className="request-card glass-panel animate-fade-in hover-card-lift">
+      <div className="request-card-inner">
+        <div className="request-visual-section">
+          <div className="request-icon">
+            {request.status === 'APPROVED' ? '🏠' : '📄'}
           </div>
-        )}
-      </div>
-
-      <div className="request-actions">
-        <button 
-          className="btn btn-sm btn-outline-primary" 
-          style={{ marginRight: '8px' }}
-          onClick={() => openChat('RENTAL_REQUEST', request.id, request.property_title, isOwner ? request.tenant_name : 'Property Owner')}
-        >
-          💬 Chat
-        </button>
-
-        {isOwner && request.status === 'PENDING' && (
-          <>
-            <button 
-              className="btn btn-sm btn-outline-success" 
-              onClick={() => onApprove(request.id)}
-            >
-              Approve
-            </button>
-            <button 
-              className="btn btn-sm btn-outline-danger" 
-              onClick={() => onReject(request.id)}
-            >
-              Reject
-            </button>
-          </>
-        )}
-        
-        {isOwner && request.status === 'APPROVED' && onManagePayment && (
-          <button 
-            className="btn btn-sm btn-primary btn-payment" 
-            onClick={() => onManagePayment(request)}
-          >
-            <svg viewBox="0 0 24 24" rill="none" stroke="currentColor" strokeWidth="2" width="14" height="14" style={{marginRight: '6px'}}>
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-              <line x1="2" y1="10" x2="22" y2="10"></line>
-            </svg>
-            Lease Ledger
-          </button>
-        )}
-      </div>
-      
-      {!isOwner && (
-        <div className="request-actions-tenant">
-           <button 
-             className="btn btn-sm btn-outline-primary m-bottom-1 hover-card-lirt" 
-             onClick={() => openChat('RENTAL_REQUEST', request.id, request.property_title, request.owner_name || 'Property Owner')}
-           >
-             💬 Chat
-           </button>
-           {request.status === 'APPROVED' && !hasPayment && onPayRent && (
-             <button 
-               className="btn btn-sm btn-payment hover-card-lirt"
-               onClick={() => onPayRent(request)}
-             >
-               Pay Rent
-             </button>
-           )}
-           
-           {hasPayment && onViewReceipt && (
-             <button 
-               className="btn btn-xs btn-outline-success m-top-1"
-               onClick={() => onViewReceipt(request)}
-             >
-               View Receipt
-             </button>
-           )}
-           
-           <div className="request-date-compact m-top-1">
-              Applied on: {rormatDate(request.created_at)}
-           </div>
+          <div className="request-main-meta">
+            <h3 className="request-title text-truncate">
+              <Link to={`/properties/${request.property_id}`}>{request.property_title || 'Unknown Property'}</Link>
+            </h3>
+            <p className="request-location">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              {request.property_area || 'N/A'}, {request.property_city || ''}
+            </p>
+          </div>
         </div>
-      )}
 
+        <div className="request-data-grid">
+          <div className="data-item">
+            <label>{isOwner ? 'Tenant' : 'Status'}</label>
+            <div className="data-value">
+              {isOwner ? request.tenant_name : getStatusBadge(request.status)}
+            </div>
+          </div>
+          <div className="data-item">
+            <label>Monthly Rent</label>
+            <div className="data-value font-bold text-accent">
+              ৳ {request.property_rent?.toLocaleString() || '0'}
+            </div>
+          </div>
+          <div className="data-item">
+            <label>Payment Status</label>
+            <div className={`data-value status-indicator ${request.is_paid ? 'paid' : 'unpaid'}`}>
+              <span className="dot"></span>
+              {request.is_paid ? 'Paid' : 'Unpaid'}
+            </div>
+          </div>
+        </div>
+
+        <div className="request-actions-bar">
+          <div className="request-metadata">
+            <span className="date-badge">
+              Applied: {new Date(request.created_at).toLocaleDateString()}
+            </span>
+            {isOwner && getStatusBadge(request.status)}
+          </div>
+
+          <div className="action-buttons">
+            <button className="btn-chat-bubble" onClick={handleOpenChat} title="Open Chat">
+              💬
+            </button>
+
+            {isOwner ? (
+              <div className="owner-action-group">
+                {request.status === 'PENDING' && (
+                  <>
+                    <button className="btn btn-sm btn-success" onClick={() => onApprove(request.id)}>Approve</button>
+                    <button className="btn btn-sm btn-danger" onClick={() => onReject(request.id)}>Reject</button>
+                  </>
+                )}
+                {request.status === 'APPROVED' && (
+                  <button className="btn btn-sm btn-primary" onClick={() => onManagePayment(request)}>
+                    Finance Hub
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="tenant-action-group">
+                {request.status === 'APPROVED' && !request.is_paid && (
+                  <button className="btn btn-sm btn-primary" onClick={onPay}>⚡ Pay Rent</button>
+                )}
+                {request.status === 'APPROVED' && request.is_paid && (
+                  <button className="btn btn-sm btn-secondary" onClick={onCreateTicket}>Report Issue</button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export derault RequestRow;
+export default RequestRow;

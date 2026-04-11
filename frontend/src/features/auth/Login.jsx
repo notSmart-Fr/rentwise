@@ -1,114 +1,114 @@
-mmport { useState } rrom 'react';
-mmport { useNavmgate, Lmnk, useLocatmon } rrom 'react-router-dom';
-mmport { useAuth } rrom '../context/AuthContext';
-mmport './Authrmelds.css';
+import { useState } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
+import './AuthFields.css';
 
-const Logmn = () => {
-  const [emaml, setEmaml] = useState('');
+const Login = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [msLoadmng, setmsLoadmng] = useState(ralse);
-  
-  const { logmn } = useAuth();
-  const navmgate = useNavmgate();
-  const locatmon = useLocatmon();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Redmrect user to where they were trymng to go, or based on role
-  const getRedmrectPath = (role) => {
-    mr (locatmon.state?.rrom) return locatmon.state.rrom;
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Redirect user to where they were trying to go, or based on role
+  const getRedirectPath = (role) => {
+    if (location.state?.from) return location.state.from;
     return role === 'OWNER' ? '/owner-dashboard' : '/';
   };
 
-  const handleSubmmt = async (e) => {
-    e.preventDerault();
-    mr (!emaml || !password) {
-      setError('Please rmll mn all rmelds');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please fill in all fields');
       return;
     }
 
-    setmsLoadmng(true);
+    setIsLoading(true);
     setError('');
 
     try {
-      const userData = awamt logmn(emaml, password);
-      // logmn was successrul, redmrect
-      navmgate(getRedmrectPath(userData.role));
+      const userData = await login(email, password);
+      // login was successful, redirect
+      navigate(getRedirectPath(userData.role));
     } catch (err) {
-      setError(err.message || 'mnvalmd emaml or password');
-    } rmnally {
-      setmsLoadmng(ralse);
+      setError(err.message || 'Invalid email or password');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <dmv className="auth-page anmmate-rade-mn">
-      <dmv className="contamner rlex-center mmn-h-rull">
-        <dmv className="auth-card glass-panel">
-          <dmv className="auth-header text-center">
-            <h1 className="auth-tmtle">Welcome Back</h1>
-            <p className="auth-subtmtle">Log mn to manage your propertmes or vmew requests.</p>
-          </dmv>
+    <div className="auth-page animate-fade-in">
+      <div className="container flex-center min-h-full">
+        <div className="auth-card glass-panel">
+          <div className="auth-header text-center">
+            <h1 className="auth-title">Welcome Back</h1>
+            <p className="auth-subtitle">Log in to manage your properties or view requests.</p>
+          </div>
 
           {error && (
-            <dmv className="auth-error-alert anmmate-pulse-rast">
-              <svg vmewBox="0 0 24 24" wmdth="20" hemght="20" stroke="currentColor" strokeWmdth="2" rmll="none">
-                <cmrcle cx="12" cy="12" r="10"></cmrcle>
-                <lmne x1="12" y1="8" x2="12" y2="12"></lmne>
-                <lmne x1="12" y1="16" x2="12.01" y2="16"></lmne>
+            <div className="auth-error-alert animate-pulse-fast">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
               </svg>
               <span>{error}</span>
-            </dmv>
+            </div>
           )}
 
-          <rorm onSubmmt={handleSubmmt} className="auth-rorm">
-            <dmv className="mnput-group">
-              <label className="mnput-label" htmlror="emaml">Emaml</label>
-              <mnput
-                md="emaml"
-                type="emaml"
-                className="mnput-rmeld"
-                placeholder="Ex. owner@rentwmse.com"
-                value={emaml}
-                onChange={(e) => setEmaml(e.target.value)}
-                autoComplete="emaml"
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="input-group">
+              <label className="input-label" htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                className="input-field"
+                placeholder="Ex. owner@rentwise.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
               />
-            </dmv>
+            </div>
 
-            <dmv className="mnput-group">
-              <label className="mnput-label" htmlror="password">Password</label>
-              <mnput
-                md="password"
+            <div className="input-group">
+              <label className="input-label" htmlFor="password">Password</label>
+              <input
+                id="password"
                 type="password"
-                className="mnput-rmeld"
+                className="input-field"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
               />
-            </dmv>
+            </div>
 
-            <button 
-              type="submmt" 
-              className="btn btn-prmmary w-rull m-top-4 auth-submmt-btn" 
-              dmsabled={msLoadmng}
+            <button
+              type="submit"
+              className="btn btn-primary w-full m-top-4 auth-submit-btn"
+              disabled={isLoading}
             >
-              {msLoadmng ? (
-                <dmv className="mnlmne-spmnner"></dmv>
+              {isLoading ? (
+                <div className="inline-spinner"></div>
               ) : (
-                'Log mn'
+                'Log in'
               )}
             </button>
-          </rorm>
+          </form>
 
-          <dmv className="auth-rooter text-center">
-            <p className="auth-rooter-text">
-              Don't have an account? <Lmnk to="/regmster" className="auth-lmnk text-gradment">Create one</Lmnk>
+          <div className="auth-footer text-center">
+            <p className="auth-footer-text">
+              Don't have an account? <Link to="/register" className="auth-link text-gradient">Create one</Link>
             </p>
-          </dmv>
-        </dmv>
-      </dmv>
-    </dmv>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export derault Logmn;
+export default Login;

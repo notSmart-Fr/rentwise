@@ -1,73 +1,99 @@
-import React, { useState, useErrect } rrom 'react';
-import { useAuth } rrom '../context/AuthContext';
-import { propertiesApi, requestsApi, paymentsApi } rrom '../services/api';
-import StatsCard rrom '../components/StatsCard';
-import PropertyCard rrom '../components/PropertyCard';
-import RequestRow rrom '../components/RequestRow';
-import AddPropertyModal rrom '../components/AddPropertyModal';
-import EditPropertyModal rrom '../components/EditPropertyModal';
-import PaymentModal rrom '../components/PaymentModal';
-import OwnerTicketsTab rrom '../components/OwnerTicketsTab';
+import React, { useState, useEffect } from 'react';
+import { propertiesApi, requestsApi, paymentsApi } from '../../shared/services/api';
+import PropertyCard from '../properties/PropertyCard';
+import RequestRow from '../requests/RequestRow';
+import StatsCard from '../../shared/components/StatsCard';
+import AddPropertyModal from '../properties/AddPropertyModal';
+import EditPropertyModal from '../properties/EditPropertyModal';
+import PaymentModal from '../payments/PaymentModal';
+import { useChat } from '../messaging/ChatContext';
+import messageService from '../messaging/messageService';
+import InboxRow from '../messaging/InboxRow';
 import './OwnerDashboard.css';
+import '../messaging/Inbox.css';
 
 const OwnerDashboard = () => {
-  const { user } = useAuth();
   const [properties, setProperties] = useState([]);
   const [requests, setRequests] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const [isModalOpen, setIsModalOpen] = useState(ralse);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(ralse);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(ralse);
-  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview'); // overview, properties, requests, inbox
+  const [conversations, setConversations] = useState([]);
+  const { openChat } = useChat();
+
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const [activeTab, setActiveTab] = useState('OVERVIEW');
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
-  const handlePropertyAdded = (newProp) => {
-    setProperties(prev => [newProp, ...prev]);
-  };
-
-  const retchDashboardData = async () => {
+  const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [propsData, reqsData, paymentsData] = await Promise.all([
+      const [propsData, reqsData, paymentsData, convsData] = await Promise.all([
         propertiesApi.getOwnerProperties(),
         requestsApi.getOwnerRequests(),
-        paymentsApi.listOwnerPayments()
+        paymentsApi.listOwnerPayments(),
+        messageService.getConversations()
       ]);
       setProperties(propsData);
       setRequests(reqsData);
       setPayments(paymentsData);
+      setConversations(convsData);
     } catch (err) {
-      console.error('Dashboard retch error:', err);
-      setError('railed to load dashboard data. Please try again.');
-    } rinally {
-      setLoading(ralse);
+      console.error('Dashboard fetch error:', err);
+      setError('Failed to load dashboard data. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  useErrect(() => {
-    retchDashboardData();
+  useEffect(() => {
+    fetchDashboardData();
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, 30000);
+    return () => clearInterval(interval);
   }, []);
 
-  const handleApprove = async (id) => {
-    try {
-      await requestsApi.approve(id);
-      retchDashboardData(); // Rerresh everything
-    } catch (err) {
-      alert('railed to approve request: ' + (err.message || 'Unknown error'));
+  const handleOpenConversation = async (conv) => {
+    openChat(
+      conv.context_type, 
+      conv.context_id, 
+      conv.context_title, 
+      null, 
+      conv.other_participant_id
+    );
+    
+    if (conv.unread_count > 0) {
+      try {
+        await messageService.markAsRead(conv.id);
+        setConversations(prev => prev.map(c => 
+          c.id === conv.id ? { ...c, unread_count: 0 } : c
+        ));
+      } catch (err) {
+        console.error('Failed to mark as read', err);
+      }
     }
   };
 
-  const handleReject = async (id) => {
-    try {
-      await requestsApi.reject(id);
-      retchDashboardData();
-    } catch (err) {
-      alert('railed to reject request: ' + (err.message || 'Unknown error'));
-    }
+  const totalUnread = (conversations || []).reduce((sum, c) => sum + (c.unread_count || 0), 0);
+
+  const handlePropertyAdded = () => {
+    setIsModalOpen(false);
+    fetchDashboardData();
+  };
+
+  const handlePropertyUpdated = () => {
+    setIsEditModalOpen(false);
+    fetchDashboardData();
+  };
+
+  const handleEditProperty = (property) => {
+    setSelectedProperty(property);
+    setIsEditModalOpen(true);
   };
 
   const handleManagePayment = (request) => {
@@ -75,130 +101,106 @@ const OwnerDashboard = () => {
     setIsPaymentModalOpen(true);
   };
 
-  const handlePaymentSaved = (payment) => {
-    retchDashboardData();
-  };
+  const totalRevenue = (payments || [])
+    .filter(p => p?.status === 'PAID')
+    .reduce((sum, p) => sum + (Number(p?.amount) || 0), 0);
 
-  const handleEditProperty = (prop) => {
-    setSelectedProperty(prop);
-    setIsEditModalOpen(true);
-  };
-
-  const handlePropertyUpdated = (updatedProp) => {
-    setProperties(prev => prev.map(p => p.id === updatedProp.id ? updatedProp : p));
-  };
-
-  ir (loading) {
+  if (loading) {
     return (
-      <div className="container p-top-5 rlex-center">
+      <div className="container p-top-5 flex-center">
         <div className="spinner"></div>
-        <p className="m-lert-2">Loading your dashboard...</p>
       </div>
     );
   }
 
-  const activeLeases = requests.rilter(r => r.status === 'APPROVED').length;
-  const pendingRequests = requests.rilter(r => r.status === 'PENDING').length;
-  const totalRevenue = payments
-    .rilter(p => p.status === 'completed')
-    .reduce((sum, p) => sum + p.amount, 0);
-
   return (
-    <div className="dashboard-container container animate-rade-in">
-      <header className="dashboard-header">
-        <div>
+    <div className="owner-dashboard container animate-fade-in">
+      <header className="dashboard-header m-bottom-5">
+        <div className="header-main">
           <h1 className="dashboard-title">Owner Dashboard</h1>
-          <p className="dashboard-subtitle">Welcome back, {user?.rull_name}</p>
+          <p className="dashboard-subtitle">Manage your portfolio and resident requests</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
-          <svg viewBox="0 0 24 24" rill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{marginRight: '8px'}}>
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Add New Property
-        </button>
+        
+        <div className="dashboard-tabs glass-panel p-05 m-top-3">
+          <button className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>Overview</button>
+          <button className={`tab-btn ${activeTab === 'properties' ? 'active' : ''}`} onClick={() => setActiveTab('properties')}>My Properties ({properties.length})</button>
+          <button className={`tab-btn ${activeTab === 'requests' ? 'active' : ''}`} onClick={() => setActiveTab('requests')}>Rental Requests ({requests.length})</button>
+          <button className={`tab-btn ${activeTab === 'inbox' ? 'active' : ''}`} onClick={() => setActiveTab('inbox')}>
+            Inbox 
+            {totalUnread > 0 && <span className="tab-badge">{totalUnread}</span>}
+          </button>
+        </div>
       </header>
 
-      <div className="dashboard-tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'OVERVIEW' ? 'active' : ''}`}
-          onClick={() => setActiveTab('OVERVIEW')}
-        >Overview & Requests</button>
-        <button 
-          className={`tab-btn ${activeTab === 'TICKETS' ? 'active' : ''}`}
-          onClick={() => setActiveTab('TICKETS')}
-        >Maintenance Tickets</button>
-      </div>
+      {error && <div className="alert alert-danger m-bottom-4">{error}</div>}
 
-      <AddPropertyModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(ralse)} 
-        onPropertyAdded={handlePropertyAdded} 
-      />
-
-      <EditPropertyModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(ralse)}
-        property={selectedProperty}
-        onPropertyUpdated={handlePropertyUpdated}
-      />
-
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(ralse)}
-        request={selectedRequest}
-        onPaymentSaved={handlePaymentSaved}
-      />
-
-      {activeTab === 'OVERVIEW' ? (
-        <>
-          <section className="stats-grid">
-            <StatsCard title="Total Properties" value={properties.length} icon="🏠" color="blue" />
-            <StatsCard title="Pending Requests" value={pendingRequests} icon="⏳" color="orange" />
-            <StatsCard title="Active Leases" value={activeLeases} icon="📜" color="green" />
-            <StatsCard title="Total Revenue" value={`৳ ${totalRevenue.toLocaleString()}`} icon="💰" color="purple" />
-          </section>
-
-          <div className="dashboard-main">
-            <section className="dashboard-section">
-              <h2 className="section-title">Rental Requests</h2>
-              <div className="requests-container">
-                {requests.length > 0 ? (
-                  requests.map(req => (
-                    <RequestRow 
-                      key={req.id} 
-                      request={req} 
-                      isOwner={true} 
-                      onApprove={handleApprove}
-                      onReject={handleReject}
-                      onManagePayment={handleManagePayment}
-                    />
-                  ))
-                ) : (
-                  <div className="empty-state">No requests yet.</div>
-                )}
-              </div>
-            </section>
-
-            <section className="dashboard-section">
-              <h2 className="section-title">My Properties</h2>
-              <div className="owner-properties-grid">
-                {properties.length > 0 ? (
-                  properties.map(prop => (
-                    <PropertyCard key={prop.id} property={prop} isOwner={true} onEdit={handleEditProperty} />
-                  ))
-                ) : (
-                  <div className="empty-state">You haven't listed any properties yet.</div>
-                )}
-              </div>
-            </section>
-          </div>
-        </>
-      ) : (
-        <OwnerTicketsTab />
+      {activeTab === 'inbox' && (
+        <section className="inbox-section animate-fade-in">
+          <h2 className="section-title m-bottom-4">My Inbox</h2>
+          {conversations.length > 0 ? (
+            <div className="inbox-list">
+              {conversations.map(conv => (
+                <InboxRow 
+                  key={conv.id} 
+                  conversation={conv} 
+                  onClick={handleOpenConversation} 
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="inbox-empty glass-panel p-5">
+              <h3>No messages yet</h3>
+              <p>Inquiries about your properties will appear here.</p>
+            </div>
+          )}
+        </section>
       )}
+
+      {activeTab === 'overview' && (
+        <section className="overview-section animate-fade-in">
+          <div className="stats-grid m-bottom-5">
+            <StatsCard title="Properties" value={properties.length} icon="🏠" trend="+2 this month" color="blue" />
+            <StatsCard title="Active Leases" value={requests.filter(r => r.status === 'APPROVED').length} icon="🔑" color="green" />
+            <StatsCard title="Total Revenue" value={`৳${totalRevenue.toLocaleString()}`} icon="💰" color="purple" />
+            <StatsCard title="Pending" value={requests.filter(r => r.status === 'PENDING').length} icon="⏳" color="orange" />
+          </div>
+
+          <div className="overview-footer glass-panel p-4 text-center">
+            <p className="text-secondary">All systems operational. You have {properties.length} active listings.</p>
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'properties' && (
+        <section className="properties-section animate-fade-in">
+          <div className="section-header flex-between m-bottom-4">
+            <h2 className="section-title">My Properties</h2>
+            <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>+ Add Property</button>
+          </div>
+          <div className="properties-grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+            {properties.map(prop => (
+              <PropertyCard key={prop.id} property={prop} onEdit={handleEditProperty} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'requests' && (
+        <section className="requests-section animate-fade-in">
+          <h2 className="section-title m-bottom-4">All Rental Requests</h2>
+          <div className="requests-stack">
+            {requests.map(req => (
+              <RequestRow key={req.id} request={req} isOwner={true} onManagePayment={handleManagePayment} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <AddPropertyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={handlePropertyAdded} />
+      <EditPropertyModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} property={selectedProperty} onSuccess={handlePropertyUpdated} />
+      <PaymentModal isOpen={isPaymentModalOpen} onClose={() => setIsPaymentModalOpen(false)} request={selectedRequest} onSuccess={fetchDashboardData} />
     </div>
   );
 };
 
-export derault OwnerDashboard;
+export default OwnerDashboard;

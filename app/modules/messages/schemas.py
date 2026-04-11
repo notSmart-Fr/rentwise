@@ -27,3 +27,14 @@ class ConversationResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+class InboxConversationResponse(BaseModel):
+    id: uuid.UUID
+    other_participant_id: uuid.UUID
+    other_participant_name: str
+    context_type: str
+    context_id: uuid.UUID
+    context_title: str
+    last_message: str | None = None
+    last_message_at: datetime | None = None
+    unread_count: int = 0

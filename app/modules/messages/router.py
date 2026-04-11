@@ -5,10 +5,11 @@ from sqlalchemy.orm import Session
 from app.db.deps import get_db
 from app.modules.auth.deps import get_current_user
 from app.modules.auth.model import User
-from app.modules.messages.schemas import MessageCreate, MessageResponse
+from app.modules.messages.schemas import MessageCreate, MessageResponse, InboxConversationResponse
 from app.modules.messages.service import MessageService
 from app.modules.requests.model import RentalRequest
 from app.modules.tickets.model import Ticket
+from app.modules.properties.model import Property
 
 router = APIRouter(tags=["messages"])
 service = MessageService()
@@ -27,42 +28,47 @@ def send_message(
     context_type: str,
     context_id: str,
     payload: MessageCreate,
+    receiver_id: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     ctx_uuid = uuid.UUID(context_id)
 
-    # Check if conversation already exists
-    conv = service.repo.get_conversation_by_context(db, context_type, ctx_uuid)
+    # If receiver_id is provided, use it. Otherwise derive from context.
+    rec_uuid = uuid.UUID(receiver_id) if receiver_id else None
+
+    # Check if conversation already exists using participant-aware lookup
+    conv = service.repo.get_conversation_by_context(db, context_type, ctx_uuid, current_user.id)
     
-    if conv:
-        # Derive receiver from existing conversation
-        rec_uuid = conv.participant2_id if conv.participant1_id == current_user.id else conv.participant1_id
-    else:
-        # Derive both participants from the context entity
+    if not conv or (rec_uuid and rec_uuid not in [conv.participant1_id, conv.participant2_id]):
+        # Derive participants from the context entity if not provided or doesn't match existing
         if context_type == "RENTAL_REQUEST":
             req = db.query(RentalRequest).filter(RentalRequest.id == ctx_uuid).first()
             if not req:
                 raise HTTPException(status_code=404, detail="Rental request not found")
-            # Determine who the other participant is
-            if current_user.id == req.tenant_id:
-                rec_uuid = req.owner_id
-            elif current_user.id == req.owner_id:
-                rec_uuid = req.tenant_id
-            else:
-                raise HTTPException(status_code=403, detail="Not a participant in this request")
+            rec_uuid = req.owner_id if current_user.id == req.tenant_id else req.tenant_id
         elif context_type == "TICKET":
             ticket = db.query(Ticket).filter(Ticket.id == ctx_uuid).first()
             if not ticket:
                 raise HTTPException(status_code=404, detail="Ticket not found")
-            if current_user.id == ticket.tenant_id:
-                rec_uuid = ticket.owner_id
-            elif current_user.id == ticket.owner_id:
-                rec_uuid = ticket.tenant_id
-            else:
-                raise HTTPException(status_code=403, detail="Not a participant in this ticket")
+            rec_uuid = ticket.owner_id if current_user.id == ticket.tenant_id else ticket.tenant_id
+        elif context_type == "PROPERTY":
+            prop = db.query(Property).filter(Property.id == ctx_uuid).first()
+            if not prop:
+                raise HTTPException(status_code=404, detail="Property not found")
+            
+            if not rec_uuid:
+                # If tenant is messaging, receiver is owner
+                if current_user.id != prop.owner_id:
+                    rec_uuid = prop.owner_id
+                else:
+                    # Owner must provide receiver_id to specify which tenant inquiry they are replying to
+                    raise HTTPException(status_code=400, detail="Owner must provide receiver_id for property inquiries")
         else:
             raise HTTPException(status_code=400, detail=f"Unsupported context_type: {context_type}")
+    else:
+        # Conversation exists and participants match
+        rec_uuid = conv.participant2_id if conv.participant1_id == current_user.id else conv.participant1_id
 
     try:
         msg = service.send_message(db, context_type, ctx_uuid, current_user.id, rec_uuid, payload.content)
@@ -76,9 +82,37 @@ def send_message(
 def get_conversation_messages(
     context_type: str,
     context_id: str,
+    receiver_id: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     ctx_uuid = uuid.UUID(context_id)
-    msgs = service.get_messages(db, context_type, ctx_uuid, current_user.id)
+    
+    # If the current user is the owner, we might need receiver_id to find the right property inquiry thread
+    target_participant = uuid.UUID(receiver_id) if receiver_id else current_user.id
+    
+    # Special handling for Owners viewing Property Inquiries without a specific receiver_id
+    # We'll try to find the "first" or "only" inquiry thread if receiver_id is missing, 
+    # but ideally the frontend should pass it.
+    
+    msgs = service.get_messages(db, context_type, ctx_uuid, current_user.id, receiver_id)
     return msgs
+
+@router.get("/conversations", response_model=list[InboxConversationResponse])
+def get_inbox(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Get all conversations for the current user (Inbox)"""
+    return service.get_user_inbox(db, current_user.id)
+
+@router.patch("/conversations/{conversation_id}/read")
+def mark_read(
+    conversation_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Mark all messages in a conversation as read"""
+    conv_uuid = uuid.UUID(conversation_id)
+    service.mark_as_read(db, conv_uuid, current_user.id)
+    return {"status": "ok"}

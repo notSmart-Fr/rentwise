@@ -115,20 +115,27 @@ export const requestsApi = {
 };
 
 export const paymentsApi = {
-  // Owner actions
-  record: (requestId, data) => apiRequest(`/owner/requests/${requestId}/payments`, {
-    method: 'POST',
-    body: data,
-  }),
-  getByRequest: (requestId) => apiRequest(`/owner/requests/${requestId}/payments`, { method: 'GET' }),
-  listOwnerPayments: () => apiRequest('/owner/payments', { method: 'GET' }),
-  updatePayment: (paymentId, data) => apiRequest(`/owner/payments/${paymentId}`, {
+  // Common creation
+  create: (data) => {
+    // Both owner and automated-tenant paths hit the same record logic on the backend (conceptually)
+    // But owners record for a specific request.
+    const endpoint = data.request_id 
+      ? `/owner/requests/${data.request_id}/payments` 
+      : '/owner/payments';
+    return apiRequest(endpoint, {
+      method: 'POST',
+      body: data,
+    });
+  },
+  update: (paymentId, data) => apiRequest(`/owner/payments/${paymentId}`, {
     method: 'PATCH',
     body: data,
   }),
-  
-  // Tenant actions
+
+  // Retrieval
+  getByRequest: (requestId) => apiRequest(`/owner/requests/${requestId}/payments`, { method: 'GET' }),
   getTenantByRequest: (requestId) => apiRequest(`/tenant/requests/${requestId}/payments`, { method: 'GET' }),
+  listOwnerPayments: () => apiRequest('/owner/payments', { method: 'GET' }),
   
   // Automated Checkout (Simulation)
   initializeAutomated: (requestId, method) => 

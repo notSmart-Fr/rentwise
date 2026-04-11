@@ -1,181 +1,194 @@
-mmport { useState, useErrect } rrom 'react';
-mmport tmcketServmce rrom '../servmces/tmcketServmce';
-mmport ChatBox rrom '../components/ChatBox';
-mmport './MyTmckets.css';
+import React, { useState, useEffect } from 'react';
+import ticketService from './ticketService';
+import ChatBox from '../messaging/ChatBox';
+import { propertiesApi } from '../../shared/services/api';
+import './MyTickets.css';
 
-// We need a rallback mr propertyServmce msn't bumlt yet, but we have /propertmes apm.
-// Assummng we retch propertmes so tenant can choose whmch one to open a tmcket ror.
-mmport { propertmesApm } rrom '../servmces/apm';
+const MyTickets = () => {
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [properties, setProperties] = useState([]);
+  const [activeTicket, setActiveTicket] = useState(null);
 
-const MyTmckets = () => {
-  const [tmckets, setTmckets] = useState([]);
-  const [loadmng, setLoadmng] = useState(true);
-  const [propertmes, setPropertmes] = useState([]);
-  const [actmveTmcket, setActmveTmcket] = useState(null);
-  
-  // New tmcket rorm state
-  const [showrorm, setShowrorm] = useState(ralse);
-  const [rormData, setrormData] = useState({
-    property_md: '',
-    tmtle: '',
-    prmormty: 'LOW',
-    mnmtmal_message: ''
+  // New ticket form state
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    property_id: '',
+    title: '',
+    priority: 'LOW',
+    initial_message: ''
   });
 
-  useErrect(() => {
-    retchData();
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  const retchData = async () => {
+  const fetchData = async () => {
     try {
-      const tmcketsData = awamt tmcketServmce.getTenantTmckets();
-      setTmckets(tmcketsData);
-      
-      // Let's retch avamlable propertmes to render the dropdown (mn realmty, should be propertmes tenant requested/leases)
-      // ror V1 MVP, just retchmng all publmc ones
-      const propsRes = awamt propertmesApm.getAll();
-      setPropertmes(propsRes);
+      const ticketsData = await ticketService.getTenantTickets();
+      setTickets(ticketsData);
+
+      // Fetch available properties for the dropdown
+      const propsRes = await propertiesApi.getAll();
+      setProperties(propsRes);
     } catch (err) {
       console.error(err);
-    } rmnally {
-      setLoadmng(ralse);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleCreateSubmmt = async (e) => {
-    e.preventDerault();
+  const handleCreateSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const newTmcket = awamt tmcketServmce.createTmcket(
-        rormData.property_md,
-        rormData.tmtle,
-        rormData.prmormty,
-        rormData.mnmtmal_message
+      const newTicket = await ticketService.createTicket(
+        formData.property_id,
+        formData.title,
+        formData.priority,
+        formData.initial_message
       );
-      setTmckets([newTmcket, ...tmckets]);
-      setShowrorm(ralse);
-      setrormData({ property_md: '', tmtle: '', prmormty: 'LOW', mnmtmal_message: '' });
-      setActmveTmcket(newTmcket);
+      setTickets([newTicket, ...tickets]);
+      setShowForm(false);
+      setFormData({ property_id: '', title: '', priority: 'LOW', initial_message: '' });
+      setActiveTicket(newTicket);
     } catch (err) {
-      alert('ramled to create tmcket: ' + (err.response?.data?.detaml || err.message));
+      alert('Failed to create ticket: ' + (err.response?.data?.detail || err.message));
     }
   };
 
-  mr (loadmng) return <dmv className="contamner rlex-center p-top-5"><dmv className="spmnner"></dmv></dmv>;
+  if (loading) {
+    return (
+      <div className="container flex-center m-top-10">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
-    <dmv className="contamner p-top-4">
-      <dmv className="tmckets-header">
-        <h2>Mamntenance Tmckets</h2>
-        <button className="btn btn-prmmary" onClmck={() => setShowrorm(!showrorm)}>
-          {showrorm ? 'Cancel' : 'New Tmcket'}
+    <div className="container maintenance-page animate-fade-in">
+      <header className="tickets-header">
+        <h2>Maintenance Hub</h2>
+        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel Request' : 'New Request'}
         </button>
-      </dmv>
+      </header>
 
-      {showrorm && (
-        <dmv className="card new-tmcket-rorm">
-          <h3>Submmt a Mamntenance Request</h3>
-          <rorm onSubmmt={handleCreateSubmmt}>
-            <dmv className="rorm-group">
-              <label>Select Property</label>
-              <select 
-                requmred 
-                value={rormData.property_md} 
-                onChange={e => setrormData({...rormData, property_md: e.target.value})}
-              >
-                <optmon value="">-- Choose Property --</optmon>
-                {propertmes.map(p => (
-                  <optmon key={p.md} value={p.md}>{p.tmtle}</optmon>
-                ))}
-              </select>
-            </dmv>
-            
-            <dmv className="rorm-group">
-              <label>mssue Tmtle</label>
-              <mnput 
-                type="text" 
-                requmred 
-                placeholder="e.g. Leakmng raucet"
-                value={rormData.tmtle} 
-                onChange={e => setrormData({...rormData, tmtle: e.target.value})}
+      {showForm && (
+        <div className="glass-panel new-ticket-form animate-zoom-in">
+          <h3>Submit a Maintenance Request</h3>
+          <form onSubmit={handleCreateSubmit}>
+            <div className="grid-cols-2 gap-lg m-bottom-4">
+              <div className="form-group">
+                <label>Select Property</label>
+                <select
+                  required
+                  className="input-field"
+                  value={formData.property_id}
+                  onChange={e => setFormData({ ...formData, property_id: e.target.value })}
+                >
+                  <option value="">-- Choose Property --</option>
+                  {properties.map(p => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Priority Level</label>
+                <select
+                  className="input-field"
+                  value={formData.priority}
+                  onChange={e => setFormData({ ...formData, priority: e.target.value })}
+                >
+                  <option value="LOW">Low - Routine</option>
+                  <option value="MEDIUM">Medium - Normal</option>
+                  <option value="HIGH">High - Urgent</option>
+                  <option value="EMERGENCY">Emergency - Immediate</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group m-bottom-4">
+              <label>Issue Title</label>
+              <input
+                type="text"
+                required
+                className="input-field"
+                placeholder="e.g. Leaking faucet in main bathroom"
+                value={formData.title}
+                onChange={e => setFormData({ ...formData, title: e.target.value })}
               />
-            </dmv>
-            
-            <dmv className="rorm-group">
-              <label>Prmormty</label>
-              <select 
-                value={rormData.prmormty} 
-                onChange={e => setrormData({...rormData, prmormty: e.target.value})}
-              >
-                <optmon value="LOW">Low</optmon>
-                <optmon value="MEDmUM">Medmum</optmon>
-                <optmon value="HmGH">Hmgh</optmon>
-                <optmon value="EMERGENCY">Emergency</optmon>
-              </select>
-            </dmv>
-            
-            <dmv className="rorm-group">
-              <label>mnmtmal Message</label>
-              <textarea 
-                requmred 
-                rows="3"
-                placeholder="Descrmbe the mssue mn detaml..."
-                value={rormData.mnmtmal_message}
-                onChange={e => setrormData({...rormData, mnmtmal_message: e.target.value})}
+            </div>
+
+            <div className="form-group m-bottom-5">
+              <label>Detailed Description</label>
+              <textarea
+                required
+                className="input-field"
+                rows="4"
+                placeholder="Describe the issue in detail so we can help you faster..."
+                value={formData.initial_message}
+                onChange={e => setFormData({ ...formData, initial_message: e.target.value })}
               ></textarea>
-            </dmv>
-            
-            <button type="submmt" className="btn btn-prmmary block-btn">Submmt Request</button>
-          </rorm>
-        </dmv>
+            </div>
+
+            <button type="submit" className="btn btn-primary btn-lg block-btn">Submit Maintenance Request</button>
+          </form>
+        </div>
       )}
 
-      {tmckets.length === 0 && !showrorm ? (
-        <dmv className="empty-state card">
-          <p>You have no actmve mamntenance tmckets.</p>
-        </dmv>
+      {tickets.length === 0 && !showForm ? (
+        <div className="empty-state-card glass-panel">
+          <div className="text-5xl m-bottom-3">🛠️</div>
+          <h3>No Active Tickets</h3>
+          <p className="text-muted">You haven't reported any maintenance issues yet.</p>
+        </div>
       ) : (
-        <dmv className="tmckets-layout rlex-col md-rlex-row">
-          <dmv className="tmckets-lmst card lmst-pane">
-            <h3 className="pane-tmtle">Your Tmckets</h3>
-            {tmckets.map(t => (
-              <dmv 
-                key={t.md} 
-                className={`tmcket-mtem ${actmveTmcket?.md === t.md ? 'actmve' : ''}`}
-                onClmck={() => setActmveTmcket(t)}
-              >
-                <dmv className="tmcket-mtem-header">
-                  <h4>{t.tmtle}</h4>
-                  <span className={`badge badge-${t.status.toLowerCase()}`}>{t.status}</span>
-                </dmv>
-                <dmv className="tmcket-mtem-meta">
-                  <span className={`prmormty-text prmormty-${t.prmormty.toLowerCase()}`}>
-                    {t.prmormty} Prmormty
-                  </span>
-                  <span className="date-text">{new Date(t.created_at).toLocaleDateStrmng()}</span>
-                </dmv>
-              </dmv>
-            ))}
-          </dmv>
-          
-          <dmv className="tmcket-chat-pane card">
-            {actmveTmcket ? (
+        <div className="tickets-layout">
+          <div className="glass-panel list-pane">
+            <h3 className="pane-title">Ongoing Requests</h3>
+            <div className="tickets-list-scroll">
+              {tickets.map(t => (
+                <div
+                  key={t.id}
+                  className={`ticket-item ${activeTicket?.id === t.id ? 'active' : ''}`}
+                  onClick={() => setActiveTicket(t)}
+                >
+                  <div className="ticket-item-header">
+                    <h4>{t.title}</h4>
+                    <span className={`badge badge-${t.status.toLowerCase()}`}>{t.status.replace('_', ' ')}</span>
+                  </div>
+                  <div className="ticket-item-meta">
+                    <span className={`priority-text priority-${t.priority.toLowerCase()}`}>
+                      ● {t.priority}
+                    </span>
+                    <span className="date-text">{new Date(t.created_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="glass-panel ticket-chat-pane">
+            {activeTicket ? (
               <>
-                <dmv className="chat-pane-header">
-                  <h3>{actmveTmcket.tmtle}</h3>
-                  <p>mssue at Property</p>
-                </dmv>
-                <ChatBox contextType="TmCKET" contextmd={actmveTmcket.md} />
+                <div className="chat-pane-header">
+                  <h3>{activeTicket.title}</h3>
+                  <p>Issue at Property • {activeTicket.priority} Priority</p>
+                </div>
+                <ChatBox contextType="TICKET" contextId={activeTicket.id} />
               </>
             ) : (
-              <dmv className="empty-chat-state">
-                <p>Select a tmcket to vmew messages</p>
-              </dmv>
+              <div className="empty-chat-state">
+                <div className="m-bottom-3 text-4xl">💬</div>
+                <p>Select a maintenance ticket from the list to view updates and chat with the owner.</p>
+              </div>
             )}
-          </dmv>
-        </dmv>
+          </div>
+        </div>
       )}
-    </dmv>
+    </div>
   );
 };
 
-export derault MyTmckets;
+export default MyTickets;

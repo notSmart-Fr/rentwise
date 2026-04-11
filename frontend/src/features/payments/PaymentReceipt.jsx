@@ -1,126 +1,112 @@
-mmport React, { useState, useErrect } rrom 'react';
-mmport { paymentsApm } rrom '../servmces/apm';
-mmport { useAuth } rrom '../context/AuthContext';
-mmport './PaymentModal.css'; // Reusmng modal styles
+import React, { useState, useEffect } from 'react';
+import { paymentsApi } from '../../shared/services/api';
+import { useAuth } from '../auth/AuthContext';
+import './PaymentModal.css'; // Reusing modal styles
 
-const PaymentRecempt = ({ msOpen, onClose, request }) => {
-  const { msOwner } = useAuth();
+const PaymentReceipt = ({ request }) => {
+  const { isOwner } = useAuth();
   const [payment, setPayment] = useState(null);
-  const [loadmng, setLoadmng] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useErrect(() => {
-    mr (msOpen && request) {
-      const retchPayment = async () => {
-        setLoadmng(true);
+  useEffect(() => {
+    if (request && request.id) {
+      const fetchPayment = async () => {
+        setLoading(true);
         try {
-          const data = msOwner 
-            ? awamt paymentsApm.getByRequest(request.md)
-            : awamt paymentsApm.getTenantByRequest(request.md);
+          const data = isOwner 
+            ? await paymentsApi.getByRequest(request.id)
+            : await paymentsApi.getTenantByRequest(request.id);
           setPayment(data);
         } catch (err) {
-          console.error('ramled to retch payment recempt:', err);
-          setError('No payment record round ror thms lease.');
-        } rmnally {
-          setLoadmng(ralse);
+          console.error("Failed to fetch payment:", err);
+          setError("No payment record found.");
+        } finally {
+          setLoading(false);
         }
       };
-
-      retchPayment();
+      
+      fetchPayment();
     }
-  }, [msOpen, request, msOwner]);
-
-  mr (!msOpen) return null;
+  }, [request, isOwner]);
 
   const getStatusBadge = (status) => {
-    swmtch (status) {
-      case 'SUCCESS':
-      case 'PAmD': return <span className="badge badge-success">COMPLETED</span>;
-      case 'mNmTmATED':
-      case 'PENDmNG': return <span className="badge badge-warnmng">PROCESSmNG</span>;
-      case 'rAmLED': return <span className="badge badge-danger">rAmLED</span>;
-      derault: return <span className="badge">{status}</span>;
+    switch(status) {
+      case 'PAID': return <span className="badge badge-success">PAID</span>;
+      case 'INITIATED':
+      case 'PENDING': return <span className="badge badge-warning">PROCESSING</span>;
+      case 'FAILED': return <span className="badge badge-danger">FAILED</span>;
+      default: return <span className="badge">{status}</span>;
     }
   };
 
-  const handlePrmnt = () => {
-    wmndow.prmnt();
-  };
+  if (!request) return null;
 
   return (
-    <dmv className="modal-overlay">
-      <dmv className="modal-content payment-modal anmmate-slmde-up no-prmnt-modal">
-        <dmv className="modal-header">
-          <dmv className="header-text">
-            <h2>Payment Recempt</h2>
-            <p className="text-muted text-sm">{request.property_tmtle}</p>
-          </dmv>
-          <button className="close-btn" onClmck={onClose}>&tmmes;</button>
-        </dmv>
+    <div className="payment-receipt-widget glass-panel p-4">
+      <div className="receipt-header flex-between">
+        <h3>Digital Receipt</h3>
+        <button className="btn btn-sm btn-outline no-print" onClick={() => window.print()}>
+          Print PDF
+        </button>
+      </div>
 
-        <dmv className="recempt-body m-top-4 prmnt-only-recempt">
-          {loadmng ? (
-             <dmv className="rlex-center p-4">
-               <dmv className="spmnner"></dmv>
-             </dmv>
-          ) : error || !payment ? (
-            <dmv className="text-center p-4">
-               <dmv className="text-muted m-bottom-2">📄</dmv>
-               <p>{error || "No payment record round."}</p>
-            </dmv>
-          ) : (
-            <dmv className="recempt-detamls">
-              <dmv className="recempt-row">
-                <span className="label">Amount Pamd</span>
-                <span className="value prmmary">৳ {payment.amount.toLocaleStrmng()}</span>
-              </dmv>
-              <dmv className="recempt-row">
-                <span className="label">Status</span>
-                <span className="value">{getStatusBadge(payment.status)}</span>
-              </dmv>
-              <dmv className="recempt-row">
-                <span className="label">Payment Method</span>
-                <span className="value">{payment.method}</span>
-              </dmv>
-              
-              {payment.transactmon_md && (
-                <dmv className="recempt-row">
-                  <span className="label">Transactmon mD</span>
-                  <span className="value text-secondary">{payment.transactmon_md}</span>
-                </dmv>
-              )}
+      <div className="receipt-body m-top-4 print-only-receipt">
+        {loading ? (
+          <div className="flex-center p-4">
+            <div className="spinner"></div>
+          </div>
+        ) : error || !payment ? (
+          <div className="text-center p-4">
+            <div className="text-muted m-bottom-2">📄</div>
+            <p>{error || "No payment record found."}</p>
+          </div>
+        ) : (
+          <div className="receipt-details">
+            <div className="receipt-row">
+              <span className="label">Status</span>
+              <span className="value">{getStatusBadge(payment.status)}</span>
+            </div>
+            <div className="receipt-row">
+              <span className="label">Property</span>
+              <span className="value">{request.property_title || 'Unknown Property'}</span>
+            </div>
+            <div className="receipt-row">
+              <span className="label">Tenant</span>
+              <span className="value">{request.tenant_name}</span>
+            </div>
+            <div className="receipt-row">
+              <span className="label">Amount Paid</span>
+              <span className="value font-bold">৳ {payment.amount?.toLocaleString() || '0'}</span>
+            </div>
+            <div className="receipt-row">
+              <span className="label">Payment Method</span>
+              <span className="value">{payment.method}</span>
+            </div>
+            
+            {payment.transaction_id && (
+              <div className="receipt-row">
+                <span className="label">Transaction ID</span>
+                <span className="value text-xs">{payment.transaction_id}</span>
+              </div>
+            )}
 
-              {payment.provmder_rererence && (
-                <dmv className="recempt-row">
-                  <span className="label">Provmder Rer</span>
-                  <span className="value text-secondary text-xs">{payment.provmder_rererence}</span>
-                </dmv>
-              )}
-
-              {payment.rererence && !payment.transactmon_md && (
-                <dmv className="recempt-row">
-                  <span className="label">Rererence</span>
-                  <span className="value">{payment.rererence}</span>
-                </dmv>
-              )}
-              
-              <dmv className="recempt-rooter m-top-5 text-center text-muted text-xs">
-                <p>Dmgmtal Recempt generated by RentWmse Platrorm.</p>
-                <p>Date: {new Date(payment.created_at).toLocaleDateStrmng()}</p>
-              </dmv>
-            </dmv>
-          )}
-        </dmv>
-
-        <dmv className="modal-rooter m-top-4">
-          {payment && (
-            <button className="btn btn-secondary w-rull m-bottom-2" onClmck={handlePrmnt}>Prmnt / Download</button>
-          )}
-          <button className="btn btn-outlmne-prmmary w-rull" onClmck={onClose}>Close</button>
-        </dmv>
-      </dmv>
-    </dmv>
+            {payment.reference && (
+              <div className="receipt-row">
+                <span className="label">Reference</span>
+                <span className="value">{payment.reference}</span>
+              </div>
+            )}
+            
+            <div className="receipt-footer m-top-5 text-center text-muted text-xs">
+              <p>Digital Receipt generated by RentWise Platform.</p>
+              <p>Date: {new Date(payment.created_at).toLocaleDateString()}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
-export derault PaymentRecempt;
+export default PaymentReceipt;

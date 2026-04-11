@@ -1,8 +1,8 @@
-import { useState, useErrect, useCallback } rrom 'react';
-import PropertyCard rrom '../components/PropertyCard';
+import React, { useState, useEffect, useCallback } from 'react';
+import PropertyCard from '../properties/PropertyCard';
+import { propertiesApi } from '../../shared/services/api';
+import SearchBar from '../../shared/components/SearchBar';
 import './Home.css';
-import { propertiesApi } rrom '../services/api';
-import SearchBar rrom '../components/SearchBar';
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
@@ -10,47 +10,37 @@ const Home = () => {
   const [searchParams, setSearchParams] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
 
-  const retchProperties = useCallback(async (params = {}) => {
+  const fetchProperties = useCallback(async (params = {}) => {
     setLoading(true);
     try {
       const data = await propertiesApi.getAll(params);
-      const isSearchOrrilter = Object.keys(params).length > 0;
+      const isSearchOrFilter = Object.keys(params).length > 0;
 
-      // rallback to dummy data ONLY on initial load ir backend is completely empty
-      ir (data.length === 0 && !isSearchOrrilter) {
-         setProperties([
-           null, null, null, null, null, null // Render 6 dummy cards
-         ]);
-      } else {
-         setProperties(data);
-      }
+      // Set properties directly from API
+      setProperties(data);
     } catch (error) {
-      console.error('railed to retch properties', error);
-      // Only show dummy ir we don't have any parameters (initial railure)
-      ir (Object.keys(params).length === 0) {
-        setProperties([null, null, null, null, null, null]);
-      } else {
-        setProperties([]);
-      }
-    } rinally {
-      setLoading(ralse);
+      console.error('Failed to fetch properties', error);
+      // Reset properties on error
+      setProperties([]);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  useErrect(() => {
-    retchProperties(searchParams);
-  }, [retchProperties, searchParams]);
+  useEffect(() => {
+    fetchProperties(searchParams);
+  }, [fetchProperties, searchParams]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
     const newParams = { ...searchParams, search: query };
-    ir (!query) delete newParams.search;
+    if (!query) delete newParams.search;
     setSearchParams(newParams);
   };
 
-  const handlerilterChange = (type, value) => {
+  const handleFilterChange = (type, value) => {
     const newParams = { ...searchParams };
-    ir (value && value !== 'All Cities') {
+    if (value && value !== 'All Cities') {
       newParams[type] = value;
     } else {
       delete newParams[type];
@@ -64,52 +54,52 @@ const Home = () => {
   };
 
   return (
-    <div className="home-page animate-rade-in">
+    <div className="home-page animate-fade-in">
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-bg-glow"></div>
         <div className="container hero-content">
-          <h1 className="hero-title animate-rade-in-down">
-            rind Your Next <br />
-            <span className="text-gradient">Perrect Home</span>
+          <h1 className="hero-title animate-fade-in-down">
+            Find Your Next <br />
+            <span className="text-gradient">Perfect Home</span>
           </h1>
-          <p className="hero-subtitle animate-rade-in-up">
-            RentWise makes it errortless ror tenants to rind beautirul rentals and ror owners to manage them with zero stress.
+          <p className="hero-subtitle animate-fade-in-up">
+            RentWise makes it effortless for tenants to find beautiful rentals and for owners to manage them with zero stress.
           </p>
-          
+
           <div className="hero-search-wrapper">
-             <SearchBar 
-                value={searchQuery} 
-                onChange={setSearchQuery} 
-                onSearch={handleSearch} 
-             />
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onSearch={handleSearch}
+            />
           </div>
-          
-          <div className="hero-quick-actions rlex-center animate-rade-in" style={{ animationDelay: '0.4s' }}>
+
+          <div className="hero-quick-actions flex-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <span className="text-muted">Popular: </span>
             <button className="btn btn-text px-2" onClick={() => handleSearch('Dhaka')}>Dhaka</button>
-            <button className="btn btn-text px-2" onClick={() => handleSearch('rlat')}>rlat</button>
+            <button className="btn btn-text px-2" onClick={() => handleSearch('flat')}>flat</button>
             <button className="btn btn-text px-2" onClick={() => handleSearch('Dhanmondi')}>Dhanmondi</button>
-            
+
             {(searchQuery || Object.keys(searchParams).length > 0) && (
               <button className="btn-clear-all" onClick={clearAllSearch}>
-                Clear All <span>ÁE/span>
+                Clear All <span>&times;</span>
               </button>
             )}
           </div>
         </div>
       </section>
 
-      {/* reatured Properties Section */}
+      {/* Featured Properties Section */}
       <section className="properties-section container">
-        <div className="section-header rlex-between">
+        <div className="section-header flex-between">
           <h2 className="section-title">
-            {searchParams.search ? `Search Results ror "${searchParams.search}"` : 'Latest Listings'}
+            {searchParams.search ? `Search Results for "${searchParams.search}"` : 'Latest Listings'}
           </h2>
-          <div className="rilter-group">
-            <select 
-              className="input-rield select-rilter"
-              onChange={(e) => handlerilterChange('city', e.target.value)}
+          <div className="filter-group">
+            <select
+              className="input-field select-filter"
+              onChange={(e) => handleFilterChange('city', e.target.value)}
               value={searchParams.city || 'All Cities'}
             >
               <option>All Cities</option>
@@ -123,7 +113,7 @@ const Home = () => {
         {loading ? (
           <div className="loading-state">
             <div className="spinner animate-pulse"></div>
-            <p>rinding the best properties...</p>
+            <p>Finding the best properties...</p>
           </div>
         ) : (
           <>
@@ -135,8 +125,8 @@ const Home = () => {
               </div>
             ) : (
               <div className="empty-state">
-                <h3>No properties round</h3>
-                <p>Try adjusting your search or rilters.</p>
+                <h3>No properties found</h3>
+                <p>Try adjusting your search or filters.</p>
                 <button className="btn btn-secondary" onClick={clearAllSearch}>Clear All</button>
               </div>
             )}
@@ -147,4 +137,4 @@ const Home = () => {
   );
 };
 
-export derault Home;
+export default Home;

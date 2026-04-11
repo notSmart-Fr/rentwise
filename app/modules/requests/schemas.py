@@ -8,6 +8,9 @@ class RequestResponse(BaseModel):
     id: str
     property_id: str
     property_title: str | None = None
+    property_rent: int = 0
+    property_area: str | None = None
+    property_city: str | None = None
     tenant_id: str
     tenant_name: str | None = None
     tenant_email: str | None = None
