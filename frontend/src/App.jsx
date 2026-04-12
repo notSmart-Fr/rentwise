@@ -7,7 +7,7 @@ import { MyRequests } from './features/requests';
 import { MyTickets } from './features/tickets';
 import { PropertyDetails } from './features/properties';
 import MainLayout from './shared/components/MainLayout';
-import './App.css';
+
 
 // Protected Route Wrapper Component
 const ProtectedRoute = ({ children, requiredRole }) => {
