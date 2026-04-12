@@ -1,16 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './features/auth/AuthContext';
-import { ChatProvider, useChat } from './features/messaging/ChatContext';
-import Navbar from './shared/components/Navbar';
-import ChatModal from './features/messaging/ChatModal';
-import Home from './features/home/Home';
-import Login from './features/auth/Login';
-import Register from './features/auth/Register';
-import OwnerDashboard from './features/dashboard/OwnerDashboard';
-import MyRequests from './features/requests/MyRequests';
-import MyTickets from './features/tickets/MyTickets';
-import PropertyDetails from './features/properties/PropertyDetails';
-import Messages from './features/messaging/Messages';
+import { useAuth, Login, Register } from './features/auth';
+import { ChatProvider, useChat, ChatModal, Messages } from './features/messaging';
+import { Home } from './features/home';
+import { OwnerDashboard, TenantDashboard } from './features/dashboard';
+import { MyRequests } from './features/requests';
+import { MyTickets } from './features/tickets';
+import { PropertyDetails } from './features/properties';
+import MainLayout from './shared/components/MainLayout';
 import './App.css';
 
 // Protected Route Wrapper Component
@@ -31,7 +27,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
   if (requiredRole && user.role !== requiredRole) {
     // Redirect if they don't have the right role
-    return <Navigate to={user.role === 'OWNER' ? '/owner-dashboard' : '/'} replace />;
+    return <Navigate to={user.role === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard'} replace />;
   }
 
   return children;
@@ -44,7 +40,7 @@ const PublicOnlyRoute = ({ children }) => {
   if (loading) return null;
   
   if (isAuthenticated) {
-    return <Navigate to={user.role === 'OWNER' ? '/owner-dashboard' : '/'} replace />;
+    return <Navigate to={user.role === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard'} replace />;
   }
   
   return children;
@@ -53,9 +49,8 @@ const PublicOnlyRoute = ({ children }) => {
 function AppInner() {
   const { chat, closeChat } = useChat();
   return (
-    <div className="app-container">
-      <Navbar />
-      <main className="main-content">
+    <>
+      <MainLayout>
         <Routes>
           <Route path="/" element={<Home />} />
           
@@ -81,15 +76,21 @@ function AppInner() {
             <PropertyDetails />
           } />
           
+          <Route path="/tenant-dashboard" element={
+            <ProtectedRoute requiredRole="TENANT">
+              <TenantDashboard />
+            </ProtectedRoute>
+          } />
+          
           <Route path="/my-requests" element={
             <ProtectedRoute requiredRole="TENANT">
-              <MyRequests />
+              <TenantDashboard initialTab="leases" />
             </ProtectedRoute>
           } />
 
           <Route path="/my-tickets" element={
             <ProtectedRoute requiredRole="TENANT">
-              <MyTickets />
+              <TenantDashboard initialTab="maintenance" />
             </ProtectedRoute>
           } />
 
@@ -99,7 +100,7 @@ function AppInner() {
             </ProtectedRoute>
           } />
         </Routes>
-      </main>
+      </MainLayout>
 
       {/* Global persistent chat widget - survives page navigation */}
       {chat && (
@@ -113,7 +114,7 @@ function AppInner() {
           receiverId={chat.receiverId}
         />
       )}
-    </div>
+    </>
   );
 }
 

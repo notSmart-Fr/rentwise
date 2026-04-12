@@ -70,19 +70,6 @@ export async function apiRequest(endpoint, options = {}) {
 // Specific API methods (Vertical slices will use these)
 // ----------------------------------------------------------------------------
 
-export const authApi = {
-  login: (email, password) => apiRequest('/auth/login', {
-    method: 'POST',
-    // FastAPI expects form data for OAuth2PasswordRequestForm
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ username: email, password }).toString(),
-  }),
-  register: (data) => apiRequest('/auth/register', {
-    method: 'POST',
-    body: data,
-  }),
-  getMe: () => apiRequest('/auth/me', { method: 'GET' }),
-};
 
 export const propertiesApi = {
   getAll: (params = {}) => {
@@ -100,19 +87,6 @@ export const propertiesApi = {
   getOwnerProperties: () => apiRequest('/owner/properties', { method: 'GET' }),
 };
 
-export const requestsApi = {
-  // Tenant actions
-  create: (propertyId, message) => apiRequest(`/tenant/properties/${propertyId}/requests`, {
-    method: 'POST',
-    body: { message },
-  }),
-  getTenantRequests: () => apiRequest('/tenant/requests', { method: 'GET' }),
-  
-  // Owner actions
-  getOwnerRequests: () => apiRequest('/owner/requests', { method: 'GET' }),
-  approve: (requestId) => apiRequest(`/owner/requests/${requestId}/approve`, { method: 'PATCH' }),
-  reject: (requestId) => apiRequest(`/owner/requests/${requestId}/reject`, { method: 'PATCH' }),
-};
 
 export const paymentsApi = {
   // Common creation

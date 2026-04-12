@@ -26,10 +26,27 @@ V1 is designed for **local reality**: manual payments are **recorded**, not proc
 - Request leases and view payment receipts (read-only)
 
 ## 4) Tech Stack (Production-Ready)
-- **Frontend**: React + Vite + Vanilla CSS
+- **Frontend**: React + Vite + Tailwind CSS v4
 - **Backend**: FastAPI (Python 3.12)
 - **Database**: PostgreSQL (Dockerized)
 - **Environment**: Docker & Docker Compose for full-stack orchestration
+
+## 4.1 Frontend Architecture (Feature-Based Layered) 🧭
+To ensure scalability and maintainability, the frontend follows a feature-based layered pattern:
+
+### 1. Feature-First Structure
+All code related to a specific domain (e.g., `requests`, `properties`, `auth`) is encapsulated within `src/features/[feature_name]`.
+
+### 2. Architectural Layers
+Each feature is divided into three distinct layers:
+- **Data Layer (Services)**: `services/` contains raw API calls. These should be extracted from the global `api.js`.
+- **Logic Layer (Hooks)**: `hooks/` contains Custom Hooks that manage state, side effects, and business logic.
+- **UI Layer (Components)**: UI-specific components that consume hooks. They should be "purely visual" where possible.
+
+### 3. Styling Standards
+- **Tailwind CSS v4**: All new styling must use utility-first CSS. legacy `.css` files are to be deleted during refactoring.
+- **Design Tokens**: Use CSS variables defined in `@theme` in `index.css` (e.g., `var(--color-primary)`).
+- **Glassmorphism**: Use the `.glass-panel` utility for cards and overlays.
 
 ## 5) Data Model
 ### User
