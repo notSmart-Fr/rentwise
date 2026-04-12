@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import messageService from '../services/messageService';
 import { useAuth } from '../../auth';
+import { useWebSocket } from '../../../shared/context/WebSocketContext';
 
 export const useMessages = (contextType, contextId, receiverId = null) => {
   const { user } = useAuth();
+  const { subscribe } = useWebSocket();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +15,7 @@ export const useMessages = (contextType, contextId, receiverId = null) => {
     if (isInitial) setLoading(true);
     try {
       const data = await messageService.getMessages(contextType, contextId, receiverId);
-      setMessages(data);
+      setMessages(data || []);
       setError(null);
     } catch (err) {
       console.error("Failed to fetch messages:", err);
@@ -25,10 +27,27 @@ export const useMessages = (contextType, contextId, receiverId = null) => {
 
   useEffect(() => {
     fetchMessages(true);
-    // Polling every 3 seconds for messages
-    const interval = setInterval(() => fetchMessages(false), 3000);
-    return () => clearInterval(interval);
-  }, [fetchMessages]);
+    
+    // Polling fallback (slowed down to 30s for reliability)
+    const interval = setInterval(() => fetchMessages(false), 30000);
+    
+    // Real-time message subscription
+    const unsubscribe = subscribe('NEW_MESSAGE', (payload) => {
+      if (payload.context_type === contextType && payload.context_id === contextId) {
+        setMessages(prev => {
+          // Prevent duplicates
+          if (prev.some(m => m.id === payload.id)) return prev;
+          // Filter out optimistic messages
+          return [...prev.filter(m => !m.is_optimistic), payload];
+        });
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+      unsubscribe();
+    };
+  }, [fetchMessages, subscribe, contextType, contextId]);
 
   const scrollToBottom = (behavior = 'smooth') => {
     messagesEndRef.current?.scrollIntoView({ behavior });
@@ -54,7 +73,8 @@ export const useMessages = (contextType, contextId, receiverId = null) => {
 
     try {
       await messageService.sendMessage(contextType, contextId, content.trim(), receiverId);
-      fetchMessages(false); // Refresh to get actual DB record
+      // We don't need to fetchMessages() immediately anymore as the WebSocket will push it back
+      // but we might want to refresh to ensure sync. Actually, let's just let WS handle it.
     } catch (err) {
       console.error("Failed to send message:", err);
       setError("Failed to send message. Please try again.");

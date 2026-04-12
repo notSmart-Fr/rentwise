@@ -10,6 +10,8 @@ from app.modules.properties.model import Property
 from app.modules.requests.model import RentalRequest
 from app.modules.tickets.model import Ticket
 
+from app.core.websocket import manager
+
 class MessageService:
     def __init__(self):
         self.repo = MessageRepository()
@@ -29,21 +31,38 @@ class MessageService:
             conv = self.repo.create_conversation(db, participant1_id, participant2_id, context_type, context_id)
         return conv
     
-    def send_message(self, db: Session, context_type: str, context_id: uuid.UUID, sender_id: uuid.UUID, receiver_id: uuid.UUID, content: str):
+    async def send_message(self, db: Session, context_type: str, context_id: uuid.UUID, sender_id: uuid.UUID, receiver_id: uuid.UUID, content: str):
         conv = self.get_or_create_conversation(db, sender_id, receiver_id, context_type, context_id)
         
         if sender_id not in [conv.participant1_id, conv.participant2_id]:
             raise HTTPException(status_code=403, detail="Not a participant in this conversation")
             
         msg = self.repo.add_message(db, conv.id, sender_id, content)
+        
+        # Broadcast via WebSocket
+        await manager.send_personal_message({
+            "type": "NEW_MESSAGE",
+            "data": {
+                "id": str(msg.id),
+                "conversation_id": str(msg.conversation_id),
+                "sender_id": str(msg.sender_id),
+                "content": msg.content,
+                "created_at": msg.created_at.isoformat(),
+                "context_type": context_type,
+                "context_id": str(context_id)
+            }
+        }, receiver_id)
+
+        # Also push an INBOX_UPDATE to both participants so their lists refresh
+        inbox_update = {"type": "INBOX_UPDATE", "data": {"conversation_id": str(conv.id)}}
+        await manager.send_personal_message(inbox_update, receiver_id)
+        await manager.send_personal_message(inbox_update, sender_id)
+
         return msg
 
     def get_messages(self, db: Session, context_type: str, context_id: uuid.UUID, requesting_user_id: uuid.UUID, receiver_id: uuid.UUID | None = None):
         # Find the specific thread for this participant pair
         conv = self.repo.get_conversation_by_context(db, context_type, context_id, requesting_user_id)
-        
-        # If the requester is an owner and there are multiple threads, the receiver_id helps disambiguate
-        # (Already handled in router by derived receiver_id)
         
         if not conv:
             return []
@@ -93,5 +112,7 @@ class MessageService:
             })
         return inbox
 
-    def mark_as_read(self, db: Session, conversation_id: uuid.UUID, user_id: uuid.UUID):
+    async def mark_as_read(self, db: Session, conversation_id: uuid.UUID, user_id: uuid.UUID):
         self.repo.mark_messages_as_read(db, conversation_id, user_id)
+        # Notify user to refresh their inbox/unread counts
+        await manager.send_personal_message({"type": "INBOX_UPDATE", "data": {"conversation_id": str(conversation_id)}}, user_id)

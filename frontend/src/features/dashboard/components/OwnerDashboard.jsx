@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { PropertyCard, AddPropertyModal, EditPropertyModal } from '../../properties';
 import { RequestRow } from '../../requests';
 import StatsCard from '../../../shared/components/StatsCard';
@@ -37,7 +38,7 @@ const OwnerDashboard = () => {
 
   if (isLoading && properties.length === 0) {
     return (
-      <div className="container flex min-h-[70vh] items-center justify-center pt-16">
+      <div className="container flex min-h-[70vh] items-center justify-center pt-16 mx-auto">
         <div className="flex flex-col items-center gap-6">
           <div className="h-16 w-16 animate-spin rounded-full border-4 border-primary border-t-transparent shadow-glow"></div>
           <p className="text-text-secondary font-medium animate-pulse">Syncing your portfolio...</p>
@@ -61,8 +62,7 @@ const OwnerDashboard = () => {
           <p className="mt-2 text-text-secondary text-lg">Central command for your property portfolio and tenancies.</p>
         </div>
 
-        <div className="flex gap-1 p-1 bg-white/5 border border-white/5 backdrop-blur-xl rounded-2xl w-full lg:w-auto overflow-x-auto">
-          {['overview', 'properties', 'requests', 'revenue', 'maintenance', 'inbox'].map((tab) => (
+          {['overview', 'properties', 'requests', 'revenue', 'maintenance', 'chats'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -71,10 +71,10 @@ const OwnerDashboard = () => {
                 : 'text-text-secondary hover:text-white hover:bg-white/5'
                 }`}
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                {tab === 'properties' ? 'Portfolio' : tab}
+              <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
+                {tab === 'properties' ? 'Properties' : tab}
                 {tab === 'properties' && <span className="text-[10px] opacity-60">({properties.length})</span>}
-                {tab === 'inbox' && totalUnread > 0 && (
+                {tab === 'chats' && totalUnread > 0 && (
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] text-white animate-bounce-slow shadow-lg">
                     {totalUnread}
                   </span>
@@ -91,10 +91,36 @@ const OwnerDashboard = () => {
         {activeTab === 'overview' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <StatsCard title="Total Properties" value={properties.length} icon="🏠" color="blue" trend="+1 this month" />
-              <StatsCard title="Active Leases" value={activeLeasesCount} icon="🔑" color="green" />
-              <StatsCard title="Total Revenue" value={`৳ ${totalRevenue.toLocaleString()}`} icon="💰" color="purple" trend="Stable" />
-              <StatsCard title="Pending Review" value={pendingRequestsCount} icon="⏳" color="orange" />
+              <StatsCard 
+                title="Total Properties" 
+                value={properties.length} 
+                icon="🏠" 
+                color="blue" 
+                trend="+1 this month" 
+                onClick={() => setActiveTab('properties')}
+              />
+              <StatsCard 
+                title="Active Leases" 
+                value={activeLeasesCount} 
+                icon="🔑" 
+                color="green" 
+                onClick={() => setActiveTab('requests')}
+              />
+              <StatsCard 
+                title="Total Revenue" 
+                value={`৳ ${totalRevenue.toLocaleString()}`} 
+                icon="💰" 
+                color="purple" 
+                trend="Stable" 
+                onClick={() => setActiveTab('revenue')}
+              />
+              <StatsCard 
+                title="Pending Review" 
+                value={pendingRequestsCount} 
+                icon="⏳" 
+                color="orange" 
+                onClick={() => setActiveTab('requests')}
+              />
             </div>
 
             <div className="glass-panel p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-dashed bg-white/1">
@@ -109,7 +135,7 @@ const OwnerDashboard = () => {
                 className="btn btn-secondary text-sm border-white/10"
                 onClick={() => setActiveTab('properties')}
               >
-                Go to Portfolio
+                Manage My Properties
               </button>
             </div>
           </div>
@@ -119,7 +145,7 @@ const OwnerDashboard = () => {
         {activeTab === 'properties' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-white">My Portfolio</h2>
+              <h2 className="text-2xl font-black text-white">My Properties</h2>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="btn btn-primary px-8 py-3.5 shadow-xl shadow-primary/20 hover:scale-[1.03] active:scale-95 transition-transform"
@@ -170,10 +196,10 @@ const OwnerDashboard = () => {
           </div>
         )}
 
-        {/* Inbox Tab */}
-        {activeTab === 'inbox' && (
+        {/* Chats Tab - Direct interactive list for faster communication */}
+        {activeTab === 'chats' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
-            <h2 className="text-2xl font-black text-white">Inquiries</h2>
+            <h2 className="text-2xl font-black text-white">Recent Chats</h2>
             <div className="grid grid-cols-1 gap-4">
               {conversations.length > 0 ? (
                 conversations.map(conv => (

@@ -7,7 +7,7 @@ const InboxRow = ({ conversation, onClick }) => {
     <button
       onClick={() => onClick(conversation)}
       className={`w-full text-left p-6 glass-panel flex items-center gap-5 transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/3 active:scale-[0.98] ${
-        isUnread ? 'border-primary/30 ring-1 ring-primary/10' : 'opacity-80'
+        isUnread ? 'border-primary/30 ring-1 ring-primary/10' : 'border-white/5'
       }`}
     >
       <div className="relative">

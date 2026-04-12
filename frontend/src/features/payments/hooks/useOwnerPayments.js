@@ -6,8 +6,8 @@ export const useOwnerPayments = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchPayments = useCallback(async () => {
-    setLoading(true);
+  const fetchPayments = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     setError(null);
     try {
       const data = await paymentsService.listOwnerPayments();
@@ -16,12 +16,12 @@ export const useOwnerPayments = () => {
       console.error('Failed to fetch owner payments:', err);
       setError(err.message || 'Failed to load payment history');
     } finally {
-      setLoading(false);
+      if (isInitial) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchPayments();
+    fetchPayments(true);
   }, [fetchPayments]);
 
   const recordPayment = async (data) => {

@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../features/auth';
-import { useChat } from '../../features/messaging';
+import { useChat, useConversations } from '../../features/messaging';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
   const { closeChat } = useChat();
+  const { totalUnread } = useConversations();
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const role = user?.role || 'TENANT';
@@ -26,9 +27,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ease-in-out ${scrolled
-      ? 'bg-bg-base/80 backdrop-blur-3xl border-b border-white/5 py-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)]'
-      : 'bg-transparent py-8'
+    <nav className={`fixed top-0 left-0 w-full z-100 transition-all duration-300 ease-in-out ${scrolled
+      ? 'bg-bg-base/80 backdrop-blur-3xl border-b border-white/5 py-3.5 shadow-[0_20px_50px_rgba(0,0,0,0.6)]'
+      : 'bg-transparent py-6'
       }`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
 
@@ -65,7 +66,14 @@ const Navbar = () => {
                   <Link to="/my-tickets" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Issues</Link>
                 </>
               )}
-              <Link to="/messages" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Chat</Link>
+              <Link to="/messages" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 relative">
+                Notifications
+                {totalUnread > 0 && (
+                  <span className="absolute -top-2 -right-3 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] text-white font-bold animate-pulse">
+                    {totalUnread}
+                  </span>
+                )}
+              </Link>
               <div className="w-px h-6 bg-white/5 mx-2" />
               <button
                 className="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-danger active:scale-95 transition-all outline-none"
@@ -97,7 +105,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-0 left-0 w-full h-screen z-60 md:hidden bg-bg-base/98 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-300 px-6 pt-24 pb-12 overflow-y-auto">
+        <div className="fixed inset-0 top-0 left-0 w-full h-screen z-110 md:hidden bg-bg-base/98 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-300 px-6 pt-24 pb-12 overflow-y-auto">
           <div className="flex flex-col gap-2">
             <Link to="/" className="text-4xl font-black text-white py-6 border-b border-white/5 flex items-center justify-between group" onClick={() => setIsMenuOpen(false)}>
               Explore <span className="text-primary group-hover:translate-x-2 transition-transform">→</span>
@@ -112,7 +120,14 @@ const Navbar = () => {
                     <Link to="/my-tickets" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Maintenance</Link>
                   </>
                 )}
-                <Link to="/messages" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Messages</Link>
+                <Link to="/messages" className="text-4xl font-black text-white py-6 border-b border-white/5 relative" onClick={() => setIsMenuOpen(false)}>
+                  Notifications
+                  {totalUnread > 0 && (
+                    <span className="ml-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-danger text-[11px] text-white font-bold">
+                      {totalUnread}
+                    </span>
+                  )}
+                </Link>
                 <div className="pt-12">
                   <button className="w-full btn btn-secondary py-5 text-lg" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>Exit Platform</button>
                 </div>

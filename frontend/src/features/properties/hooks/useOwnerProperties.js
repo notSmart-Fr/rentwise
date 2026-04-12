@@ -6,8 +6,8 @@ export const useOwnerProperties = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchOwnerProperties = useCallback(async () => {
-    setLoading(true);
+  const fetchOwnerProperties = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     setError(null);
     try {
       const data = await propertiesService.getOwnerProperties();
@@ -16,12 +16,12 @@ export const useOwnerProperties = () => {
       console.error('Failed to fetch owner properties:', err);
       setError(err.message || 'Failed to load your properties');
     } finally {
-      setLoading(false);
+      if (isInitial) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchOwnerProperties();
+    fetchOwnerProperties(true);
   }, [fetchOwnerProperties]);
 
   const toggleAvailability = async (id, currentStatus) => {

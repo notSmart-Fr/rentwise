@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { MyRequests } from '../../requests';
 import { MyTickets } from '../../tickets';
 import { TenantPayments } from '../../payments';
@@ -49,7 +50,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
             { id: 'leases', label: 'My Leases' },
             { id: 'maintenance', label: 'Maintenance' },
             { id: 'payments', label: 'History' },
-            { id: 'inbox', label: 'Messages' }
+            { id: 'chats', label: 'Chats' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -61,7 +62,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {tab.label}
-                {tab.id === 'inbox' && totalUnread > 0 && (
+                {tab.id === 'chats' && totalUnread > 0 && (
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] text-white shadow-lg">
                     {totalUnread}
                   </span>
@@ -156,9 +157,10 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
           </div>
         )}
 
-        {activeTab === 'inbox' && (
+        {/* Chats Tab - Direct interactive list */}
+        {activeTab === 'chats' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
-            <h2 className="text-2xl font-black text-white">My Conversations</h2>
+            <h2 className="text-2xl font-black text-white">Recent Chats</h2>
             <div className="grid grid-cols-1 gap-4">
               {conversations.length > 0 ? (
                 conversations.map(conv => (

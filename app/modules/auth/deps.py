@@ -27,6 +27,20 @@ def get_current_user(
 
     return user
 
+def get_current_user_ws(
+    token: str,
+    db: Session = Depends(get_db),
+) -> User:
+    """Helper for WebSocket auth via query parameter"""
+    try:
+        payload = decode_token(token)
+        user_id = uuid.UUID(payload["sub"])
+    except Exception:
+        return None
+
+    user = repo.get_by_id(db, user_id)
+    return user
+
 def require_owner(user: User = Depends(get_current_user)) -> User:
     if user.role != "OWNER":
         raise HTTPException(status_code=403, detail="Owner access required")

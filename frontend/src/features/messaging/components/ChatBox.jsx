@@ -10,7 +10,7 @@ const ChatBox = ({ contextType, contextId, receiverId }) => {
     error,
     messagesEndRef,
     sendMessage
-  } = useMessagesInternal(contextType, contextId, receiverId);
+  } = useMessages(contextType, contextId, receiverId);
   const [inputText, setInputText] = useState('');
 
   const handleSend = async (e) => {
@@ -59,9 +59,9 @@ const ChatBox = ({ contextType, contextId, receiverId }) => {
 
                 <div className={`flex w-full ${isMe ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                    <div className={`px-5 py-3.5 rounded-2xl text-sm leading-relaxed shadow-sm transition-all animate-in fade-in slide-in-from-${isMe ? 'right' : 'left'}-2 ${isMe
-                      ? 'bg-primary text-white rounded-br-none'
-                      : 'bg-white/10 text-white border border-white/5 rounded-bl-none backdrop-blur-md'
+                    <div className={`px-5 py-3 rounded-2xl text-[15px] leading-relaxed shadow-md transition-all animate-in fade-in slide-in-from-${isMe ? 'right' : 'left'}-2 ${isMe
+                      ? 'bg-primary text-white rounded-br-none shadow-primary/20'
+                      : 'bg-white/15 text-white border border-white/10 rounded-bl-none backdrop-blur-xl'
                       } ${msg.is_optimistic ? 'opacity-70 italic' : ''}`}>
                       {msg.content}
                     </div>

@@ -60,7 +60,7 @@ const Messages = () => {
                 </div>
               ))
             ) : (
-              <div className="p-12 text-center opacity-40">
+              <div className="p-12 text-center opacity-70">
                  <div className="text-4xl mb-4">📭</div>
                  <p className="text-sm font-bold uppercase tracking-widest text-text-muted">Inbox is empty</p>
               </div>
@@ -114,10 +114,10 @@ const Messages = () => {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 opacity-30">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 opacity-80">
                <div className="text-6xl mb-6">📬</div>
                <h3 className="text-xl font-bold text-white mb-2">Select a conversation</h3>
-               <p className="text-text-secondary text-sm max-w-xs">Pick an inquiry from the side list to start managing the conversation.</p>
+               <p className="text-text-secondary text-base max-w-xs px-6">Pick an inquiry from the side list to start managing the conversation.</p>
             </div>
           )}
         </div>

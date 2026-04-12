@@ -6,8 +6,8 @@ export const useOwnerRequests = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchRequests = useCallback(async () => {
-    setLoading(true);
+  const fetchRequests = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     setError(null);
     try {
       const data = await requestsService.getOwnerRequests();
@@ -16,12 +16,12 @@ export const useOwnerRequests = () => {
       console.error('Failed to fetch owner requests:', err);
       setError(err.message || 'Failed to load rental requests');
     } finally {
-      setLoading(false);
+      if (isInitial) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchRequests();
+    fetchRequests(true);
   }, [fetchRequests]);
 
   const approveRequest = async (id) => {
