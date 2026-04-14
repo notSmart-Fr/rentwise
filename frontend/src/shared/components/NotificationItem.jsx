@@ -1,10 +1,29 @@
 import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
+
+// Custom lightweight relative time formatter to avoid extra dependencies
+const getRelativeTime = (date) => {
+  if (!date) return '';
+  const now = new Date();
+  const then = new Date(date);
+  const diffInSeconds = Math.floor((now - then) / 1000);
+  
+  if (diffInSeconds < 60) return 'just now';
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays}d ago`;
+  
+  return then.toLocaleDateString();
+};
 
 const NotificationItem = ({ notification, onClick }) => {
   const { type, title, subtitle, timestamp, unread } = notification;
 
-  // Polymorphic Icon selection
   const getIcon = () => {
     switch (type) {
       case 'MESSAGE': return '💬';
@@ -14,7 +33,6 @@ const NotificationItem = ({ notification, onClick }) => {
     }
   };
 
-  // Polymorphic Color selection
   const getColorClass = () => {
     switch (type) {
       case 'MESSAGE': return 'text-primary';
@@ -27,8 +45,9 @@ const NotificationItem = ({ notification, onClick }) => {
   return (
     <div
       onClick={() => onClick(notification)}
-      className={`group flex items-start gap-4 p-4 transition-all hover:bg-white/5 cursor-pointer border-b border-white/5 last:border-0 ${unread ? 'bg-white/2' : ''
-        }`}
+      className={`group flex items-start gap-4 p-4 transition-all hover:bg-white/5 cursor-pointer border-b border-white/5 last:border-0 ${
+        unread ? 'bg-white/2' : ''
+      }`}
     >
       <div className={`mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform ${getColorClass()}`}>
         <span className="text-lg">{getIcon()}</span>
@@ -40,7 +59,7 @@ const NotificationItem = ({ notification, onClick }) => {
             {title}
           </h4>
           <span className="text-[10px] text-slate-500 whitespace-nowrap">
-            {timestamp ? formatDistanceToNow(new Date(timestamp), { addSuffix: true }) : ''}
+            {getRelativeTime(timestamp)}
           </span>
         </div>
         <p className="mt-0.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">

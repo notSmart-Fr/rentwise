@@ -19,12 +19,12 @@ const NotificationDropdown = ({ onClose }) => {
         null, // No system message
         null  // participant ID handled by service
       );
-
+      
       if (notification.unread) {
         await markAsRead(data.conversationId);
       }
     }
-
+    
     // Closer dropdown after action
     onClose();
   };
@@ -34,8 +34,8 @@ const NotificationDropdown = ({ onClose }) => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pb-2 border-b border-white/5">
         <h3 className="text-sm font-black uppercase tracking-widest text-white">Notifications</h3>
-        <Link
-          to="/messages"
+        <Link 
+          to="/messages" 
           onClick={onClose}
           className="text-[10px] font-black uppercase tracking-tighter text-primary hover:text-white transition-colors"
         >
@@ -47,10 +47,10 @@ const NotificationDropdown = ({ onClose }) => {
       <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
         {notifications.length > 0 ? (
           notifications.map(notif => (
-            <NotificationItem
-              key={notif.id}
-              notification={notif}
-              onClick={handleNotificationClick}
+            <NotificationItem 
+              key={notif.id} 
+              notification={notif} 
+              onClick={handleNotificationClick} 
             />
           ))
         ) : (

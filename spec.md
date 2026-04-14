@@ -44,7 +44,8 @@ Each feature is divided into three distinct layers:
 - **UI Layer (Components)**: UI-specific components that consume hooks. They should be "purely visual" where possible.
 
 ### 3. Styling Standards
-- **Tailwind CSS v4**: All new styling must use utility-first CSS. legacy `.css` files are to be deleted during refactoring.
+- **Tailwind CSS v4**: All new styling must use utility-first CSS.
+- **V4 Shorthand**: Leverage Tailwind v4's improved engine for arbitrary values without brackets (e.g., use `z-100` instead of `z-[100]`, and `bg-white/2` for 2% opacity).
 - **Design Tokens**: Use CSS variables defined in `@theme` in `index.css` (e.g., `var(--color-primary)`).
 - **Glassmorphism**: Use the `.glass-panel` utility for cards and overlays.
 
