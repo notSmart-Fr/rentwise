@@ -5,3 +5,4 @@ export { default as Messages } from './components/Messages';
 export * from './context/ChatContext';
 export * from './hooks/useConversations';
 export * from './hooks/useMessages';
+export { messageService } from './services/messageService';

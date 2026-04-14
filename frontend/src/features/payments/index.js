@@ -6,4 +6,4 @@ export { default as OwnerPayments } from './components/OwnerPayments';
 export * from './hooks/usePayments';
 export * from './hooks/useOwnerPayments';
 export * from './hooks/useTenantPayments';
-export * from './services/paymentsService';
+export { paymentsService } from './services/paymentsService';

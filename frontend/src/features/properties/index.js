@@ -12,4 +12,4 @@ export { usePropertyForm } from './hooks/usePropertyForm';
 export { useOwnerProperties } from './hooks/useOwnerProperties';
 
 // Services
-export { default as propertiesService } from './services/propertiesService';
+export { propertiesService } from './services/propertiesService';

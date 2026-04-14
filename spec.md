@@ -64,6 +64,20 @@ Global assets used by two or more features.
 ### ⚙️ Core (`src/core/`)
 Singletons and project-level bootstrapping (API client configuration, Global Router).
 
+## 🗃️ Frontend: Unified Export Standard
+To prevent "SyntaxError: Missing export" and ensure predictable imports, all frontend modules MUST follow these export rules:
+
+### 1. Named Singleton Exports (Services & Hooks)
+Services and Hooks must primarily use **Named Exports**. This provides strict naming and better IDE support.
+- **Service Pattern:** `export const myService = new MyService();`
+- **Hook Pattern:** `export const useMyHook = () => { ... };`
+*Note: Default exports are allowed only as fallback secondary exports.*
+
+### 2. Barrel Policy (`index.js`)
+Every feature and shared directory MUST contain an `index.js` file that acts as the "Public API" for that module.
+- **Rule:** Hooks, Services, and Main Components must be re-exported through the feature's `index.js`.
+- **Usage:** Developers/Agents should import from the feature root (e.g., `import { requestsService } from '@/features/requests'`) rather than deep-nesting.
+
 ---
 
 ## 🏎️ Execution Workflow
