@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../features/auth';
 import { useChat, useConversations } from '../../features/messaging';
+import NotificationDropdown from './NotificationDropdown';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ const Navbar = () => {
   const { totalUnread } = useConversations();
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationRef = useRef(null);
   const role = user?.role || 'TENANT';
 
   useEffect(() => {
@@ -18,6 +21,17 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle outside click for notifications
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setIsNotificationsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleLogout = () => {
@@ -66,14 +80,79 @@ const Navbar = () => {
                   <Link to="/my-tickets" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Issues</Link>
                 </>
               )}
-              <Link to="/messages" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 relative">
-                Notifications
-                {totalUnread > 0 && (
-                  <span className="absolute -top-2 -right-3 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] text-white font-bold animate-pulse">
-                    {totalUnread}
-                  </span>
+              
+              {/* Global Notifications Dropdown */}
+              <div className="relative" ref={notificationRef}>
+                <button 
+                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                  className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 flex items-center gap-2 outline-none group"
+                >
+                  Notifications
+                  <div className="relative">
+                    <span className={`flex h-2.5 w-2.5 rounded-full ${totalUnread > 0 ? 'bg-danger animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-white/10'}`} />
+                  </div>
+                </button>
+                {isNotificationsOpen && (
+                  <NotificationDropdown onClose={() => setIsNotificationsOpen(false)} />
                 )}
+              </div>
+
+              <div className="w-px h-6 bg-white/5 mx-2" />
+              <button
+                className="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-danger active:scale-95 transition-all outline-none"
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Log In</Link>
+              <Link to="/register" className="btn btn-primary px-8 py-2.5 shadow-lg shadow-primary/20">
+                Sign Up
               </Link>
+            </>
+          )}
+        </div>
+
+        {/* Mobile menu Toggle */}
+        <button
+          className="md:hidden flex items-center justify-center w-11 h-11 bg-white/5 border border-white/10 rounded-xl text-white outline-none active:scale-90 transition-transform"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <svg viewBox="0 0 24 24" className="w-6 h-6 shrink-0" stroke="currentColor" strokeWidth="2.5" fill="none">
+            <path d={isMenuOpen ? "M18 6L6 18M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 top-0 left-0 w-full h-screen z-110 md:hidden bg-bg-base/98 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-300 px-6 pt-24 pb-12 overflow-y-auto">
+          <div className="flex flex-col gap-2">
+            <Link to="/" className="text-4xl font-black text-white py-6 border-b border-white/5 flex items-center justify-between group" onClick={() => setIsMenuOpen(false)}>
+              Explore <span className="text-primary group-hover:translate-x-2 transition-transform">→</span>
+            </Link>
+            {isAuthenticated ? (
+              <>
+                {role === 'OWNER' ? (
+                  <Link to="/owner-dashboard" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                ) : (
+                  <>
+                    <Link to="/tenant-dashboard" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                    <Link to="/my-tickets" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Maintenance</Link>
+                  </>
+                )}
+                
+                {/* Mobile Notifications Shortcut */}
+                <Link to="/messages" className="text-4xl font-black text-white py-6 border-b border-white/5 relative" onClick={() => setIsMenuOpen(false)}>
+                  Notifications
+                  {totalUnread > 0 && (
+                    <span className="ml-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-danger text-[11px] text-white font-bold">
+                      {totalUnread}
+                    </span>
+                  )}
+                </Link>
               <div className="w-px h-6 bg-white/5 mx-2" />
               <button
                 className="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-danger active:scale-95 transition-all outline-none"
