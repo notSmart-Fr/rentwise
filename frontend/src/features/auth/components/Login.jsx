@@ -47,19 +47,46 @@ const Login = () => {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 p-4 bg-danger/10 border border-danger/20 rounded-lg text-danger mb-6 text-sm animate-pulse">
-              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <span>{error}</span>
+            <div className="flex flex-col gap-3 p-4 bg-danger/10 border border-danger/20 rounded-xl text-danger mb-6 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2.5" fill="none">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span className="font-medium whitespace-pre-wrap">
+                  {error === 'ACCOUNT_NOT_FOUND' 
+                    ? "We couldn't find an account with that email." 
+                    : error === 'INCORRECT_PASSWORD' 
+                    ? "Incorrect password. Please try again." 
+                    : error}
+                </span>
+              </div>
+              
+              {/* Smart Suggestion UI */}
+              <div className="flex items-center gap-3 pt-2 border-t border-danger/10">
+                {error === 'ACCOUNT_NOT_FOUND' ? (
+                  <Link to="/register" className="flex items-center gap-1.5 font-semibold text-danger hover:underline">
+                    <span>Create an account</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </Link>
+                ) : error === 'INCORRECT_PASSWORD' ? (
+                  <Link to="/forgot-password" state={{ email }} className="flex items-center gap-1.5 font-semibold text-danger hover:underline">
+                    <span>Reset password?</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </Link>
+                ) : null}
+              </div>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-text-secondary" htmlFor="email">Email</label>
+              <label className="text-sm font-medium text-text-secondary pl-1" htmlFor="email">Email Address</label>
               <input
                 id="email"
                 type="email"
@@ -68,25 +95,36 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
+                required
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-text-secondary" htmlFor="password">Password</label>
+              <div className="flex items-center justify-between pl-1">
+                <label className="text-sm font-medium text-text-secondary" htmlFor="password">Password</label>
+                <Link 
+                  to="/forgot-password" 
+                  tabIndex="-1"
+                  className="text-xs font-semibold text-primary hover:text-accent transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 id="password"
                 type="password"
                 className="input-field"
-                placeholder="Enter your password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
+                required
               />
             </div>
 
             <button
               type="submit"
-              className="btn btn-primary w-full mt-4 py-3.5 text-base"
+              className="btn btn-primary w-full mt-4 py-3.5 text-base shadow-lg shadow-primary/20"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -99,7 +137,7 @@ const Login = () => {
 
           <div className="mt-8 pt-6 border-t border-white/5 text-center">
             <p className="text-text-secondary text-sm">
-              Don't have an account? <Link to="/register" className="font-semibold bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">Create one</Link>
+              Don't have an account? <Link to="/register" className="font-semibold text-primary hover:text-accent transition-colors">Create one</Link>
             </p>
           </div>
         </div>

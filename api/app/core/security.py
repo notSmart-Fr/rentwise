@@ -29,3 +29,17 @@ def decode_token(token: str) -> dict:
         return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])
     except JWTError as e:
         raise ValueError("Invalid token") from e
+
+def create_reset_token(email: str) -> str:
+    """Creates a short-lived token for password reset (15 mins)"""
+    now = datetime.now(timezone.utc)
+    exp = now + timedelta(minutes=15)
+    payload = {"sub": email, "iat": int(now.timestamp()), "exp": exp, "purpose": "password_reset"}
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
+
+def decode_reset_token(token: str) -> str:
+    """Decodes a reset token and returns the email if valid"""
+    payload = decode_token(token)
+    if payload.get("purpose") != "password_reset":
+        raise ValueError("Invalid token purpose")
+    return payload["sub"]

@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import messageService from '../services/messageService';
 import { useWebSocket } from '../../../shared/context/WebSocketContext';
+import { useAuth } from '../../../features/auth';
 
 export const useConversations = () => {
+  const { isAuthenticated } = useAuth();
   const { subscribe } = useWebSocket();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchConversations = useCallback(async (isInitial = false) => {
+    if (!isAuthenticated) return;
     if (isInitial) setLoading(true);
     setError(null);
     try {
@@ -20,9 +23,15 @@ export const useConversations = () => {
     } finally {
       if (isInitial) setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setConversations([]);
+      setLoading(false);
+      return;
+    }
+
     fetchConversations(true);
     
     // Auto-refresh every 60 seconds as a silent backup
@@ -37,7 +46,7 @@ export const useConversations = () => {
       clearInterval(interval);
       unsubscribe();
     };
-  }, [fetchConversations, subscribe]);
+  }, [fetchConversations, subscribe, isAuthenticated]);
 
   const markAsRead = async (conversationId) => {
     try {

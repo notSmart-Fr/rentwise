@@ -1,10 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth, Login, Register } from './features/auth';
+import { useAuth, Login, Register, ForgotPassword, ResetPassword } from './features/auth';
 import { ChatProvider, useChat, ChatModal, Messages } from './features/messaging';
 import { Home } from './features/home';
 import { OwnerDashboard, TenantDashboard } from './features/dashboard';
-import { MyRequests } from './features/requests';
-import { MyTickets } from './features/tickets';
 import { PropertyDetails } from './features/properties';
 import MainLayout from './shared/components/MainLayout';
 
@@ -57,6 +55,18 @@ function AppInner() {
           <Route path="/login" element={
             <PublicOnlyRoute>
               <Login />
+            </PublicOnlyRoute>
+          } />
+
+          <Route path="/forgot-password" element={
+            <PublicOnlyRoute>
+              <ForgotPassword />
+            </PublicOnlyRoute>
+          } />
+
+          <Route path="/reset-password" element={
+            <PublicOnlyRoute>
+              <ResetPassword />
             </PublicOnlyRoute>
           } />
           

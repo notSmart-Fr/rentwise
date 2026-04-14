@@ -62,6 +62,7 @@ const OwnerDashboard = () => {
           <p className="mt-2 text-text-secondary text-lg">Central command for your property portfolio and tenancies.</p>
         </div>
 
+        <div className="flex gap-1 p-1 bg-white/5 border border-white/5 backdrop-blur-xl rounded-2xl w-full lg:w-auto overflow-x-auto">
           {['overview', 'properties', 'requests', 'revenue', 'maintenance', 'chats'].map((tab) => (
             <button
               key={tab}
