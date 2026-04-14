@@ -6,7 +6,7 @@ from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
 from app.db.deps import get_db
 from app.core.security import decode_token
-from app.modules.auth.schemas import RegisterRequest, LoginRequest, TokenResponse, MeResponse
+from app.modules.auth.schemas import RegisterRequest, LoginRequest, TokenResponse, MeResponse, GoogleLoginRequest
 from app.modules.auth.service import AuthService
 from app.modules.auth.model import User
 from app.modules.auth.deps import oauth2_scheme, get_current_user
@@ -44,6 +44,18 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     except ValueError as e:
         # Use exact error code for frontend processing
         raise HTTPException(status_code=401, detail=str(e))
+
+@router.post("/google", response_model=TokenResponse)
+def google_login(payload: GoogleLoginRequest, db: Session = Depends(get_db)):
+    try:
+        token = service.google_login(db, payload.id_token, payload.role)
+        return TokenResponse(access_token=token)
+    except ValueError as e:
+        error_msg = str(e)
+        if error_msg == "ROLE_REQUIRED":
+            # 403 Forbidden is a good way to signal "More info needed"
+            raise HTTPException(status_code=403, detail="ROLE_REQUIRED")
+        raise HTTPException(status_code=401, detail=error_msg)
 
 @router.post("/forgot-password")
 def forgot_password(payload: dict, db: Session = Depends(get_db)):

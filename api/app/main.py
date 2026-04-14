@@ -13,10 +13,17 @@ from app.modules.payments.owner_router import router as payments_router
 from app.modules.payments.tenant_router import router as tenant_payments_router
 from app.modules.tickets.router import router as tickets_router
 from app.modules.messages.router import router as messages_router
+from app.modules.notifications.router import router as notifications_router
 
 
+
+from app.core.errors import value_error_handler, generic_exception_handler
 
 app = FastAPI(title=settings.app_name)
+
+# Register Global Exception Handlers
+app.add_exception_handler(ValueError, value_error_handler)
+app.add_exception_handler(Exception, generic_exception_handler)
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -39,6 +46,7 @@ app.include_router(payments_router)
 app.include_router(tenant_payments_router)
 app.include_router(tickets_router)
 app.include_router(messages_router)
+app.include_router(notifications_router)
 
 @app.get("/")
 def root():

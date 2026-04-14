@@ -1,10 +1,11 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth, Login, Register, ForgotPassword, ResetPassword } from './features/auth';
 import { ChatProvider, useChat, ChatModal, Messages } from './features/messaging';
 import { Home } from './features/home';
 import { OwnerDashboard, TenantDashboard } from './features/dashboard';
 import { PropertyDetails } from './features/properties';
 import MainLayout from './shared/components/MainLayout';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 // Protected Route Wrapper Component
@@ -46,6 +47,9 @@ const PublicOnlyRoute = ({ children }) => {
 
 function AppInner() {
   const { chat, closeChat } = useChat();
+  const location = useLocation();
+  const isDedicatedMessagesPage = location.pathname === '/messages';
+
   return (
     <>
       <MainLayout>
@@ -113,7 +117,8 @@ function AppInner() {
       </MainLayout>
 
       {/* Global persistent chat widget - survives page navigation */}
-      {chat && (
+      {/* Hide when on the full /messages page to prevent UI overlap */}
+      {chat && !isDedicatedMessagesPage && (
         <ChatModal
           isOpen={true}
           onClose={closeChat}
@@ -130,9 +135,11 @@ function AppInner() {
 
 function App() {
   return (
-    <ChatProvider>
-      <AppInner />
-    </ChatProvider>
+    <GoogleOAuthProvider clientId="782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com">
+      <ChatProvider>
+        <AppInner />
+      </ChatProvider>
+    </GoogleOAuthProvider>
   );
 }
 

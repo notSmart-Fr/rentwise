@@ -1,81 +1,84 @@
-# RentWise API — V1 Spec (Assumptions-Driven, Owner-First)
+# RentWise Unified Architecture Specification (spec.md)
 
-## 1) Purpose
-Build an owner-first rental backend API that helps landlords list properties, manage tenant requests, and record payments.
-V1 is designed for **local reality**: manual payments are **recorded**, not processed via gateway.
+This document serves as the "Ground Truth" for all development on the RentWise platform. It ensures consistency, scalability, and developer sanity.
 
-## 2) Primary User & Market
-- **Primary user:** Owner / Landlord (drives adoption; controls supply)
-- **Secondary user:** Tenant / Renter (creates demand; submits requests)
-- **Market fit:** Local (Bangladesh-like) reality first; keep future upgrade path to global.
-## 3) V1.5 Scope (Current State)
-### 3.1 Authentication & Roles
-- Register: OWNER or TENANT
-- Login: JWT access token
-- Invisible role verification for UX
+---
 
-### 3.2 Owner: Property Management & Ledger
-- Create/Update property listings
-- **Visuals**: Attach multiple image URLs to listings
-- Approve/Reject tenant lease requests
-- **Financials**: Record manual payments and track revenue stats
+## 🐍 Backend: Layered & Shared Standards
+Every module in `api/app/modules/` MUST adhere to the **Router -> Service -> Repository** hierarchy. Global reusable logic is partitioned by its role:
 
-### 3.3 Tenant/Public: Discovery & Tracking
-- Browse available properties with visual previews
-- Advanced search/filter (keyword & city)
-- Request leases and view payment receipts (read-only)
+### 🏠 Domain Modules (`app/modules/`)
+Vertical slices of business logic (e.g., `payments`, `tickets`).
 
-## 4) Tech Stack (Production-Ready)
-- **Frontend**: React + Vite + Tailwind CSS v4
-- **Backend**: FastAPI (Python 3.12)
-- **Database**: PostgreSQL (Dockerized)
-- **Environment**: Docker & Docker Compose for full-stack orchestration
+### ⚙️ Core Infrastructure (`app/core/`)
+Cross-cutting infrastructure services.
+- **WebSocket:** Connection and broadcasting manager.
+- **Security:** JWT, Hashing, and Authentication logic.
+- **Communication:** Email/SMS templates and configurations.
 
-## 4.1 Frontend Architecture (Feature-Based Layered) 🧭
-To ensure scalability and maintainability, the frontend follows a feature-based layered pattern:
+### 🛠️ Common Utilities (`app/utils/`)
+Pure, stateless helper functions (e.g., `date_formatters`, `uuid_helpers`).
 
-### 1. Feature-First Structure
-All code related to a specific domain (e.g., `requests`, `properties`, `auth`) is encapsulated within `src/features/[feature_name]`.
+### 🗄️ Database Foundation (`app/db/`)
+Shared persistence logic and session management.
+- **Base Model:** Shared SQLAlchemy columns (ID, Timestamps).
+- **Base Repository:** Generic CRUD operations (Get, Create, Update, Delete).
 
-### 2. Architectural Layers
-Each feature is divided into three distinct layers:
-- **Data Layer (Services)**: `services/` contains raw API calls. These should be extracted from the global `api.js`.
-- **Logic Layer (Hooks)**: `hooks/` contains Custom Hooks that manage state, side effects, and business logic.
-- **UI Layer (Components)**: UI-specific components that consume hooks. They should be "purely visual" where possible.
+---
 
-### 3. Styling Standards
-- **Tailwind CSS v4**: All new styling must use utility-first CSS.
-- **V4 Shorthand**: Leverage Tailwind v4's improved engine for arbitrary values without brackets (e.g., use `z-100` instead of `z-[100]`, and `bg-white/2` for 2% opacity).
-- **Design Tokens**: Use CSS variables defined in `@theme` in `index.css` (e.g., `var(--color-primary)`).
-- **Glassmorphism**: Use the `.glass-panel` utility for cards and overlays.
+## 🏗️ Backend Layers Detail
+| Layer | File | Responsibility | Allowed Imports |
+| :--- | :--- | :--- | :--- |
+| **Router** | `router.py` | FastAPI entry point, dependency injection (`get_db`), input validation (Pydantic), and HTTP response status mapping. | Services, Schemas, Auth Deps. |
+| **Service** | `service.py` | **The Brain.** Business logic, authorization, permission checks, orchestration, and inter-repository calls. | Repositories, Other Services, Models. |
+| **Repository** | `repository.py` | Pure Data Persistence. Raw SQLAlchemy queries. CRUD operations. No business logic. | Models, DB Session. |
+| **Model** | `model.py` | Declarative SQLAlchemy Table definitions. | - |
+| **Schema** | `schemas.py` | Pydantic Request/Response models. | - |
 
-## 5) Data Model
-### User
-- id (uuid), role, full_name, email, password_hash
+### 🛠️ Backend Rules of Engagement
+1. **No Logic in Routers:** Routers must only call service methods and handle high-level exceptions.
+2. **Permission Checks in Services:** Always verify "Can user X perform action Y on resource Z?" inside the Service layer.
+3. **Repository Purity:** Repositories should not know about "Users" or "Permissions"—they just know about "Data".
+4. **Error Handling:** Services should raise standard Python exceptions (e.g., `ValueError`, `PermissionError`). Routers translate these to `HTTPException`.
 
-### Property
-- id (uuid), owner_id, title, city, area, rent_amount, bedrooms, bathrooms, is_available
-- **images**: Relationship to PropertyImage
+---
 
-### PropertyImage
-- id (uuid), property_id (fk), url
+## ⚛️ Frontend: Feature-Based Slicing (FBS)
+The project is organized by business domains to prevent the "folder-by-type" anti-pattern.
 
-### RentalRequest
-- id (uuid), property_id, tenant_id, status (PENDING | APPROVED | REJECTED)
+### 🏠 Features (`src/features/`)
+Self-contained modules representing a single business domain (e.g., `messaging`, `auth`).
+- `components/`: UI components exclusive to this feature.
+- `hooks/`: Domain-specific state management (e.g., `useConversations`).
+- `services/`: API wrapper functions for this domain.
+- `context/`: (Optional) Feature-specific contexts (e.g., `AuthContext`).
+- `utils/`: Logic or formatters specific to this domain.
 
-### Payment
-- id (uuid), rental_request_id, amount, method (CASH | BKASH | NAGAD | BANK), status (PENDING | COMPLETED)
+### 🌐 Shared (`src/shared/`)
+Global assets used by two or more features.
+- `components/`: Generic UI units (Cards, Inputs, Modals, Navbar).
+- `hooks/`: Utility hooks (WebSockets, Notifications, UI helpers).
+- `services/`: Global API configurations and base services.
+- `context/`: App-wide providers (Theme, Global WebSocket, Global Notifications).
 
-## 6) API Endpoints
-- **Auth**: `/auth/register`, `/auth/login`, `/me`
-- **Owner**: `/owner/properties`, `/owner/requests`, `/owner/payments` (for stats)
-- **Public**: `/properties`, `/properties/{id}`
-- **Tenant**: `/tenant/requests`, `/tenant/payments` (for receipts)
+### ⚙️ Core (`src/core/`)
+Singletons and project-level bootstrapping (API client configuration, Global Router).
 
-## 7) Non-Goals (Future ideas)
-- Payment gateway integration
-- In-app messaging
-- Real file upload to S3/Cloudinary
-- Notifications (email/push)
-in moderation
-- Reporting dashboard
+---
+
+## 🏎️ Execution Workflow
+When adding a new feature:
+
+**1. Backend Development**
+- Define the **Model** & **Schema**.
+- Implement the **Repository** for data access.
+- Implement the **Service** for logic.
+- Expose via the **Router**.
+
+**2. Frontend Development**
+- Implement the **Service** (API match).
+- Create the **Hook** (React State wrapper).
+- Build the **Components** (UI).
+
+---
+*Failure to follow these standards will result in broken builds and awkward PR reviews.*

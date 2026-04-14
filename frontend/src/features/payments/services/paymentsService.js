@@ -1,39 +1,34 @@
+import BaseApiService from '../../../shared/services/BaseApiService';
 import { apiRequest } from '../../../shared/services/api';
 
-export const paymentsService = {
-  getById: async (id) => {
-    return await apiRequest(`/payments/${id}`, { method: 'GET' });
-  },
+class PaymentsService extends BaseApiService {
+  constructor() {
+    super('/payments');
+  }
 
-  getByRequest: async (requestId) => {
-    return await apiRequest(`/payments/request/${requestId}`, { method: 'GET' });
-  },
+  async getByRequest(requestId) {
+    return await apiRequest(`${this.resourcePath}/request/${requestId}`, { method: 'GET' });
+  }
 
-  getTenantByRequest: async (requestId) => {
-    return await apiRequest(`/payments/tenant/request/${requestId}`, { method: 'GET' });
-  },
+  async getTenantByRequest(requestId) {
+    return await apiRequest(`/tenant/requests/${requestId}/payments`, { method: 'GET' });
+  }
 
-  create: async (paymentData) => {
-    return await apiRequest('/payments', {
+  async recordManualPayment(requestId, paymentData) {
+    return await apiRequest(`/owner/requests/${requestId}/payments`, {
       method: 'POST',
-      body: paymentData
+      body: JSON.stringify(paymentData)
     });
-  },
+  }
 
-  update: async (id, paymentData) => {
-    return await apiRequest(`/payments/${id}`, {
-      method: 'PATCH',
-      body: paymentData
-    });
-  },
-
-  listOwnerPayments: async () => {
+  async listOwnerPayments() {
     return await apiRequest('/owner/payments', { method: 'GET' });
-  },
+  }
 
-  listTenantPayments: async () => {
+  async listTenantPayments() {
     return await apiRequest('/tenant/payments', { method: 'GET' });
   }
-};
+}
 
+export const paymentsService = new PaymentsService();
 export default paymentsService;

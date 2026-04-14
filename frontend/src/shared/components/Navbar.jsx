@@ -2,33 +2,36 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../features/auth';
 import { useChat, useConversations } from '../../features/messaging';
-import NotificationDropdown from './NotificationDropdown';
+import { useNotifications } from '../hooks/useNotifications';
+import ChatDropdown from './ChatDropdown';
+import AlertsDropdown from './AlertsDropdown';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
   const { closeChat } = useChat();
-  const { totalUnread } = useConversations();
+  const { totalUnread: unreadMessages } = useConversations();
+  const { unreadCount: unreadAlerts } = useNotifications();
+  
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const notificationRef = useRef(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isAlertsOpen, setIsAlertsOpen] = useState(false);
+  
+  const chatRef = useRef(null);
+  const alertsRef = useRef(null);
   const role = user?.role || 'TENANT';
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle outside click for notifications
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-        setIsNotificationsOpen(false);
-      }
+      if (chatRef.current && !chatRef.current.contains(event.target)) setIsChatOpen(false);
+      if (alertsRef.current && !alertsRef.current.contains(event.target)) setIsAlertsOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -67,7 +70,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden md:flex items-center gap-8">
           <Link to="/" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Explore</Link>
 
           {isAuthenticated ? (
@@ -81,20 +84,38 @@ const Navbar = () => {
                 </>
               )}
               
-              {/* Global Notifications Dropdown */}
-              <div className="relative" ref={notificationRef}>
-                <button 
-                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                  className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 flex items-center gap-2 outline-none group"
-                >
-                  Notifications
-                  <div className="relative">
-                    <span className={`flex h-2.5 w-2.5 rounded-full ${totalUnread > 0 ? 'bg-danger animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-white/10'}`} />
-                  </div>
-                </button>
-                {isNotificationsOpen && (
-                  <NotificationDropdown onClose={() => setIsNotificationsOpen(false)} />
-                )}
+              <div className="flex items-center gap-6 ml-4">
+                {/* Messages Dropdown */}
+                <div className="relative" ref={chatRef}>
+                  <button 
+                    onClick={() => { setIsChatOpen(!isChatOpen); setIsAlertsOpen(false); }}
+                    className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 flex items-center gap-2 outline-none group"
+                  >
+                    Messages
+                    <div className="relative">
+                      <span className={`flex h-2 w-2 rounded-full ${unreadMessages > 0 ? 'bg-primary animate-pulse shadow-[0_0_8px_rgba(124,58,237,0.5)]' : 'bg-white/10'}`} />
+                    </div>
+                  </button>
+                  {isChatOpen && (
+                    <ChatDropdown onClose={() => setIsChatOpen(false)} />
+                  )}
+                </div>
+
+                {/* Alerts Dropdown */}
+                <div className="relative" ref={alertsRef}>
+                  <button 
+                    onClick={() => { setIsAlertsOpen(!isAlertsOpen); setIsChatOpen(false); }}
+                    className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 flex items-center gap-2 outline-none group"
+                  >
+                    Alerts
+                    <div className="relative">
+                      <span className={`flex h-2 w-2 rounded-full ${unreadAlerts > 0 ? 'bg-accent animate-pulse shadow-[0_0_8px_rgba(56,189,248,0.5)]' : 'bg-white/10'}`} />
+                    </div>
+                  </button>
+                  {isAlertsOpen && (
+                    <AlertsDropdown onClose={() => setIsAlertsOpen(false)} />
+                  )}
+                </div>
               </div>
 
               <div className="w-px h-6 bg-white/5 mx-2" />

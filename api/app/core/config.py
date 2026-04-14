@@ -6,7 +6,7 @@ class Settings(BaseSettings):
 
     jwt_secret: str
     jwt_alg: str = "HS256"
-    access_token_minutes: int = 60 * 24
+    access_token_minutes: int = 60 * 24 * 30 # 30 Days
 
     # SMTP Settings (Gmail)
     smtp_user: str = ""
@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     
     # Frontend URL for links in emails
     frontend_url: str = "http://localhost:5173"
+
+    google_client_id: str = "782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

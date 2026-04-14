@@ -70,8 +70,8 @@ const PropertyDetails = () => {
   return (
     <div className="container pb-20 pt-32 animate-fade-in">
       {/* Breadcrumb */}
-      <nav className="mb-10 flex items-center gap-3 text-sm font-medium text-slate-400">
-        <Link to="/" className="transition-colors hover:text-white">Explore</Link>
+      <nav className="mb-10 flex items-center gap-3 text-sm font-medium text-slate-400 cursor-default select-none">
+        <Link to="/" className="transition-colors hover:text-white cursor-pointer">Explore</Link>
         <span className="text-slate-600">/</span>
         <span className="text-slate-400">{property.city}</span>
         <span className="text-slate-600">/</span>
@@ -111,8 +111,8 @@ const PropertyDetails = () => {
           </div>
 
           {/* Info Sections */}
-          <div className="flex flex-col gap-8">
-            <div className="space-y-2">
+           <div className="flex flex-col gap-8">
+            <div className="space-y-2 cursor-default select-none">
               <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">{property.title}</h1>
               <div className="flex items-center gap-2 text-lg text-slate-400">
                 <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -123,7 +123,7 @@ const PropertyDetails = () => {
             </div>
 
             {/* Specs Bar */}
-            <div className="flex flex-wrap gap-10 border-y border-white/5 py-8">
+            <div className="flex flex-wrap gap-10 border-y border-white/5 py-8 cursor-default select-none">
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Bedrooms</span>
                 <span className="text-2xl font-black text-white">{property.bedrooms || 'N/A'}</span>
@@ -145,7 +145,7 @@ const PropertyDetails = () => {
 
             {/* Description */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white">About this home</h3>
+              <h3 className="text-xl font-bold text-white cursor-default select-none">About this home</h3>
               <p className="text-lg leading-relaxed text-slate-400">
                 {property.description || "No description provided by the owner."}
               </p>
@@ -153,10 +153,10 @@ const PropertyDetails = () => {
 
             {/* Amenities */}
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white">Amenities</h3>
+              <h3 className="text-xl font-bold text-white cursor-default select-none">Amenities</h3>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {['✨ Modern Finish', '🚗 Parking Space', '🛡️ 24/7 Security', '📶 High-Speed Internet'].map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/5 p-4 font-bold text-slate-300 transition-all hover:border-primary hover:bg-white/8 hover:text-white">
+                  <div key={item} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/5 p-4 font-bold text-slate-300 transition-all hover:border-primary hover:bg-white/8 hover:text-white cursor-default select-none">
                     {item}
                   </div>
                 ))}
@@ -168,7 +168,7 @@ const PropertyDetails = () => {
         {/* Sidebar */}
         <div className="lg:sticky lg:top-32">
           <div className="flex flex-col gap-6 rounded-2xl border border-white/5 bg-white/5 p-10 backdrop-blur-xl shadow-2xl">
-            <div className="flex items-baseline gap-2 border-b border-white/5 pb-6">
+            <div className="flex items-baseline gap-2 border-b border-white/5 pb-6 cursor-default select-none">
               <span className="text-4xl font-black text-white font-display">৳ {property.rent_amount.toLocaleString()}</span>
               <span className="text-slate-400 text-lg">/ month</span>
             </div>

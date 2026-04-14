@@ -45,11 +45,7 @@ def update_property(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    prop_id = uuid.UUID(property_id)
-    prop = repo.get_by_id(db, prop_id)
-    if not prop or prop.owner_id != owner.id:
-        raise HTTPException(status_code=404, detail="Property not found")
-    prop = service.update(db, prop, payload)
+    prop = service.update(db, uuid.UUID(property_id), owner.id, payload)
     return service.to_response(prop)
 
 @owner_router.patch("/properties/{property_id}/availability", response_model=PropertyResponse)
@@ -59,12 +55,7 @@ def set_availability(
     db: Session = Depends(get_db),
     owner: User = Depends(require_owner),
 ):
-    prop_id = uuid.UUID(property_id)
-    prop = repo.get_by_id(db, prop_id)
-    if not prop or prop.owner_id != owner.id:
-        raise HTTPException(status_code=404, detail="Property not found")
-    prop.is_available = payload.is_available
-    prop = repo.save(db, prop)
+    prop = service.update_availability(db, uuid.UUID(property_id), owner.id, payload.is_available)
     return service.to_response(prop)
 
 # PUBLIC endpoints

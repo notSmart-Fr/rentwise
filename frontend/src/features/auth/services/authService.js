@@ -11,6 +11,10 @@ export const authService = {
     method: 'POST',
     body: data,
   }),
+  loginWithGoogle: (idToken, role) => apiRequest('/auth/google', {
+    method: 'POST',
+    body: { id_token: idToken, role },
+  }),
   getMe: () => apiRequest('/auth/me', { method: 'GET' }),
 };
 

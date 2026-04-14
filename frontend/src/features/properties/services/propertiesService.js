@@ -1,31 +1,41 @@
+import BaseApiService from '../../../shared/services/BaseApiService';
 import { apiRequest } from '../../../shared/services/api';
 
-const propertiesService = {
-  getAll: (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const endpoint = query ? `/properties?${query}` : '/properties';
-    return apiRequest(endpoint, { method: 'GET' });
-  },
-  
-  getById: (id) => apiRequest(`/properties/${id}`, { method: 'GET' }),
-  
-  // Owner only endpoints
-  create: (data) => apiRequest('/owner/properties', {
-    method: 'POST',
-    body: data,
-  }),
-  
-  getOwnerProperties: () => apiRequest('/owner/properties', { method: 'GET' }),
-  
-  update: (id, data) => apiRequest(`/owner/properties/${id}`, {
-    method: 'PATCH',
-    body: data,
-  }),
-  
-  setAvailability: (id, isAvailable) => apiRequest(`/owner/properties/${id}/availability`, {
-    method: 'PATCH',
-    body: { is_available: isAvailable },
-  }),
-};
+class PropertiesService extends BaseApiService {
+  constructor() {
+    super('/properties');
+    this.ownerPath = '/owner/properties';
+  }
 
+  // Public methods use super (which uses /properties)
+  // getAll and getById are already handled by BaseApiService
+
+  // Owner specific methods
+  async create(data) {
+    return await apiRequest(this.ownerPath, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getOwnerProperties() {
+    return await apiRequest(this.ownerPath, { method: 'GET' });
+  }
+
+  async update(id, data) {
+    return await apiRequest(`${this.ownerPath}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async setAvailability(id, isAvailable) {
+    return await apiRequest(`${this.ownerPath}/${id}/availability`, {
+      method: 'PATCH',
+      body: JSON.stringify({ is_available: isAvailable }),
+    });
+  }
+}
+
+export const propertiesService = new PropertiesService();
 export default propertiesService;

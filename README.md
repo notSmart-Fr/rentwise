@@ -1,6 +1,14 @@
 # RentWise - Property Management Platform
 **A full-stack rental ecosystem with automated ledgers and visual discovery.**
 
+## 🤖 Agentic Directions
+If you are an AI assistant or human developer working on this repository, **you MUST follow the architectural standards defined in [spec.md](./spec.md).**
+- **Architecture:** Layered Backend (Router/Service/Repository) + Feature-Based Frontend (FBS).
+- **Shared Logic:** Use `api/app/db/base_repo.py` for backend CRUD and `frontend/src/shared` for frontend reusability.
+- **Consistency:** Any new module MUST adhere to the layers defined in the specification.
+
+---
+
 ## 🚀 Quick Start (Docker - Recommended)
 The fastest way to run the entire stack (Backend, Frontend, and Database) is using Docker Compose.
 
@@ -12,13 +20,6 @@ The fastest way to run the entire stack (Backend, Frontend, and Database) is usi
 3. **Access the platform:**
    - **Frontend UI**: [http://localhost:5173](http://localhost:5173)
    - **API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
-
-## 🔑 Test Credentials
-Use the following demo accounts to explore the platform without registering:
-- **Owner Account**: `owner@test.com` / `password123`
-- **Tenant Account**: `tenant_real@test.com` / `password123`
 
 ---
 

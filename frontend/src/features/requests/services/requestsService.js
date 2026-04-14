@@ -1,25 +1,36 @@
+import BaseApiService from '../../../shared/services/BaseApiService';
 import { apiRequest } from '../../../shared/services/api';
 
-export const requestsService = {
+class RequestsService extends BaseApiService {
+  constructor() {
+    super('/requests');
+  }
+
   // Tenant actions
-  create: (propertyId, message) => 
-    apiRequest(`/tenant/properties/${propertyId}/requests`, {
+  async create(propertyId, message) {
+    return await apiRequest(`/tenant/properties/${propertyId}/requests`, {
       method: 'POST',
-      body: { message },
-    }),
+      body: JSON.stringify({ message }),
+    });
+  }
   
-  getTenantRequests: () => 
-    apiRequest('/tenant/requests', { method: 'GET' }),
+  async getTenantRequests() {
+    return await apiRequest('/tenant/requests', { method: 'GET' });
+  }
   
   // Owner actions
-  getOwnerRequests: () => 
-    apiRequest('/owner/requests', { method: 'GET' }),
+  async getOwnerRequests() {
+    return await apiRequest('/owner/requests', { method: 'GET' });
+  }
   
-  approve: (requestId) => 
-    apiRequest(`/owner/requests/${requestId}/approve`, { method: 'PATCH' }),
+  async approve(requestId) {
+    return await apiRequest(`/owner/requests/${requestId}/approve`, { method: 'PATCH' });
+  }
   
-  reject: (requestId) => 
-    apiRequest(`/owner/requests/${requestId}/reject`, { method: 'PATCH' }),
-};
+  async reject(requestId) {
+    return await apiRequest(`/owner/requests/${requestId}/reject`, { method: 'PATCH' });
+  }
+}
 
+export const requestsService = new RequestsService();
 export default requestsService;

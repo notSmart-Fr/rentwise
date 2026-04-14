@@ -24,3 +24,7 @@ class MeResponse(BaseModel):
     email: EmailStr
     phone: str | None = None
     is_verified: bool
+
+class GoogleLoginRequest(BaseModel):
+    id_token: str
+    role: UserRole | None = None

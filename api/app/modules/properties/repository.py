@@ -1,19 +1,9 @@
-import uuid
-from sqlalchemy import select, or_
-from sqlalchemy.orm import Session
-
+from app.db.base_repo import BaseRepository
 from app.modules.properties.model import Property
 
-class PropertyRepository:
-    def create(self, db: Session, prop: Property) -> Property:
-        db.add(prop)
-        db.commit()
-        db.refresh(prop)
-        return prop
-
-    def get_by_id(self, db: Session, prop_id: uuid.UUID) -> Property | None:
-        stmt = select(Property).where(Property.id == prop_id)
-        return db.execute(stmt).scalar_one_or_none()
+class PropertyRepository(BaseRepository[Property]):
+    def __init__(self):
+        super().__init__(Property)
 
     def list_by_owner(self, db: Session, owner_id: uuid.UUID) -> list[Property]:
         stmt = select(Property).where(Property.owner_id == owner_id)
@@ -54,14 +44,9 @@ class PropertyRepository:
             stmt = stmt.where(Property.bedrooms == beds)
 
         return list(db.execute(stmt).scalars().all())
+
     def mark_as_unavailable(self, db: Session, prop_id: uuid.UUID) -> None:
         prop = self.get_by_id(db, prop_id)
         if prop:
             prop.is_available = False
-            self.save(db, prop)
-
-    def save(self, db: Session, prop: Property) -> Property:
-        db.add(prop)
-        db.commit()
-        db.refresh(prop)
-        return prop
+            self.create(db, prop) # BaseRepository.create acts as save/add

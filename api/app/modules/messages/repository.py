@@ -1,8 +1,10 @@
-import uuid
-from sqlalchemy.orm import Session
+from app.db.base_repo import BaseRepository
 from app.modules.messages.model import Conversation, Message
 
-class MessageRepository:
+class MessageRepository(BaseRepository[Conversation]):
+    def __init__(self):
+        super().__init__(Conversation)
+
     def get_conversation_by_context(self, db: Session, context_type: str, context_id: uuid.UUID, participant_id: uuid.UUID | None = None) -> Conversation | None:
         query = db.query(Conversation).filter(
             Conversation.context_type == context_type,
@@ -25,10 +27,7 @@ class MessageRepository:
             context_type=context_type,
             context_id=context_id
         )
-        db.add(conv)
-        db.commit()
-        db.refresh(conv)
-        return conv
+        return self.create(db, conv)
 
     def add_message(self, db: Session, conversation_id: uuid.UUID, sender_id: uuid.UUID, content: str) -> Message:
         msg = Message(
@@ -39,12 +38,6 @@ class MessageRepository:
         db.add(msg)
         db.commit()
         db.refresh(msg)
-        
-        # update conversation updated_at ? Not strictly necessary but good practice
-        # conv = db.query(Conversation).filter(Conversation.id == conversation_id).first()
-        # conv.updated_at = datetime.utcnow()
-        # db.commit()
-        
         return msg
 
     def get_messages_for_conversation(self, db: Session, conversation_id: uuid.UUID) -> list[Message]:
@@ -66,6 +59,3 @@ class MessageRepository:
             Message.is_read == False
         ).update({"is_read": True}, synchronize_session=False)
         db.commit()
-
-    def get_conversation_by_id(self, db: Session, conversation_id: uuid.UUID) -> Conversation | None:
-        return db.query(Conversation).filter(Conversation.id == conversation_id).first()

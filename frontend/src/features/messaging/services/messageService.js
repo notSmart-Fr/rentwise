@@ -1,29 +1,35 @@
+import BaseApiService from '../../../shared/services/BaseApiService';
 import { apiRequest } from '../../../shared/services/api';
 
-const messageService = {
-  getMessages: async (contextType, contextId, receiverId = null) => {
+class MessageService extends BaseApiService {
+  constructor() {
+    super('/conversations');
+  }
+
+  async getMessages(contextType, contextId, receiverId = null) {
     let url = `/messages/context/${contextType}/${contextId}`;
     if (receiverId) url += `?receiver_id=${receiverId}`;
     return await apiRequest(url, { method: 'GET' });
-  },
+  }
 
-  sendMessage: async (contextType, contextId, content, receiverId = null) => {
+  async sendMessage(contextType, contextId, content, receiverId = null) {
     let url = `/messages/context/${contextType}/${contextId}`;
     if (receiverId) url += `?receiver_id=${receiverId}`;
     
     return await apiRequest(url, {
       method: 'POST',
-      body: { content }
+      body: JSON.stringify({ content })
     });
-  },
-
-  getConversations: async () => {
-    return await apiRequest('/conversations', { method: 'GET' });
-  },
-
-  markAsRead: async (conversationId) => {
-    return await apiRequest(`/conversations/${conversationId}/read`, { method: 'PATCH' });
   }
-};
 
+  async getConversations() {
+    return this.getAll();
+  }
+
+  async markAsRead(conversationId) {
+    return await apiRequest(`${this.resourcePath}/${conversationId}/read`, { method: 'POST' });
+  }
+}
+
+export const messageService = new MessageService();
 export default messageService;

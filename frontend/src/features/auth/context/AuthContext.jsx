@@ -58,6 +58,24 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+  
+  const loginWithGoogle = async (idToken, role) => {
+    try {
+      // 1. Get Token from backend
+      const response = await authService.loginWithGoogle(idToken, role);
+      storeToken(response.access_token);
+
+      // 2. Fetch User Profile
+      const userData = await authService.getMe();
+      setUser(userData);
+      localStorage.setItem('role', userData.role);
+
+      return userData;
+    } catch (error) {
+      removeAuthToken();
+      throw error;
+    }
+  };
 
   const logout = () => {
     removeAuthToken();
@@ -71,6 +89,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    loginWithGoogle,
     isAuthenticated: !!user,
     isOwner: user?.role === 'OWNER',
     isTenant: user?.role === 'TENANT'

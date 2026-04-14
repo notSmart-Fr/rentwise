@@ -1,40 +1,46 @@
+import BaseApiService from '../../../shared/services/BaseApiService';
 import { apiRequest } from '../../../shared/services/api';
 
-const ticketService = {
-  createTicket: async (propertyId, title, priority, initialMessage) => {
+class TicketService extends BaseApiService {
+  constructor() {
+    super('/tickets');
+  }
+
+  async createTicket(propertyId, title, priority, initialMessage) {
     return await apiRequest('/tenant/tickets', {
       method: 'POST',
-      body: {
+      body: JSON.stringify({
         property_id: propertyId,
         title,
         priority,
         initial_message: initialMessage
-      }
+      })
     });
-  },
+  }
 
-  getTenantTickets: async () => {
+  async getTenantTickets() {
     return await apiRequest('/tenant/tickets', { method: 'GET' });
-  },
+  }
 
-  getOwnerTickets: async () => {
+  async getOwnerTickets() {
     return await apiRequest('/owner/tickets', { method: 'GET' });
-  },
+  }
 
-  updateTicketStatus: async (ticketId, status) => {
+  async updateTicketStatus(ticketId, status) {
     return await apiRequest(`/owner/tickets/${ticketId}/status`, {
       method: 'PATCH',
-      body: { status }
+      body: JSON.stringify({ status })
     });
-  },
+  }
 
-  getTenantTicket: async (ticketId) => {
+  async getTenantTicket(ticketId) {
     return await apiRequest(`/tenant/tickets/${ticketId}`, { method: 'GET' });
-  },
+  }
 
-  getOwnerTicket: async (ticketId) => {
+  async getOwnerTicket(ticketId) {
     return await apiRequest(`/owner/tickets/${ticketId}`, { method: 'GET' });
   }
-};
+}
 
+export const ticketService = new TicketService();
 export default ticketService;
