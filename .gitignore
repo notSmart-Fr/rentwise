@@ -1,25 +1,39 @@
-# Virtual environment
-.venv/
-
-# Python cache
-__pycache__/
-*.pyc
-
-# Environment variables
+# --- Global / Editor ---
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 .env
+.env.*
+*.local
 
-# SQLite database
-*.db
+# --- Backend (api/) ---
+api/.venv/
+api/__pycache__/
+api/*.pyc
+api/*.pyo
+api/*.pyd
+api/data/
+api/*.db
 
-# Frontend Node/JS
+# --- Frontend (frontend/) ---
 frontend/node_modules/
 frontend/dist/
+frontend/dist-ssr/
 frontend/build/
-frontend/.env*
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
 frontend/.next/
 frontend/.vercel/
 frontend/out/
-frontend/public/vite.svg (optional?)
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# --- Logs ---
+logs
+*.log

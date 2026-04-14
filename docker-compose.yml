@@ -11,11 +11,11 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   api:
-    build: .
+    build: ./api
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - ./api:/app
     environment:
       - DATABASE_URL=postgresql+psycopg://rentwise:rentwise@db:5432/rentwise
       - JWT_SECRET=super-long-random-secret

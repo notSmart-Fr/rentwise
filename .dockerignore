@@ -1,11 +1,29 @@
-.venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Git
 .git/
+.gitignore
+
+# Editor
 .vscode/
-data/
-*.db
-.env
-.env.*
+.idea/
+
+# Backend (api/)
+api/.venv/
+api/__pycache__/
+api/*.pyc
+api/*.pyo
+api/*.pyd
+api/data/
+api/*.db
+api/.env
+api/.env.*
+
+# Frontend (frontend/)
+frontend/node_modules/
+frontend/dist/
+frontend/npm-debug.log*
+frontend/README.md
+frontend/.eslint.config.js
+
+# Docker
+docker-compose.yml
+**/Dockerfile

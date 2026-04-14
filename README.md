@@ -47,9 +47,10 @@ Use the following demo accounts to explore the platform without registering:
 If you prefer running components separately for development:
 
 ### Backend
-1. Create a venv and install dependencies: `pip install -r requirements.txt`
-2. Set `JWT_SECRET` and `DATABASE_URL` in environment.
-3. Run: `uvicorn app.main:app --reload`
+1. Navigate to directory: `cd api`
+2. Create a venv and install dependencies: `pip install -r requirements.txt`
+3. Set `JWT_SECRET` and `DATABASE_URL` in environment.
+4. Run: `uvicorn app.main:app --reload`
 
 ### Frontend
 1. Navigate to directory: `cd frontend`
