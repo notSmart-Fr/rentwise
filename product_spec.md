@@ -9,6 +9,7 @@ RentWise is a modern, full-stack rental ecosystem designed to bridge the gap bet
 To preserve AI processing tokens and ensure human-approved design aesthetics:
 - **Development**: The AI will write, compile, and structure the code functionality.
 - **Verification**: The **Technical Product Owner (You)** will be solely responsible for testing the application in the browser. 
+- **Restriction**: The AI must NOT automate testing using the browser subagent tool; debugging and visual verification are reserved for the user.
 - **Feedback Loop**: If you encounter an error, simply paste the visual behavior or the console error into the chat, and the AI will provide a hotfix.
 
 ---

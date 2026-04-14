@@ -6,6 +6,7 @@ const Home = () => {
   const {
     properties,
     loading,
+    error,
     searchParams,
     searchQuery,
     setSearchQuery,
@@ -56,8 +57,76 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Featured Properties Section */}
+      <section id="results" className="py-section-py border-t border-white/5">
+        <div className="container px-6 mx-auto">
+          <div className="flex flex-col sm:flex-row items-baseline justify-between mb-header-mb gap-8">
+            <div>
+              <h2 className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tight">
+                {searchParams.search ? `Results for "${searchParams.search}"` : 'Latest Listings'}
+              </h2>
+              <p className="text-text-secondary text-lg font-medium opacity-60">Experience the finest properties available today</p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <select
+                className="bg-white/5 border border-white/10 text-white font-bold py-3 px-6 rounded-xl outline-none focus:border-primary transition-colors cursor-pointer text-sm"
+                onChange={(e) => handleFilterChange('city', e.target.value)}
+                value={searchParams.city || 'All Cities'}
+              >
+                <option value="All Cities" className="bg-slate-900 font-bold">All Cities</option>
+                {['Dhaka', 'Chittagong', 'Sylhet'].map(city => (
+                  <option key={city} value={city} className="bg-slate-900 font-bold">{city}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-40">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
+              <p className="text-text-muted text-sm italic font-medium">Fine-tuning your search results...</p>
+            </div>
+          ) : error ? (
+            <div className="glass-panel py-32 flex flex-col items-center justify-center text-center border-red-500/20">
+              <span className="text-6xl mb-6">⚠️</span>
+              <h3 className="text-2xl font-bold text-white mb-3">Unable to load properties</h3>
+              <p className="text-text-secondary max-w-sm mb-10 text-sm">{error}. Please ensure the backend is running.</p>
+              <button
+                className="btn btn-primary px-8 py-3.5 shadow-lg active:scale-95 transition-transform"
+                onClick={() => window.location.reload()}
+              >
+                Retry Connection
+              </button>
+            </div>
+          ) : (
+            <>
+              {properties.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+                  {properties.map((prop, index) => (
+                    <PropertyCard key={prop?.id || index} property={prop} />
+                  ))}
+                </div>
+              ) : (
+                <div className="glass-panel py-32 flex flex-col items-center justify-center text-center border-dashed border-white/10">
+                  <span className="text-6xl mb-6 grayscale opacity-20">🏠</span>
+                  <h3 className="text-2xl font-bold text-white mb-3">No listings found</h3>
+                  <p className="text-text-secondary max-w-sm mb-10 text-sm">We couldn't find any properties matching your current filters. Try expanding your search area.</p>
+                  <button
+                    className="btn btn-primary px-8 py-3.5 shadow-lg active:scale-95 transition-transform"
+                    onClick={clearAllSearch}
+                  >
+                    Clear Search Filters
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
       {/* How It Works Section */}
-      <section className="py-section-py bg-white/1 relative">
+      <section className="py-section-py bg-white/1 relative border-t border-white/5">
         <div className="absolute inset-0 bg-primary/2 opacity-5 pointer-events-none"></div>
         <div className="container px-6 mx-auto relative z-10">
           <div className="text-center mb-header-mb">
@@ -90,62 +159,6 @@ const Home = () => {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Featured Properties Section */}
-      <section className="py-section-py border-t border-white/5">
-        <div className="container px-6 mx-auto">
-          <div className="flex flex-col sm:flex-row items-baseline justify-between mb-header-mb gap-8">
-            <div>
-              <h2 className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tight">
-                {searchParams.search ? `Results for "${searchParams.search}"` : 'Latest Listings'}
-              </h2>
-              <p className="text-text-secondary text-lg font-medium opacity-60">Experience the finest properties available today</p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <select
-                className="bg-white/5 border border-white/10 text-white font-bold py-3 px-6 rounded-xl outline-none focus:border-primary transition-colors cursor-pointer text-sm"
-                onChange={(e) => handleFilterChange('city', e.target.value)}
-                value={searchParams.city || 'All Cities'}
-              >
-                <option value="All Cities" className="bg-slate-900 font-bold">All Cities</option>
-                {['Dhaka', 'Chittagong', 'Sylhet'].map(city => (
-                  <option key={city} value={city} className="bg-slate-900 font-bold">{city}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-40">
-              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
-              <p className="text-text-muted text-sm italic font-medium">Fine-tuning your search results...</p>
-            </div>
-          ) : (
-            <>
-              {properties.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
-                  {properties.map((prop, index) => (
-                    <PropertyCard key={prop?.id || index} property={prop} />
-                  ))}
-                </div>
-              ) : (
-                <div className="glass-panel py-32 flex flex-col items-center justify-center text-center border-dashed border-white/10">
-                  <span className="text-6xl mb-6 grayscale opacity-20">🏠</span>
-                  <h3 className="text-2xl font-bold text-white mb-3">No listings found</h3>
-                  <p className="text-text-secondary max-w-sm mb-10 text-sm">We couldn't find any properties matching your current filters. Try expanding your search area.</p>
-                  <button
-                    className="btn btn-primary px-8 py-3.5 shadow-lg active:scale-95 transition-transform"
-                    onClick={clearAllSearch}
-                  >
-                    Clear Search Filters
-                  </button>
-                </div>
-              )}
-            </>
-          )}
         </div>
       </section>
 

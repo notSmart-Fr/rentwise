@@ -1,8 +1,8 @@
 from typing import TypeVar, Generic, Type, Any, List, Optional
 import uuid
 from sqlalchemy.orm import Session
-from app.db.base import Base
-from app.db.base_repo import BaseRepository
+from app.persistence.base import Base
+from app.persistence.base_repo import BaseRepository
 
 T = TypeVar("T", bound=Base)
 

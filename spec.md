@@ -19,7 +19,7 @@ Cross-cutting infrastructure services.
 ### 🛠️ Common Utilities (`app/utils/`)
 Pure, stateless helper functions (e.g., `date_formatters`, `uuid_helpers`).
 
-### 🗄️ Database Foundation (`app/db/`)
+### 🗄️ Persistence Foundation (`app/persistence/`)
 Shared persistence logic and session management.
 - **Base Model:** Shared SQLAlchemy columns (ID, Timestamps).
 - **Base Repository:** Generic CRUD operations (Get, Create, Update, Delete).
@@ -29,9 +29,9 @@ Shared persistence logic and session management.
 ## 🏗️ Backend Layers Detail
 | Layer | File | Responsibility | Allowed Imports |
 | :--- | :--- | :--- | :--- |
-| **Router** | `router.py` | FastAPI entry point, dependency injection (`get_db`), input validation (Pydantic), and HTTP response status mapping. | Services, Schemas, Auth Deps. |
+| **Router** | `router.py` | FastAPI entry point, dependency injection (`get_db`), input validation (Pydantic), and HTTP response status mapping. | Services, Schemas, Auth Deps (app.persistence). |
 | **Service** | `service.py` | **The Brain.** Business logic, authorization, permission checks, orchestration, and inter-repository calls. | Repositories, Other Services, Models. |
-| **Repository** | `repository.py` | Pure Data Persistence. Raw SQLAlchemy queries. CRUD operations. No business logic. | Models, DB Session. |
+| **Repository** | `repository.py` | Pure Data Persistence. Raw SQLAlchemy queries. CRUD operations. No business logic. | Models, DB Session (app.persistence). |
 | **Model** | `model.py` | Declarative SQLAlchemy Table definitions. | - |
 | **Schema** | `schemas.py` | Pydantic Request/Response models. | - |
 

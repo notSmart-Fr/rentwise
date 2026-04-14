@@ -1,4 +1,7 @@
-from app.db.base_repo import BaseRepository
+import uuid
+from sqlalchemy import select, or_
+from sqlalchemy.orm import Session
+from app.persistence.base_repo import BaseRepository
 from app.modules.properties.model import Property
 
 class PropertyRepository(BaseRepository[Property]):

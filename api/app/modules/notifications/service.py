@@ -1,4 +1,6 @@
-from app.db.base_service import BaseService
+import uuid
+from sqlalchemy.orm import Session
+from app.persistence.base_service import BaseService
 from app.modules.notifications.model import Notification
 from app.modules.notifications.repository import NotificationRepository
 from app.core.websocket import manager

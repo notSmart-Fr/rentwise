@@ -1,4 +1,6 @@
-from app.db.base_repo import BaseRepository
+import uuid
+from sqlalchemy.orm import Session
+from app.persistence.base_repo import BaseRepository
 from app.modules.tickets.model import Ticket
 from app.modules.tickets.schemas import TicketCreate
 

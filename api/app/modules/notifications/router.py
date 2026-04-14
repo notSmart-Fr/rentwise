@@ -2,7 +2,7 @@ import uuid
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.db.deps import get_db
+from app.persistence.deps import get_db
 from app.modules.auth.deps import get_current_user
 from app.modules.auth.model import User
 from app.modules.notifications.schemas import NotificationResponse

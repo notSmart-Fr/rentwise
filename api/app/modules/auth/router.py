@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
-from app.db.deps import get_db
+from app.persistence.deps import get_db
 from app.core.security import decode_token
 from app.modules.auth.schemas import RegisterRequest, LoginRequest, TokenResponse, MeResponse, GoogleLoginRequest
 from app.modules.auth.service import AuthService

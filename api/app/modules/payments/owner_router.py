@@ -2,7 +2,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.db.deps import get_db
+from app.persistence.deps import get_db
 from app.modules.auth.deps import require_owner
 from app.modules.auth.model import User
 from app.modules.requests.repository import RequestRepository

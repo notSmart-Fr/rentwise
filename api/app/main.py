@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from app.core.config import settings
 
-from app.db.session import engine
-from app.db.base import Base
+from app.persistence.session import engine
+from app.persistence.base import Base
 
 # IMPORTANT: import models so SQLAlchemy knows them
 

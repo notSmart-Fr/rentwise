@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from app.db.base_repo import BaseRepository
+from app.persistence.base_repo import BaseRepository
 from app.modules.auth.model import User
 
 class UserRepository(BaseRepository[User]):

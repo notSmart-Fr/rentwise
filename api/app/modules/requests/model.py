@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.modules.auth.model import User
 from app.modules.properties.model import Property
 
-from app.db.base import Base
+from app.persistence.base import Base
 
 
 

@@ -2,7 +2,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 
-from app.db.deps import get_db
+from app.persistence.deps import get_db
 from app.modules.auth.deps import get_current_user, get_current_user_ws
 from app.modules.auth.model import User
 from app.modules.messages.schemas import MessageCreate, MessageResponse, InboxConversationResponse

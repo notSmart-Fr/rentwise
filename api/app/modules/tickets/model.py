@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import UUID, String, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base
+from app.persistence.base import Base
 from app.modules.auth.model import User
 from app.modules.properties.model import Property
 

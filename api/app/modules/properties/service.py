@@ -1,4 +1,6 @@
-from app.db.base_service import BaseService
+import uuid
+from sqlalchemy.orm import Session
+from app.persistence.base_service import BaseService
 from app.modules.properties.model import Property, PropertyImage
 from app.modules.properties.repository import PropertyRepository
 

@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.security import decode_token
-from app.db.deps import get_db
+from app.persistence.deps import get_db
 from app.modules.auth.model import User
 from app.modules.auth.repository import UserRepository
 

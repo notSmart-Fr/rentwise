@@ -1,4 +1,6 @@
-from app.db.base_service import BaseService
+import uuid
+from sqlalchemy.orm import Session
+from app.persistence.base_service import BaseService
 from app.modules.payments.enums import PaymentStatus
 from app.modules.payments.model import Payment
 from app.modules.payments.repository import PaymentRepository

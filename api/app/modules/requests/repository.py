@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.db.base_repo import BaseRepository
+from app.persistence.base_repo import BaseRepository
 from app.modules.requests.model import RentalRequest
 
 class RequestRepository(BaseRepository[RentalRequest]):

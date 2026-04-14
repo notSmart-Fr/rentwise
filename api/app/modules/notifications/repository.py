@@ -1,4 +1,6 @@
-from app.db.base_repo import BaseRepository
+import uuid
+from sqlalchemy.orm import Session
+from app.persistence.base_repo import BaseRepository
 from app.modules.notifications.model import Notification
 
 class NotificationRepository(BaseRepository[Notification]):

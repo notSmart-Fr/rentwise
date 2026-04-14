@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic, Type, Any, List, Optional
 import uuid
 from sqlalchemy.orm import Session
-from app.db.base import Base
+from app.persistence.base import Base
 
 T = TypeVar("T", bound=Base)
 

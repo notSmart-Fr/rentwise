@@ -4,7 +4,7 @@ class Settings(BaseSettings):
     app_name: str = "RentWise API"
     database_url: str = "sqlite:///./rentwise.db"
 
-    jwt_secret: str
+    jwt_secret: str = "dev-secret-key-123"
     jwt_alg: str = "HS256"
     access_token_minutes: int = 60 * 24 * 30 # 30 Days
 
