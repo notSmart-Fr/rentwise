@@ -45,8 +45,7 @@ const NotificationItem = ({ notification, onClick }) => {
   return (
     <div
       onClick={() => onClick(notification)}
-      className={`group flex items-start gap-4 p-4 transition-all hover:bg-white/5 cursor-pointer border-b border-white/5 last:border-0 ${
-        unread ? 'bg-white/2' : ''
+      className={`group flex items-start gap-4 p-4 transition-all hover:bg-white/5 cursor-pointer border-b border-white/5 last:border-0 ${unread ? 'bg-white/2' : ''
       }`}
     >
       <div className={`mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform ${getColorClass()}`}>
