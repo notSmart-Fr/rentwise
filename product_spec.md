@@ -1,7 +1,7 @@
 # RentWise Product Specification & Roadmap
 
 ## 1. Product Overview
-RentWise is a modern, full-stack rental ecosystem designed to bridge the gap between property owners and tenants. It replaces manual paperwork and disjointed communication with a central hub for visual discovery, digital lease applications, and integrated (simulated) payment legders.
+RentWise is a modern, full-stack rental ecosystem designed to bridge the gap between property owners and tenants. It replaces manual paperwork and disjointed communication with a central hub for visual discovery, digital lease applications, and integrated (simulated) payment ledgers.
 
 ---
 
@@ -14,47 +14,53 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ---
 
-## 3. Current Capabilities (Version 1.0 Core)
+## 3. Current Capabilities (Core Engine)
 
 ### 👤 Role-Based Architecture
-- **Tenant**: Can browse listings, apply for leases, track request status, securely pay rent via simulated gateways, and download digital receipts.
-- **Owner**: Can list new properties with image URLs, manage incoming requests (Approve/Reject), view their unified income ledger, and manually record cash/off-platform payments.
+- **Tenant**: Browse listings, apply for leases, track request status, securely pay rent via simulated gateways, and download digital receipts.
+- **Owner**: List properties, manage incoming requests (Approve/Reject), view unified income ledger, and track maintenance issues.
 
 ### 🏠 Property Discovery
-- Responsive masonry grid displaying modern property cards.
-- Real-time search and filter logic (by city, area, price range, and keyword).
-- Detail view for properties to see extended descriptions.
+- Responsive masonry grid with modern property cards.
+- Real-time search and filter logic (City, Area, Price, Keywords).
+- Detail view for properties with image carousels.
 
-### 📝 Lease Lifecycle
-- Tenants can submit a formal application message to the owner.
-- Owners review applicants across all their properties from a unified dashboard.
-- State machine: `PENDING` -> `APPROVED` -> `SUCCESS` (Payment).
+### 📝 Lease & Maintenance Lifecycle
+- **Lease Applications**: PENDING -> APPROVED -> SUCCESS flow.
+- **Maintenance Portal**: Tenants can submit repair tickets with initial messages; Owners can update status (Open -> Work in Progress -> Resolved).
+- **Automated Notifications**: Real-time alerts for lease status changes, incoming messages, and payment confirmations.
+
+### 💬 Unified Communication
+- **Contextual Messaging**: Dedicated chat threads for each property inquiry, rental request, and maintenance ticket.
+- **Real-time Engine**: Powered by WebSockets for instant message delivery and unread count tracking.
 
 ### 💳 Payment & Ledger System
-- **Checkout Simulation**: Interactive overlay mimicking mobile finance (bKash/Nagad) and Bank Transfers.
-- **Digital Receipts**: Print-optimized, auto-generated PDFs showing Transaction IDs and timestamps.
+- **Checkout Simulation**: Interactive overlay for bKash/Nagad and Bank Transfers.
+- **Ledger Tracking**: Every transaction is recorded in a unified ledger for both parties.
+- **Print-Optimized Receipts**: High-fidelity digital receipts with transaction IDs.
 
 ---
 
-## 4. Proposed Future Roadmap (Version 2.0 & Beyond)
-Now that the core engine is stable, here are the logical next steps you can choose to pursue.
+## 4. Proposed Future Roadmap (Next Phases)
 
-### Phase 1: Communication & Operations
-- **Maintenance Portal**: Tenants can submit repair tickets (e.g., "Leaky Faucet") with photos, which show up in the Owner's dashboard.
-- **Messaging System**: Simple socket-based or polled messaging between an owner and a tenant within an approved lease context.
+### Phase 1: UX Polish & Asset Management
+- **Rich Media Uploads**: Implement actual file uploads for property images (transitioning away from external Unsplash URLs).
+- **User Profiles**: Interactive profile settings including avatar uploads and phone number verification.
+- **Verification Badges**: Add "Verified" status for properties/users to increase trust.
 
-### Phase 2: Refined UX & Profiles
-- **User Profiles**: Allow users to upload avatars, change contact information, and reset passwords.
-- **Rich Media**: Allow actual image file uploads (to S3 or local storage) instead of relying on external URLs for property listings.
-- **Animated Onboarding**: A beautiful step-by-step tutorial overlay the first time a user registers.
+### Phase 2: Analytics & Reporting
+- **In-App Analytics**: Charts (Recharts) showing monthly income trends and occupancy rates for owners.
+- **PDF Generation**: Real server-side PDF generation for receipts and lease agreements using ReportLab or xhtml2pdf.
+- **Financial Export**: Export income ledgers to CSV or Excel.
 
-### Phase 3: Analytics & Deployment
-- **Owner Analytics**: Introduce charts (using Chart.js or Recharts) in the Owner Dashboard showing month-over-month rental income, occupancy rates, etc.
-- **Cloud Deployment**: Containerize the app perfectly for a cloud provider (like Render, DigitalOcean, or AWS) and set up actual SSL.
+### Phase 3: Advanced Automation & Scale
+- **Google Calendar Integration**: Sync property viewings-appointments with user calendars.
+- **Email/SMS Service Integration**: Move from console-logged notifications to actual SendGrid/Twilio integration.
+- **Global Search Optimization**: Full-text search implementation for scaling to thousands of listings.
 
 ---
 
 ## 5. Test Credentials Dictionary
-*Always available for rapid local testing.*
+*Standard dev accounts for rapid local testing.*
 - **Owner Account**: `owner@test.com` / `password123`
 - **Tenant Account**: `tenant_real@test.com` / `password123`
