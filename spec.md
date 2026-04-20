@@ -2,6 +2,10 @@
 
 This document serves as the "Ground Truth" for all development on the RentWise platform. It ensures consistency, scalability, and developer sanity.
 
+### 📜 Documentation Integrity
+1. **Spec-First Development:** The `spec.md` is the source of truth. Any change to architecture, dependencies, or project structure MUST be reflected here immediately.
+2. **Agent Responsibility:** AI Agents are required to update this document whenever they introduce a legacy technology, a new dependency, or restructure a module.
+
 ---
 
 ## 🐍 Backend: Layered & Shared Standards
@@ -23,6 +27,7 @@ Pure, stateless helper functions (e.g., `date_formatters`, `uuid_helpers`).
 Shared persistence logic and session management.
 - **Base Model:** Shared SQLAlchemy columns (ID, Timestamps).
 - **Base Repository:** Generic CRUD operations (Get, Create, Update, Delete).
+- **Migrations:** Alembic is used for all schema changes. Direct `metadata.create_all()` calls are forbidden.
 
 ---
 
@@ -40,6 +45,7 @@ Shared persistence logic and session management.
 2. **Permission Checks in Services:** Always verify "Can user X perform action Y on resource Z?" inside the Service layer.
 3. **Repository Purity:** Repositories should not know about "Users" or "Permissions"—they just know about "Data".
 4. **Error Handling:** Services should raise standard Python exceptions (e.g., `ValueError`, `PermissionError`). Routers translate these to `HTTPException`.
+5. **Migrations First:** Never manually modify the database schema. Always generate an Alembic revision for any Model changes.
 
 ---
 
@@ -85,6 +91,8 @@ When adding a new feature:
 
 **1. Backend Development**
 - Define the **Model** & **Schema**.
+- **Migrations:** Run `alembic revision --autogenerate -m "description"` to detect changes.
+- **Upgrade:** Apply changes using `alembic upgrade head`.
 - Implement the **Repository** for data access.
 - Implement the **Service** for logic.
 - Expose via the **Router**.
