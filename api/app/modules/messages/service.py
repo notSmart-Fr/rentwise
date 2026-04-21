@@ -74,8 +74,25 @@ class MessageService(BaseService[Conversation]):
 
         return msg
 
-    def get_messages(self, db: Session, context_type: str, context_id: uuid.UUID, requesting_user_id: uuid.UUID):
-        conv = self.repo.get_conversation_by_context(db, context_type, context_id, requesting_user_id)
+    def get_messages(self, db: Session, context_type: str, context_id: uuid.UUID, requesting_user_id: uuid.UUID, other_participant_id: str | None = None):
+        other_uuid = uuid.UUID(other_participant_id) if other_participant_id else None
+        
+        # If we have the other participant's ID, we can get the unique conversation
+        if other_uuid:
+            # Check both directions
+            from sqlalchemy import or_, and_
+            conv = db.query(Conversation).filter(
+                Conversation.context_type == context_type,
+                Conversation.context_id == context_id,
+                or_(
+                    and_(Conversation.participant1_id == requesting_user_id, Conversation.participant2_id == other_uuid),
+                    and_(Conversation.participant1_id == other_uuid, Conversation.participant2_id == requesting_user_id)
+                )
+            ).first()
+        else:
+            # Fallback to general lookup (only safe for unique contexts like TICKET or REQUEST)
+            conv = self.repo.get_conversation_by_context(db, context_type, context_id, requesting_user_id)
+            
         if not conv: return []
         return self.repo.get_messages_for_conversation(db, conv.id)
 
@@ -86,16 +103,24 @@ class MessageService(BaseService[Conversation]):
             other_id = conv.participant2_id if conv.participant1_id == user_id else conv.participant1_id
             other_user = db.query(User).filter(User.id == other_id).first()
             
+            user_role = "TENANT"
             title = "Conversation"
+            status = None
             if conv.context_type == "PROPERTY":
                 entity = db.query(Property).filter(Property.id == conv.context_id).first()
                 title = f"Inquiry: {entity.title}" if entity else "Property Inquiry"
+                status = "Available" if entity and entity.is_available else "Rented"
+                if entity and entity.owner_id == user_id: user_role = "OWNER"
             elif conv.context_type == "RENTAL_REQUEST":
                 entity = db.query(RentalRequest).filter(RentalRequest.id == conv.context_id).first()
                 title = f"Lease: {entity.property_title}" if entity else "Rental Request"
+                status = entity.status if entity else "Unknown"
+                if entity and entity.owner_id == user_id: user_role = "OWNER"
             elif conv.context_type == "TICKET":
                 entity = db.query(Ticket).filter(Ticket.id == conv.context_id).first()
                 title = f"Ticket: {entity.title}" if entity else "Support Ticket"
+                status = entity.status if entity else "Unknown"
+                if entity and entity.owner_id == user_id: user_role = "OWNER"
             
             last_msg = db.query(Message).filter(Message.conversation_id == conv.id).order_by(Message.created_at.desc()).first()
             unread = db.query(Message).filter(Message.conversation_id == conv.id, Message.sender_id != user_id, Message.is_read == False).count()
@@ -107,6 +132,8 @@ class MessageService(BaseService[Conversation]):
                 "context_type": conv.context_type,
                 "context_id": str(conv.context_id),
                 "context_title": title,
+                "context_status": status,
+                "user_role": user_role,
                 "last_message": last_msg.content if last_msg else None,
                 "last_message_at": last_msg.created_at.isoformat() if last_msg else None,
                 "unread_count": unread

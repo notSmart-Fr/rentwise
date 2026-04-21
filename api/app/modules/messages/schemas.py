@@ -35,6 +35,8 @@ class InboxConversationResponse(BaseModel):
     context_type: str
     context_id: uuid.UUID
     context_title: str
+    context_status: str | None = None
+    user_role: str  # 'OWNER' or 'TENANT' - the role the current user plays in this context
     last_message: str | None = None
     last_message_at: datetime | None = None
     unread_count: int = 0

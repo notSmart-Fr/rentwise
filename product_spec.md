@@ -16,11 +16,11 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ## 3. Current Capabilities (Core Engine)
 
-### 👤 Role-Based Architecture (Airbnb Style)
-- **Universal Accounts**: Every user is both a **Tenant** and an **Owner**. No separate accounts are needed.
+### 🔑 Secure Authentication (Airbnb Style)
+- **Universal Accounts**: Every user is both a **Tenant** and an **Owner** registered via a single email.
+- **Google Social Login**: Integrated Google One Tap and button authentication for seamless onboarding.
 - **Toggle Mode**: A global switcher allows users to flip between "Renting" and "Hosting" modes instantly.
-- **Tenant Capabilities**: Browse listings, apply for leases, track request status, securely pay rent, and download digital receipts.
-- **Owner Capabilities**: List properties, manage incoming requests (Approve/Reject), view unified income ledger, and track maintenance issues.
+- **Smart Validation**: In-depth backend verification of email existence and password strength.
 
 ### 🏠 Property Discovery
 - Responsive masonry grid with modern property cards.
@@ -29,7 +29,7 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ### 📝 Lease & Maintenance Lifecycle
 - **Lease Applications**: PENDING -> APPROVED -> SUCCESS flow.
-- **Maintenance Portal**: Tenants can submit repair tickets with initial messages; Owners can update status (Open -> Work in Progress -> Resolved).
+- **Maintenance Portal**: Tenants can submit repair tickets; Owners can update status (Open -> Work in Progress -> Resolved).
 - **Automated Notifications**: Real-time alerts for lease status changes, incoming messages, and payment confirmations.
 
 ### 💬 Unified Communication
@@ -52,7 +52,7 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ### Phase 2: Analytics & Reporting
 - **In-App Analytics**: Charts (Recharts) showing monthly income trends and occupancy rates for owners.
-- **PDF Generation**: Real server-side PDF generation for receipts and lease agreements using ReportLab or xhtml2pdf.
+- **PDF Generation**: Real server-side PDF generation for receipts and lease agreements.
 - **Financial Export**: Export income ledgers to CSV or Excel.
 
 ### Phase 3: Advanced Automation & Scale
@@ -64,5 +64,5 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ## 5. Test Credentials Dictionary
 *Standard dev accounts for rapid local testing.*
-- **Owner Account**: `owner@test.com` / `password123`
-- **Tenant Account**: `tenant_real@test.com` / `password123`
+- **Universal Account**: `owner@test.com` / `password123` (Can switch roles via UI)
+- **Alt Account**: `tenant_real@test.com` / `password123`

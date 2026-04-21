@@ -87,7 +87,11 @@ Every feature and shared directory MUST contain an `index.js` file that acts as 
 ## 🔒 Security & Identity
 - **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both `is_owner` and `is_tenant` capabilities.
 - **Active Role State**: The frontend manages an `activeRole` (persisted in local storage) to toggle between Tenant and Owner dashboards without logging out.
-- **Role-Based Access Control (RBAC)**: Backend endpoints verify permissions based on the user's boolean flags (`is_owner`/`is_tenant`), ensuring an account can only perform actions (like listing a property) if they have the proper flags set.
+- **Role-Based Access Control (RBAC)**: Backend endpoints verify permissions based on the user's boolean flags (`is_owner`/`is_tenant`).
+- **Social Integration (Google)**: 
+    - Google One Tap and standard login are supported.
+    - **Origin Rule**: All frontend URLs (e.g., `http://localhost:5173`) MUST be added to the Google Cloud Console's "Authorized JavaScript origins."
+    - **Auto-Provisioning**: Google logins automatically provision dual-mode accounts with `is_owner=True` and `is_tenant=True`.
 
 ---
 

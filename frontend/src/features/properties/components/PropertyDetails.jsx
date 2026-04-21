@@ -173,7 +173,7 @@ const PropertyDetails = () => {
               <span className="text-slate-400 text-lg">/ month</span>
             </div>
 
-            {isTenant || !isAuthenticated ? (
+            {property.owner_id !== user?.id || !isAuthenticated ? (
               <div className="space-y-6">
                 {requestStatus === 'success' ? (
                   <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-8 text-center animate-fade-in">
@@ -187,30 +187,41 @@ const PropertyDetails = () => {
                 ) : (
                   <div className="flex flex-col gap-4">
                     <p className="text-sm text-slate-500">Includes maintenance fees. Utilities not included.</p>
-                    <button
-                      onClick={handleRequestLease}
-                      disabled={requestStatus === 'loading' || !property.is_available}
-                      className="w-full rounded-xl bg-primary py-4 text-lg font-black text-white shadow-xl transition-all hover:scale-[1.02] hover:shadow-primary/20 disabled:opacity-50 disabled:grayscale"
-                    >
-                      {requestStatus === 'loading' ? 'Processing...' : 'Request Lease'}
-                    </button>
-                    <button
-                      onClick={handleOpenChat}
-                      disabled={!property.is_available}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-4 text-lg font-black text-white transition-all hover:bg-white/10"
-                    >
-                      💬 Message Owner
-                    </button>
+                    {isTenant || !isAuthenticated ? (
+                       <>
+                        <button
+                          onClick={handleRequestLease}
+                          disabled={requestStatus === 'loading' || !property.is_available}
+                          className="w-full rounded-xl bg-primary py-4 text-lg font-black text-white shadow-xl transition-all hover:scale-[1.02] hover:shadow-primary/20 disabled:opacity-50 disabled:grayscale"
+                        >
+                          {requestStatus === 'loading' ? 'Processing...' : 'Request Lease'}
+                        </button>
+                        <button
+                          onClick={handleOpenChat}
+                          disabled={!property.is_available}
+                          className="w-full rounded-xl border border-white/10 bg-white/5 py-4 text-lg font-black text-white transition-all hover:bg-white/10"
+                        >
+                          💬 Message Owner
+                        </button>
+                       </>
+                    ) : (
+                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
+                          <p className="text-sm text-text-secondary font-bold uppercase tracking-widest">Switch to Renting mode to interact</p>
+                       </div>
+                    )}
                     <p className="text-center text-xs text-slate-500">Zero upfront fees for requesting.</p>
                   </div>
                 )}
               </div>
             ) : (
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 space-y-3">
-                <p className="font-bold text-white italic">You are viewing as an Owner.</p>
-                <p className="text-sm text-slate-400">Only tenants can lodge lease requests. Manage your listings from the dashboard.</p>
-                <Link to="/owner-dashboard" className="block w-full rounded-lg border border-primary/50 py-2 text-center text-sm font-bold text-primary-hover hover:bg-primary/20">
-                  Go to Dashboard
+                <div className="flex items-center gap-2 text-primary">
+                   <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                   <p className="font-bold text-white italic">You own this property.</p>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed">Manage occupancy, tickets, and rent collection for this asset from your dashboard.</p>
+                <Link to="/owner-dashboard" className="block w-full rounded-lg border border-primary/50 py-3 text-center text-sm font-bold text-primary hover:bg-primary/10 transition-all">
+                  Go to Asset Management
                 </Link>
               </div>
             )}

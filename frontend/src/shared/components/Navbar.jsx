@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../features/auth';
 import { useChat, useConversations } from '../../features/messaging';
 import { useNotifications } from '../hooks/useNotifications';
-import ChatDropdown from './ChatDropdown';
-import AlertsDropdown from './AlertsDropdown';
+import InboxDropdown from './InboxDropdown';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -83,83 +82,115 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link to="/" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Explore</Link>
+        <div className="hidden md:flex items-center gap-6">
+          <Link to="/" className="text-[12px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Explore</Link>
 
           {isAuthenticated ? (
             <>
-              {activeRole === 'OWNER' ? (
-                <Link to="/owner-dashboard" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Dashboard</Link>
-              ) : (
-                <>
-                  <Link to="/tenant-dashboard" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Dashboard</Link>
-                  <Link to="/my-tickets" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Issues</Link>
-                </>
-              )}
-              
-              <div className="flex items-center gap-6 ml-4">
-                {/* Messages Dropdown */}
-                <div className="relative" ref={chatRef}>
+               {/* Unified Inbox */}
+               <div className="relative ml-2" ref={chatRef}>
                   <button 
                     onClick={() => { setIsChatOpen(!isChatOpen); setIsAlertsOpen(false); }}
-                    className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 flex items-center gap-2 outline-none group"
+                    className={`group relative flex items-center justify-center p-2 rounded-xl transition-all duration-300 ${
+                       isChatOpen ? 'bg-white/10 text-white' : 'text-text-secondary hover:text-white hover:bg-white/5'
+                    }`}
                   >
-                    Messages
-                    <div className="relative">
-                      <span className={`flex h-2 w-2 rounded-full ${unreadMessages > 0 ? 'bg-primary animate-pulse shadow-[0_0_8px_rgba(124,58,237,0.5)]' : 'bg-white/10'}`} />
+                    <span className="text-[11px] font-black uppercase tracking-widest mr-2">Inbox</span>
+                    <div className="relative flex h-5 w-5 items-center justify-center">
+                       <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                          <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                       </svg>
+                       {(unreadMessages + unreadAlerts) > 0 && (
+                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-black text-white shadow-[0_0_12px_rgba(124,58,237,0.6)] animate-bounce">
+                             {unreadMessages + unreadAlerts}
+                          </span>
+                       )}
                     </div>
                   </button>
                   {isChatOpen && (
-                    <ChatDropdown onClose={() => setIsChatOpen(false)} />
+                    <InboxDropdown onClose={() => setIsChatOpen(false)} />
                   )}
-                </div>
+               </div>
 
-                {/* Alerts Dropdown */}
-                <div className="relative" ref={alertsRef}>
+               <div className="w-px h-6 bg-white/5 mx-2" />
+
+               {/* Profile Menu (Airbnb Style) */}
+               <div className="relative" ref={alertsRef}>
                   <button 
-                    onClick={() => { setIsAlertsOpen(!isAlertsOpen); setIsChatOpen(false); }}
-                    className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300 flex items-center gap-2 outline-none group"
+                    onClick={() => setIsAlertsOpen(!isAlertsOpen)}
+                    className="flex items-center gap-3 p-1.5 pl-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 shadow-lg active:scale-95"
                   >
-                    Alerts
-                    <div className="relative">
-                      <span className={`flex h-2 w-2 rounded-full ${unreadAlerts > 0 ? 'bg-accent animate-pulse shadow-[0_0_8px_rgba(56,189,248,0.5)]' : 'bg-white/10'}`} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                       {user?.full_name?.split(' ')[0] || 'Menu'}
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-linear-to-tr from-primary to-accent flex items-center justify-center text-[10px] font-black text-white shadow-inner">
+                       {user?.full_name?.[0] || '👤'}
                     </div>
                   </button>
+
                   {isAlertsOpen && (
-                    <AlertsDropdown onClose={() => setIsAlertsOpen(false)} />
+                    <div className="absolute right-0 top-full mt-4 w-64 rounded-3xl border border-white/10 bg-bg-base/95 p-2 shadow-[20px_40px_80px_rgba(0,0,0,0.6)] backdrop-blur-3xl animate-in fade-in slide-in-from-top-4 duration-300 z-110">
+                       <div className="flex flex-col">
+                          <div className="p-4 border-b border-white/5">
+                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Current Mode</p>
+                             <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-primary shadow-glow shadow-primary" />
+                                <span className="font-bold text-white text-sm">
+                                   {activeRole === 'OWNER' ? 'Hosting' : 'Renting'}
+                                </span>
+                             </div>
+                          </div>
+
+                          <button 
+                            onClick={handleSwitchRole}
+                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                          >
+                             <span className="text-lg">↻</span>
+                             <span className="text-xs font-bold text-white">Switch to {activeRole === 'OWNER' ? 'Renting' : 'Hosting'}</span>
+                          </button>
+
+                          <Link 
+                            to={activeRole === 'OWNER' ? "/owner-dashboard" : "/tenant-dashboard"}
+                            onClick={() => setIsAlertsOpen(false)}
+                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                          >
+                             <span className="text-lg">📊</span>
+                             <span className="text-xs font-bold text-white">Dashboard</span>
+                          </Link>
+
+                          {activeRole === 'TENANT' && (
+                             <Link 
+                               to="/my-tickets"
+                               onClick={() => setIsAlertsOpen(false)}
+                               className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                             >
+                                <span className="text-lg">🔧</span>
+                                <span className="text-xs font-bold text-white">Maintenance</span>
+                             </Link>
+                          )}
+
+                          <div className="h-px bg-white/5 my-1" />
+
+                          <button 
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors group"
+                          >
+                             <span className="text-lg group-hover:rotate-12 transition-transform">🔒</span>
+                             <span className="text-xs font-bold text-danger">Log Out</span>
+                          </button>
+                       </div>
+                    </div>
                   )}
-                </div>
-              </div>
-
-              <div className="w-px h-6 bg-white/5 mx-2" />
-              
-              {/* Role Switcher Button */}
-              <button
-                onClick={handleSwitchRole}
-                className="group relative px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all duration-300 active:scale-95"
-              >
-                <div className="relative flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(124,58,237,0.4)] group-hover:scale-125 transition-transform" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
-                    {activeRole === 'OWNER' ? 'Switch to Renting' : 'Switch to Hosting'}
-                  </span>
-                </div>
-              </button>
-
-              <button
-                className="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-danger active:scale-95 transition-all outline-none ml-2"
-                onClick={handleLogout}
-              >
-                Log Out
-              </button>
+               </div>
             </>
           ) : (
-            <>
-              <Link to="/login" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Log In</Link>
-              <Link to="/register" className="btn btn-primary px-8 py-2.5 shadow-lg shadow-primary/20">
+            <div className="flex items-center gap-4">
+              <Link to="/login" className="text-[12px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Log In</Link>
+              <Link to="/register" className="btn btn-primary px-8 py-2.5 shadow-lg shadow-primary/20 rounded-full">
                 Sign Up
               </Link>
-            </>
+            </div>
           )}
         </div>
 

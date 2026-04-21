@@ -35,10 +35,9 @@ const ChatBox = ({ contextType, contextId, receiverId }) => {
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full opacity-40 text-center">
-            <div className="text-5xl mb-4">💬</div>
-            <p className="text-sm font-bold uppercase tracking-widest text-text-muted">No messages yet</p>
-            <p className="text-xs text-text-secondary mt-1">Start the conversation below.</p>
+          <div className="flex flex-col items-center justify-center h-[200px] opacity-40 text-center">
+            <div className="text-4xl mb-4">💬</div>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">No messages yet</p>
           </div>
         ) : (
           messages.map((msg, index) => {
@@ -52,17 +51,17 @@ const ChatBox = ({ contextType, contextId, receiverId }) => {
             return (
               <div key={msg.id} className="flex flex-col">
                 {showTime && (
-                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] text-center mb-4">
+                  <span className="text-[9px] font-black text-text-muted/60 uppercase tracking-[0.3em] text-center my-6">
                     {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 )}
 
-                <div className={`flex w-full ${isMe ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                    <div className={`px-5 py-3 rounded-2xl text-[15px] leading-relaxed shadow-md transition-all animate-in fade-in slide-in-from-${isMe ? 'right' : 'left'}-2 ${isMe
-                      ? 'bg-primary text-white rounded-br-none shadow-primary/20'
-                      : 'bg-white/15 text-white border border-white/10 rounded-bl-none backdrop-blur-xl'
-                      } ${msg.is_optimistic ? 'opacity-70 italic' : ''}`}>
+                <div className={`flex w-full mb-3 ${isMe ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[75%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                    <div className={`px-4 py-2.5 rounded-2xl text-[14px] leading-relaxed shadow-sm transition-all animate-in fade-in slide-in-from-${isMe ? 'right' : 'left'}-1 ${isMe
+                      ? 'bg-primary text-white rounded-tr-none'
+                      : 'bg-white/10 text-white border border-white/5 rounded-tl-none backdrop-blur-md'
+                      } ${msg.is_optimistic ? 'opacity-50' : ''}`}>
                       {msg.content}
                     </div>
                   </div>

@@ -84,6 +84,24 @@
     font-size: 1.5rem;
     color: var(--color-text-muted);
   }
+
+  /* Premium Glow Utilities */
+  .shadow-glow-primary {
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+  }
+
+  .shadow-glow-accent {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  }
+
+  @keyframes subtle-pulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .animate-glow-pulse {
+    animation: subtle-pulse 2s ease-in-out infinite;
+  }
 }
 
 @layer base {
