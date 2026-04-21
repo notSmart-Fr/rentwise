@@ -6,7 +6,6 @@ const Register = () => {
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
-    role: 'TENANT', // Default role
     password: '',
     confirm_password: '',
   });
@@ -25,12 +24,6 @@ const Register = () => {
     }));
   };
 
-  const handleRoleSelect = (role) => {
-    setFormData(prev => ({
-      ...prev,
-      role
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,8 +43,8 @@ const Register = () => {
 
     try {
       const { confirm_password, ...payload } = formData;
-      const userData = await register(payload);
-      navigate(userData.role === 'OWNER' ? '/owner-dashboard' : '/');
+      await register({ ...payload, role: 'TENANT' }); // Send default role for API compatibility
+      navigate('/');
     } catch (err) {
       setError(err.message || 'Registration failed. Try again.');
     } finally {
@@ -63,32 +56,9 @@ const Register = () => {
     <div className="flex flex-col grow min-h-[calc(100vh-80px)] py-16 px-4 animate-fade-in">
       <div className="container flex items-center justify-center min-h-full">
         <div className="glass-panel w-full max-w-[480px] p-10 mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2 text-text-primary">Create Account</h1>
-            <p className="text-text-secondary text-sm">Create an account to discover or list properties.</p>
-          </div>
-
-          <div className="flex gap-1.5 p-1 bg-bg-surface-elevated border border-white/5 rounded-xl mb-8">
-            <button
-              type="button"
-              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${formData.role === 'TENANT'
-                ? 'bg-primary text-white shadow-lg'
-                : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                }`}
-              onClick={() => handleRoleSelect('TENANT')}
-            >
-              I'm a Tenant
-            </button>
-            <button
-              type="button"
-              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${formData.role === 'OWNER'
-                ? 'bg-primary text-white shadow-lg'
-                : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                }`}
-              onClick={() => handleRoleSelect('OWNER')}
-            >
-              I'm an Owner
-            </button>
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold mb-2 text-text-primary">Create Your Account</h1>
+            <p className="text-text-secondary text-sm">Join RentWise to discover properties and manage your assets.</p>
           </div>
 
           {error && (

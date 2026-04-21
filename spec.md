@@ -57,7 +57,7 @@ Self-contained modules representing a single business domain (e.g., `messaging`,
 - `components/`: UI components exclusive to this feature.
 - `hooks/`: Domain-specific state management (e.g., `useConversations`).
 - `services/`: API wrapper functions for this domain.
-- `context/`: (Optional) Feature-specific contexts (e.g., `AuthContext`).
+- `context/`: Feature-wide shared state. For example, `ChatContext` handles the entire messaging ecosystem (inbox, unread counts, and active chat).
 - `utils/`: Logic or formatters specific to this domain.
 
 ### 🌐 Shared (`src/shared/`)

@@ -1,72 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
-import messageService from '../services/messageService';
-import { useWebSocket } from '../../../shared/context/WebSocketContext';
-import { useAuth } from '../../../features/auth';
+import { useChat } from '../context/ChatContext';
 
 export const useConversations = () => {
-  const { isAuthenticated } = useAuth();
-  const { subscribe } = useWebSocket();
-  const [conversations, setConversations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchConversations = useCallback(async (isInitial = false) => {
-    if (!isAuthenticated) return;
-    if (isInitial) setLoading(true);
-    setError(null);
-    try {
-      const data = await messageService.getConversations();
-      setConversations(data || []);
-    } catch (err) {
-      console.error('Failed to fetch conversations:', err);
-      setError(err.message || 'Failed to load conversations');
-    } finally {
-      if (isInitial) setLoading(false);
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setConversations([]);
-      setLoading(false);
-      return;
-    }
-
-    fetchConversations(true);
-    
-    // Auto-refresh every 60 seconds as a silent backup
-    const interval = setInterval(() => fetchConversations(false), 60000);
-    
-    // Real-time inbox updates
-    const unsubscribe = subscribe('INBOX_UPDATE', () => {
-      fetchConversations(false);
-    });
-
-    return () => {
-      clearInterval(interval);
-      unsubscribe();
-    };
-  }, [fetchConversations, subscribe, isAuthenticated]);
-
-  const markAsRead = async (conversationId) => {
-    try {
-      await messageService.markAsRead(conversationId);
-      setConversations(prev => prev.map(c =>
-        c.id === conversationId ? { ...c, unread_count: 0 } : c
-      ));
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  };
-
-  const totalUnread = conversations.reduce((sum, c) => sum + (c.unread_count || 0), 0);
+  const { 
+    conversations, 
+    loading, 
+    error, 
+    refresh, 
+    markAsRead, 
+    totalUnread 
+  } = useChat();
 
   return {
     conversations,
     loading,
     error,
-    refresh: fetchConversations,
+    refresh,
     markAsRead,
     totalUnread
   };

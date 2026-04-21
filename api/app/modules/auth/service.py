@@ -85,5 +85,6 @@ class AuthService:
         except ValueError as e:
             raise e
         except Exception as e:
-            print(f"Google Auth Error: {e}")
-            raise ValueError("GOOGLE_AUTH_FAILED")
+            error_detail = str(e)
+            print(f"Google Auth Error: {error_detail}")
+            raise ValueError(f"GOOGLE_AUTH_FAILED: {error_detail}")

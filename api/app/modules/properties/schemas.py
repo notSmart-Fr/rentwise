@@ -32,6 +32,7 @@ class AvailabilityRequest(BaseModel):
 class PropertyResponse(BaseModel):
     id: str
     owner_id: str
+    owner_name: str | None = None
     title: str
     description: str | None
     city: str

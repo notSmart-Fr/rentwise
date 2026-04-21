@@ -7,7 +7,7 @@ import { usePropertyDetails } from '../hooks/usePropertyDetails';
 const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isTenant } = useAuth();
+  const { isAuthenticated, isTenant, user } = useAuth();
   const { openChat } = useChat();
 
   const {

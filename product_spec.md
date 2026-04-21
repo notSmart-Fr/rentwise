@@ -34,7 +34,7 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ### 💬 Unified Communication
 - **Contextual Messaging**: Dedicated chat threads for each property inquiry, rental request, and maintenance ticket.
-- **Real-time Engine**: Powered by WebSockets for instant message delivery and unread count tracking.
+- **Real-time Engine**: Powered by WebSockets and a global **Messaging Context** for instant delivery, global unread count sync, and optimistic UI updates (e.g., instant badge clearing).
 
 ### 💳 Payment & Ledger System
 - **Checkout Simulation**: Interactive overlay for bKash/Nagad and Bank Transfers.

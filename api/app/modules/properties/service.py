@@ -53,8 +53,7 @@ class PropertyService(BaseService[Property]):
     def to_response(self, prop: Property) -> dict:
         data = super().to_response(prop)
         data["images"] = [{"id": str(img.id), "url": img.url} for img in prop.images]
-        # Base class already strings UUIDs if they are in the dict, but super().to_response return raw values
-        # Let's ensure string IDs for compatibility
         data["id"] = str(prop.id)
         data["owner_id"] = str(prop.owner_id)
+        data["owner_name"] = prop.owner.full_name if prop.owner else None
         return data

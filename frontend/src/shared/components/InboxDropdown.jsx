@@ -51,8 +51,11 @@ const MessageItem = ({ conversation, onClick }) => {
   );
 };
 
+import { useAuth } from '../../features/auth';
+
 const InboxDropdown = ({ onClose }) => {
   const navigate = useNavigate();
+  const { activeRole } = useAuth();
   const [activeTab, setActiveTab] = useState('messages');
   const { conversations, loading: loadingMsgs, markAsRead } = useConversations();
   const { openChat } = useChat();
@@ -148,13 +151,13 @@ const InboxDropdown = ({ onClose }) => {
       {/* Footer */}
       <div className="p-3 border-t border-white/5 bg-white/2 flex items-center justify-between">
         <Link 
-          to="/messages"
+          to={activeTab === 'messages' ? "/messages" : (activeRole === 'OWNER' ? "/owner-dashboard" : "/tenant-dashboard")}
           onClick={onClose}
-          className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors"
+          className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors px-2 py-1 bg-white/5 rounded-lg border border-white/10"
         >
-          All Activity
+          {activeTab === 'messages' ? 'View All Messages' : 'Manage on Dashboard'}
         </Link>
-        <span className="text-[9px] font-black uppercase tracking-tighter text-slate-600">RentWise Hub</span>
+        <span className="text-[9px] font-black uppercase tracking-tighter text-slate-600 pr-2">RentWise</span>
       </div>
     </div>
   );

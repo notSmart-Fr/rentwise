@@ -15,7 +15,7 @@ class MessageService extends BaseApiService {
   async sendMessage(contextType, contextId, content, receiverId = null) {
     let url = `/messages/context/${contextType}/${contextId}`;
     if (receiverId) url += `?receiver_id=${receiverId}`;
-    
+
     return await apiRequest(url, {
       method: 'POST',
       body: JSON.stringify({ content })
@@ -27,7 +27,7 @@ class MessageService extends BaseApiService {
   }
 
   async markAsRead(conversationId) {
-    return await apiRequest(`${this.resourcePath}/${conversationId}/read`, { method: 'POST' });
+    return await apiRequest(`${this.resourcePath}/${conversationId}/read`, { method: 'PATCH' });
   }
 }
 

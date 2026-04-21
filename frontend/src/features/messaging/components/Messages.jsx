@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useConversations } from '../hooks/useConversations';
+import { useState, useEffect, useRef } from 'react';
+import { useConversations, useChat } from '../';
 import { useAuth } from '../../auth';
 import InboxRow from './InboxRow';
 import ChatBox from './ChatBox';
@@ -7,9 +7,48 @@ import { requestsService } from '../../requests/services/requestsService';
 
 const Messages = () => {
   const { activeRole } = useAuth();
+  const { chat, closeChat } = useChat();
   const { conversations, loading, error, refresh, markAsRead } = useConversations();
   const [selectedConv, setSelectedConv] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const processedChatRef = useRef(null);
+
+  // Sync selected conversation with global chat state (from openChat calls)
+  useEffect(() => {
+    // Only process if chat is present AND it's different from the last one we handled
+    const chatKey = chat ? `${chat.contextType}-${chat.contextId}-${chat.receiverId}` : null;
+    
+    if (chat && chatKey !== processedChatRef.current) {
+      // Find the conversation that matches the context or receiver
+      const match = conversations.find(c => 
+        (c.context_type === chat.contextType && c.context_id === chat.contextId) ||
+        (c.other_participant_id === chat.receiverId && c.context_id === chat.contextId)
+      );
+      
+      if (match) {
+        setSelectedConv(match);
+        if (match.unread_count > 0) {
+          markAsRead(match.id);
+        }
+        processedChatRef.current = chatKey;
+      } else if (conversations.length > 0 || !loading) {
+        // Only create virtual if we've finished loading or have some data
+        // to avoid race conditions with initial fetch
+        setSelectedConv({
+          id: 'v-' + chat.contextId,
+          is_virtual: true,
+          context_type: chat.contextType,
+          context_id: chat.contextId,
+          context_title: chat.title,
+          other_participant_name: chat.subtitle || 'Owner',
+          other_participant_id: chat.receiverId,
+          user_role: activeRole,
+          messages: []
+        });
+        processedChatRef.current = chatKey;
+      }
+    }
+  }, [chat, conversations, markAsRead, activeRole, loading]);
 
   // Airbnb Style: Filter inbox based on the current active role (Hosting vs Traveling)
   const filteredConversations = conversations.filter(conv => conv.user_role === activeRole);
@@ -23,7 +62,7 @@ const Messages = () => {
 
   // Reset selected conversation if role switches and it's no longer in view
   useEffect(() => {
-    if (selectedConv && !filteredConversations.find(c => c.id === selectedConv.id)) {
+    if (selectedConv && !selectedConv.id.startsWith('v-') && !filteredConversations.find(c => c.id === selectedConv.id)) {
       setSelectedConv(null);
     }
   }, [activeRole, filteredConversations, selectedConv]);

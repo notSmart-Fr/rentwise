@@ -43,8 +43,6 @@ const Navbar = () => {
 
   const handleSwitchRole = () => {
     switchRole();
-    // Navigate home or to the new dashboard for a fresh start
-    navigate('/');
     setIsMenuOpen(false);
   };
 

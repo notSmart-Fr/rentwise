@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth, Login, Register, ForgotPassword, ResetPassword } from './features/auth';
-import { ChatProvider, useChat, ChatModal, Messages } from './features/messaging';
+import { ChatProvider, useChat, Messages } from './features/messaging';
 import { Home } from './features/home';
 import { OwnerDashboard, TenantDashboard } from './features/dashboard';
 import { PropertyDetails } from './features/properties';
@@ -117,19 +117,6 @@ function AppInner() {
         </Routes>
       </MainLayout>
 
-      {/* Global persistent chat widget - survives page navigation */}
-      {/* Hide when on the full /messages page to prevent UI overlap */}
-      {chat && !isDedicatedMessagesPage && (
-        <ChatModal
-          isOpen={true}
-          onClose={closeChat}
-          contextType={chat.contextType}
-          contextId={chat.contextId}
-          title={chat.title}
-          subtitle={chat.subtitle}
-          receiverId={chat.receiverId}
-        />
-      )}
     </>
   );
 }

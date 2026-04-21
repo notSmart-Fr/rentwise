@@ -100,6 +100,9 @@ class MessageService(BaseService[Conversation]):
         convs = self.repo.get_user_conversations(db, user_id)
         inbox = []
         for conv in convs:
+            if conv.participant1_id == conv.participant2_id:
+                continue
+                
             other_id = conv.participant2_id if conv.participant1_id == user_id else conv.participant1_id
             other_user = db.query(User).filter(User.id == other_id).first()
             

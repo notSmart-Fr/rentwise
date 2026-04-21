@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "RentWise API"
-    database_url: str = "sqlite:///./rentwise.db"
+    database_url: str = "postgresql+psycopg://rentwise:rentwise@localhost:5432/rentwise"
 
     jwt_secret: str = "dev-secret-key-123"
     jwt_alg: str = "HS256"

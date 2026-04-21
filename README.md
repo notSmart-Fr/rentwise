@@ -41,6 +41,7 @@ The fastest way to run the entire stack (Backend, Frontend, and Database) is usi
 * **Tenant Dashboard**: 
   - Track lease request status.
   - View digital payment receipts.
+* **Optimistic UI**: Real-time messaging and notification badges respond instantly to user interaction before server confirmation.
 
 ---
 
