@@ -19,7 +19,9 @@ class TokenResponse(BaseModel):
 
 class MeResponse(BaseModel):
     id: str
-    role: str
+    is_owner: bool
+    is_tenant: bool
+    role: str # For backward compatibility
     full_name: str
     email: EmailStr
     phone: str | None = None

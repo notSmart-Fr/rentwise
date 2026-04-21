@@ -16,9 +16,11 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ## 3. Current Capabilities (Core Engine)
 
-### 👤 Role-Based Architecture
-- **Tenant**: Browse listings, apply for leases, track request status, securely pay rent via simulated gateways, and download digital receipts.
-- **Owner**: List properties, manage incoming requests (Approve/Reject), view unified income ledger, and track maintenance issues.
+### 👤 Role-Based Architecture (Airbnb Style)
+- **Universal Accounts**: Every user is both a **Tenant** and an **Owner**. No separate accounts are needed.
+- **Toggle Mode**: A global switcher allows users to flip between "Renting" and "Hosting" modes instantly.
+- **Tenant Capabilities**: Browse listings, apply for leases, track request status, securely pay rent, and download digital receipts.
+- **Owner Capabilities**: List properties, manage incoming requests (Approve/Reject), view unified income ledger, and track maintenance issues.
 
 ### 🏠 Property Discovery
 - Responsive masonry grid with modern property cards.

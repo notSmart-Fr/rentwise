@@ -17,8 +17,10 @@ class AuthService:
         if existing:
             raise ValueError("Email already registered")
 
+        # Airbnb Style: Everyone is both an owner and a tenant
         user = User(
-            role=role,
+            is_owner=True,
+            is_tenant=True,
             full_name=full_name,
             email=email,
             phone=phone,

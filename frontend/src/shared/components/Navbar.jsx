@@ -8,7 +8,7 @@ import AlertsDropdown from './AlertsDropdown';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, activeRole, switchRole } = useAuth();
   const { closeChat } = useChat();
   const { totalUnread: unreadMessages } = useConversations();
   const { unreadCount: unreadAlerts } = useNotifications();
@@ -20,7 +20,6 @@ const Navbar = () => {
   
   const chatRef = useRef(null);
   const alertsRef = useRef(null);
-  const role = user?.role || 'TENANT';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -41,6 +40,13 @@ const Navbar = () => {
     closeChat();
     logout();
     navigate('/login');
+  };
+
+  const handleSwitchRole = () => {
+    switchRole();
+    // Navigate home or to the new dashboard for a fresh start
+    navigate('/');
+    setIsMenuOpen(false);
   };
 
   return (
@@ -64,9 +70,16 @@ const Navbar = () => {
               </defs>
             </svg>
           </div>
-          <span className="font-display text-2xl font-black text-white tracking-tighter uppercase">
-            Rent<span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic">Wise</span>
-          </span>
+          <div className="flex flex-col -gap-1">
+            <span className="font-display text-2xl font-black text-white tracking-tighter uppercase leading-none">
+              Rent<span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic">Wise</span>
+            </span>
+            {isAuthenticated && (
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/80 animate-in fade-in slide-in-from-left-1 duration-500">
+                {activeRole === 'OWNER' ? 'HOSTING' : 'RENTING'}
+              </span>
+            )}
+          </div>
         </Link>
 
         {/* Desktop Menu */}
@@ -75,7 +88,7 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
-              {role === 'OWNER' ? (
+              {activeRole === 'OWNER' ? (
                 <Link to="/owner-dashboard" className="text-[13px] font-black uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors duration-300">Dashboard</Link>
               ) : (
                 <>
@@ -119,8 +132,22 @@ const Navbar = () => {
               </div>
 
               <div className="w-px h-6 bg-white/5 mx-2" />
+              
+              {/* Role Switcher Button */}
               <button
-                className="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-danger active:scale-95 transition-all outline-none"
+                onClick={handleSwitchRole}
+                className="group relative px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all duration-300 active:scale-95"
+              >
+                <div className="relative flex items-center gap-2.5">
+                  <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(124,58,237,0.4)] group-hover:scale-125 transition-transform" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                    {activeRole === 'OWNER' ? 'Switch to Renting' : 'Switch to Hosting'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                className="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-danger active:scale-95 transition-all outline-none ml-2"
                 onClick={handleLogout}
               >
                 Log Out
@@ -156,7 +183,14 @@ const Navbar = () => {
             </Link>
             {isAuthenticated ? (
               <>
-                {role === 'OWNER' ? (
+                <button 
+                  onClick={handleSwitchRole}
+                  className="w-full text-left text-2xl font-black text-primary py-6 border-b border-white/5 uppercase tracking-widest"
+                >
+                   ↻ {activeRole === 'OWNER' ? 'Switch to Renting' : 'Switch to Hosting'}
+                </button>
+                
+                {activeRole === 'OWNER' ? (
                   <Link to="/owner-dashboard" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 ) : (
                   <>
@@ -165,24 +199,23 @@ const Navbar = () => {
                   </>
                 )}
                 
-                {/* Mobile Notifications Shortcut */}
                 <Link to="/messages" className="text-4xl font-black text-white py-6 border-b border-white/5 relative" onClick={() => setIsMenuOpen(false)}>
-                  Notifications
-                  {totalUnread > 0 && (
-                    <span className="ml-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-danger text-[11px] text-white font-bold">
-                      {totalUnread}
+                  Inbox
+                  {unreadMessages > 0 && (
+                    <span className="ml-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[11px] text-white font-bold">
+                      {unreadMessages}
                     </span>
                   )}
                 </Link>
                 <div className="pt-12">
-                  <button className="w-full btn btn-secondary py-5 text-lg" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>Exit Platform</button>
+                  <button className="w-full btn btn-secondary py-5 text-lg font-black uppercase tracking-[0.2em]" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>Exit Platform</button>
                 </div>
               </>
             ) : (
               <>
                 <Link to="/login" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Log In</Link>
                 <div className="pt-12">
-                  <Link to="/register" className="w-full block text-center btn btn-primary py-5 text-lg" onClick={() => setIsMenuOpen(false)}>Register Account</Link>
+                  <Link to="/register" className="w-full block text-center btn btn-primary py-5 text-lg font-black uppercase tracking-[0.2em]" onClick={() => setIsMenuOpen(false)}>Register Account</Link>
                 </div>
               </>
             )}

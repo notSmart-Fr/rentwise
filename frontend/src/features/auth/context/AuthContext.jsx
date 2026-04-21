@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [activeRole, setActiveRole] = useState(localStorage.getItem('activeRole') || 'TENANT');
   const [loading, setLoading] = useState(true);
 
   // Initialize Auth State on App Load
@@ -16,12 +17,18 @@ export const AuthProvider = ({ children }) => {
         try {
           const userData = await authService.getMe();
           setUser(userData);
-          localStorage.setItem('role', userData.role);
+          
+          // Re-validate activeRole: if user is logged in, ensure their activeRole is valid
+          // For Airbnb style, everyone is usually both, but we check flags to be safe
+          const storedRole = localStorage.getItem('activeRole');
+          if (!storedRole) {
+            const initialRole = userData.is_owner ? 'OWNER' : 'TENANT';
+            setActiveRole(initialRole);
+            localStorage.setItem('activeRole', initialRole);
+          }
         } catch (error) {
           console.error('Session expired or invalid token:', error);
-          removeAuthToken();
-          localStorage.removeItem('role');
-          setUser(null);
+          handleLogout();
         }
       }
       setLoading(false);
@@ -30,18 +37,22 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
+  const handleLoginSuccess = async (access_token) => {
+    storeToken(access_token);
+    const userData = await authService.getMe();
+    setUser(userData);
+    
+    // Set default active role on login if not set
+    const initialRole = userData.is_tenant ? 'TENANT' : 'OWNER';
+    setActiveRole(initialRole);
+    localStorage.setItem('activeRole', initialRole);
+    return userData;
+  };
+
   const login = async (email, password) => {
     try {
-      // 1. Get Token
       const response = await authService.login(email, password);
-      storeToken(response.access_token);
-
-      // 2. Fetch User Profile
-      const userData = await authService.getMe();
-      setUser(userData);
-      localStorage.setItem('role', userData.role);
-
-      return userData;
+      return await handleLoginSuccess(response.access_token);
     } catch (error) {
       removeAuthToken();
       throw error;
@@ -50,9 +61,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (data) => {
     try {
-      // 1. Register User
       await authService.register(data);
-      // 2. Auto-login after registration
       return await login(data.email, data.password);
     } catch (error) {
       throw error;
@@ -61,38 +70,44 @@ export const AuthProvider = ({ children }) => {
   
   const loginWithGoogle = async (idToken, role) => {
     try {
-      // 1. Get Token from backend
       const response = await authService.loginWithGoogle(idToken, role);
-      storeToken(response.access_token);
-
-      // 2. Fetch User Profile
-      const userData = await authService.getMe();
-      setUser(userData);
-      localStorage.setItem('role', userData.role);
-
-      return userData;
+      return await handleLoginSuccess(response.access_token);
     } catch (error) {
       removeAuthToken();
       throw error;
     }
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     removeAuthToken();
-    localStorage.removeItem('role');
+    localStorage.removeItem('activeRole');
     setUser(null);
+  };
+
+  const switchRole = () => {
+    const newRole = activeRole === 'TENANT' ? 'OWNER' : 'TENANT';
+    // Check if user has permission for the new role (usually both in Airbnb style)
+    if (newRole === 'OWNER' && !user?.is_owner) return;
+    if (newRole === 'TENANT' && !user?.is_tenant) return;
+
+    setActiveRole(newRole);
+    localStorage.setItem('activeRole', newRole);
   };
 
   const value = {
     user,
+    activeRole,
     loading,
     login,
     register,
-    logout,
+    logout: handleLogout,
     loginWithGoogle,
+    switchRole,
     isAuthenticated: !!user,
-    isOwner: user?.role === 'OWNER',
-    isTenant: user?.role === 'TENANT'
+    isOwner: activeRole === 'OWNER',
+    isTenant: activeRole === 'TENANT',
+    hasOwnerPermission: !!user?.is_owner,
+    hasTenantPermission: !!user?.is_tenant
   };
 
   return (

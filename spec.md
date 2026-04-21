@@ -84,6 +84,11 @@ Every feature and shared directory MUST contain an `index.js` file that acts as 
 - **Rule:** Hooks, Services, and Main Components must be re-exported through the feature's `index.js`.
 - **Usage:** Developers/Agents should import from the feature root (e.g., `import { requestsService } from '@/features/requests'`) rather than deep-nesting.
 
+## 🔒 Security & Identity
+- **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both `is_owner` and `is_tenant` capabilities.
+- **Active Role State**: The frontend manages an `activeRole` (persisted in local storage) to toggle between Tenant and Owner dashboards without logging out.
+- **Role-Based Access Control (RBAC)**: Backend endpoints verify permissions based on the user's boolean flags (`is_owner`/`is_tenant`), ensuring an account can only perform actions (like listing a property) if they have the proper flags set.
+
 ---
 
 ## 🏎️ Execution Workflow

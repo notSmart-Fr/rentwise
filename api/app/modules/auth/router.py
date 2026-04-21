@@ -24,7 +24,9 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
         user = service.register(db, payload.role, payload.full_name, payload.email, payload.phone, payload.password)
         return MeResponse(
             id=str(user.id),
-            role=user.role,
+            is_owner=user.is_owner,
+            is_tenant=user.is_tenant,
+            role="OWNER" if user.is_owner else "TENANT", # Legacy
             full_name=user.full_name,
             email=user.email,
             phone=user.phone,
@@ -94,7 +96,9 @@ def reset_password(payload: dict, db: Session = Depends(get_db)):
 def me(current: User = Depends(get_current_user)):
     return MeResponse(
         id=str(current.id),
-        role=current.role,
+        is_owner=current.is_owner,
+        is_tenant=current.is_tenant,
+        role="OWNER" if current.is_owner else "TENANT", # Legacy
         full_name=current.full_name,
         email=current.email,
         phone=current.phone,
