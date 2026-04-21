@@ -10,7 +10,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Protected Route Wrapper Component
 const ProtectedRoute = ({ children, requiredRole }) => {
-  const { isAuthenticated, user, loading } = useAuth();
+  const { isAuthenticated, activeRole, loading } = useAuth();
 
   if (loading) {
     return (
@@ -24,9 +24,10 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
-    // Redirect if they don't have the right role
-    return <Navigate to={user.role === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard'} replace />;
+  // Airbnb Style: Check the current ACTIVE mode, not the user's permanent role
+  if (requiredRole && activeRole !== requiredRole) {
+    // Redirect to the dashboard matching their current active role
+    return <Navigate to={activeRole === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard'} replace />;
   }
 
   return children;
@@ -34,12 +35,12 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
 // Redirect to dashboard if already logged in
 const PublicOnlyRoute = ({ children }) => {
-  const { isAuthenticated, user, loading } = useAuth();
+  const { isAuthenticated, activeRole, loading } = useAuth();
   
   if (loading) return null;
   
   if (isAuthenticated) {
-    return <Navigate to={user.role === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard'} replace />;
+    return <Navigate to={activeRole === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard'} replace />;
   }
   
   return children;

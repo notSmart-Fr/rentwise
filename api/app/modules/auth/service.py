@@ -66,17 +66,12 @@ class AuthService:
             user = self.repo.get_by_email(db, email)
 
             if not user:
-                # New User Case
-                if not role:
-                    # Signal frontend to show role selection modal
-                    raise ValueError("ROLE_REQUIRED")
-                
-                # Create the user
+                # Airbnb Style: Everyone is both an owner and a tenant
                 # We generate a random password because traditional login might still be used 
-                # (they can reset it later or keep using Google)
                 random_pass = str(uuid.uuid4())
                 user = User(
-                    role=role,
+                    is_owner=True,
+                    is_tenant=True,
                     full_name=full_name,
                     email=email,
                     password_hash=hash_password(random_pass),

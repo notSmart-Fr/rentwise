@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import RoleSelectionModal from './RoleSelectionModal';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,16 +9,13 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, activeRole } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [showRoleModal, setShowRoleModal] = useState(false);
-  const [googleIdToken, setGoogleIdToken] = useState(null);
-
   const getRedirectPath = (role) => {
     if (location.state?.from) return location.state.from;
-    return role === 'OWNER' ? '/owner-dashboard' : '/';
+    return role === 'OWNER' ? '/owner-dashboard' : '/tenant-dashboard';
   };
 
   const handleSubmit = async (e) => {
@@ -34,7 +30,8 @@ const Login = () => {
 
     try {
       const userData = await login(email, password);
-      navigate(getRedirectPath(userData.role));
+      // We use activeRole for redirect because even if legacy role exists, activeRole is our truth
+      navigate(getRedirectPath(activeRole));
     } catch (err) {
       setError(err.message || 'Invalid email or password');
     } finally {
@@ -47,29 +44,12 @@ const Login = () => {
     setError('');
 
     try {
+      // In the new Dual Role system, Google login doesn't need a role selection modal
+      // because every user gets both roles automatically.
       const userData = await loginWithGoogle(response.credential);
-      navigate(getRedirectPath(userData.role));
+      navigate(getRedirectPath(activeRole));
     } catch (err) {
-      if (err.message === 'ROLE_REQUIRED') {
-        setGoogleIdToken(response.credential);
-        setShowRoleModal(true);
-      } else {
-        setError(err.message || 'Google login failed');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRoleSelect = async (role) => {
-    setShowRoleModal(false);
-    setIsLoading(true);
-
-    try {
-      const userData = await loginWithGoogle(googleIdToken, role);
-      navigate(getRedirectPath(userData.role));
-    } catch (err) {
-      setError(err.message || 'Failed to complete registration');
+      setError(err.message || 'Google login failed');
     } finally {
       setIsLoading(false);
     }
@@ -101,19 +81,18 @@ const Login = () => {
                 </span>
               </div>
 
-              {/* Smart Suggestion UI */}
               <div className="flex items-center gap-3 pt-2 border-t border-danger/10">
                 {error === 'ACCOUNT_NOT_FOUND' ? (
                   <Link to="/register" className="flex items-center gap-1.5 font-semibold text-danger hover:underline">
                     <span>Create an account</span>
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg viewBox="0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
                 ) : error === 'INCORRECT_PASSWORD' ? (
                   <Link to="/forgot-password" state={{ email }} className="flex items-center gap-1.5 font-semibold text-danger hover:underline">
                     <span>Reset password?</span>
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg viewBox="0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
@@ -123,7 +102,6 @@ const Login = () => {
           )}
 
           <div className="flex flex-col gap-6">
-            {/* Primary Google Auth */}
             <div className="flex flex-col items-center">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
@@ -148,7 +126,7 @@ const Login = () => {
                   id="email"
                   type="email"
                   className="input-field"
-                  placeholder="Ex. owner@rentwise.com"
+                  placeholder="Ex. me@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
@@ -200,15 +178,8 @@ const Login = () => {
           </div>
         </div>
       </div>
-
-      <RoleSelectionModal 
-        isOpen={showRoleModal} 
-        onSelect={handleRoleSelect}
-        onCancel={() => setShowRoleModal(false)}
-      />
     </div>
   );
 };
 
-      export default Login;
-
+export default Login;

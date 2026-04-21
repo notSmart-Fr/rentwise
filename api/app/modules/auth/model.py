@@ -17,7 +17,8 @@ class User(Base):
         default=uuid.uuid4,
     )
 
-    role: Mapped[str] = mapped_column(String(10), nullable=False)  # OWNER / TENANT
+    is_owner: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_tenant: Mapped[bool] = mapped_column(Boolean, default=True)
     full_name: Mapped[str] = mapped_column(String(100), nullable=False)
 
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)

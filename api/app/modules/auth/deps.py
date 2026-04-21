@@ -11,6 +11,7 @@ from app.modules.auth.repository import UserRepository
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 repo=UserRepository()
+
 def get_current_user(
     db: Session = Depends(get_db),
     token: str = Depends(oauth2_scheme),
@@ -42,10 +43,11 @@ def get_current_user_ws(
     return user
 
 def require_owner(user: User = Depends(get_current_user)) -> User:
-    if user.role != "OWNER":
-        raise HTTPException(status_code=403, detail="Owner access required")
+    if not user.is_owner:
+        raise HTTPException(status_code=403, detail="Owner capability required")
     return user
+
 def require_tenant(user: User = Depends(get_current_user)) -> User:
-    if user.role != "TENANT":
-        raise HTTPException(status_code=403, detail="Tenant access required")
+    if not user.is_tenant:
+        raise HTTPException(status_code=403, detail="Tenant capability required")
     return user
