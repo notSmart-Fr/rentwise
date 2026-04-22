@@ -65,3 +65,29 @@ For local development, you can still use Docker Compose or manual setup.
 - **Google OAuth 2.0**: Integrated secure login for a seamless user experience.
 - **JWT Authentication**: Secure token-based access control for all internal API routes.
 - **Role-based RBAC**: Strictly partitioned features for `OWNER` and `TENANT` roles.
+
+---
+
+## 🧪 Testing
+RentWise uses **Pytest** for backend logic verification.
+
+### 🐍 Local Testing (Virtual Environment)
+1. **Activate the environment** (from the root directory):
+   ```powershell
+   # Windows
+   .\.venv\Scripts\Activate.ps1
+   ```
+2. **Navigate to the API folder**:
+   ```powershell
+   cd api
+   ```
+3. **Run tests**:
+   ```powershell
+   pytest
+   ```
+
+### 🐳 Docker Testing
+If your containers are running, you can run tests directly inside the `api` container:
+```powershell
+docker-compose exec api pytest
+```
