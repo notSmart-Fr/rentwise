@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 
 from app.persistence.session import engine
@@ -17,11 +18,20 @@ from app.modules.notifications.router import router as notifications_router
 
 
 
-from app.core.errors import value_error_handler, generic_exception_handler
+from app.core.errors import (
+    AppException, 
+    app_exception_handler, 
+    value_error_handler, 
+    generic_exception_handler
+)
 
 app = FastAPI(title=settings.app_name)
 
+# Mount Static Files for Uploads
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 # Register Global Exception Handlers
+app.add_exception_handler(AppException, app_exception_handler)
 app.add_exception_handler(ValueError, value_error_handler)
 app.add_exception_handler(Exception, generic_exception_handler)
 

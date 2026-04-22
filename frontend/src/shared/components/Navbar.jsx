@@ -122,8 +122,12 @@ const Navbar = () => {
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
                        {user?.full_name?.split(' ')[0] || 'Menu'}
                     </span>
-                    <div className="w-8 h-8 rounded-full bg-linear-to-tr from-primary to-accent flex items-center justify-center text-[10px] font-black text-white shadow-inner">
-                       {user?.full_name?.[0] || '👤'}
+                    <div className="w-8 h-8 rounded-full border border-white/20 bg-linear-to-tr from-primary to-accent flex items-center justify-center text-[10px] font-black text-white shadow-inner overflow-hidden">
+                       {user?.avatar_url ? (
+                         <img src={user.avatar_url} alt={user.full_name} className="w-full h-full object-cover" />
+                       ) : (
+                         user?.full_name?.[0] || '👤'
+                       )}
                     </div>
                   </button>
 
@@ -155,6 +159,15 @@ const Navbar = () => {
                           >
                              <span className="text-lg">📊</span>
                              <span className="text-xs font-bold text-white">Dashboard</span>
+                          </Link>
+
+                          <Link 
+                            to="/settings"
+                            onClick={() => setIsAlertsOpen(false)}
+                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                          >
+                             <span className="text-lg">⚙️</span>
+                             <span className="text-xs font-bold text-white">Settings</span>
                           </Link>
 
                           {activeRole === 'TENANT' && (

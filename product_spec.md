@@ -43,26 +43,40 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ---
 
-## 4. Proposed Future Roadmap (Next Phases)
+## 4. Implementation Status & Roadmap
 
-### Phase 1: UX Polish & Asset Management
-- **Rich Media Uploads**: Implement actual file uploads for property images (transitioning away from external Unsplash URLs).
-- **User Profiles**: Interactive profile settings including avatar uploads and phone number verification.
-- **Verification Badges**: Add "Verified" status for properties/users to increase trust.
+### ✅ Completed: Foundation & Phase 1
+- **Robust Exception System**: Custom domain exceptions with a global backend handler and frontend interceptor.
+- **Global Alert System**: Premium toast notification system (`AlertProvider`) integrated with the API client.
+- **User Profiles**: Profile settings page with phone verification and name updates.
+- **Media Engine (v1)**: Local storage provider for multi-file property uploads and user avatars.
+- **Universal Accounts**: Single-account dual-role (Owner/Tenant) logic with mode switching.
+- **Messaging & Ledgers**: Core real-time chat and simulated payment ledger.
 
-### Phase 2: Analytics & Reporting
-- **In-App Analytics**: Charts (Recharts) showing monthly income trends and occupancy rates for owners.
-- **PDF Generation**: Real server-side PDF generation for receipts and lease agreements.
-- **Financial Export**: Export income ledgers to CSV or Excel.
+### 🚀 Phase 2: Analytics & Reporting (Current)
+- **Financial Dashboard**: Interactive charts (Recharts) for owners to track monthly income and occupancy rates.
+- **Automated Receipts**: Server-side PDF generation for digital payment receipts.
+- **Data Export**: Export payment ledgers and maintenance logs to CSV/Excel for accounting.
+- **Verification Badges (Advanced)**: Implement a "Verify Identity" flow (simulated) to unlock "Verified" badges for properties.
 
-### Phase 3: Advanced Automation & Scale
-- **Google Calendar Integration**: Sync property viewings-appointments with user calendars.
-- **Email/SMS Service Integration**: Move from console-logged notifications to actual SendGrid/Twilio integration.
-- **Global Search Optimization**: Full-text search implementation for scaling to thousands of listings.
+### 🏗️ Phase 3: Automation & Cloud Scale
+- **Cloud Asset Management**: Transition from Local Storage to Cloudinary/S3 for production scalability.
+- **Real Notifications**: Integration with SendGrid (Email) and Twilio (SMS) for automated alerts.
+- **Advanced Search**: PostgreSQL full-text search implementation and Map-based discovery (Leaflet/Mapbox).
+- **Calendar Integration**: Google Calendar sync for property viewings and payment reminders.
 
 ---
 
-## 5. Test Credentials Dictionary
+## 5. Technical Standards (Ground Truth)
+- **Backend**: FastAPI | SQLAlchemy 2.0 | PostgreSQL | Pydantic v2.
+- **Frontend**: React | Vite | Tailwind CSS v4 (Glassmorphism) | Context API.
+- **API**: Domain-Driven exceptions (`NotFoundException`, `ForbiddenException`).
+- **Files**: Modular storage provider (`LocalStorage` -> `StorageProvider` interface).
+
+---
+
+## 6. Test Credentials Dictionary
 *Standard dev accounts for rapid local testing.*
-- **Universal Account**: `owner@test.com` / `password123` (Can switch roles via UI)
+- **Universal Account**: `owner@test.com` / `password123`
 - **Alt Account**: `tenant_real@test.com` / `password123`
+

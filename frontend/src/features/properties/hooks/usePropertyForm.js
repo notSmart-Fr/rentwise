@@ -15,11 +15,17 @@ export const usePropertyForm = (initialData = null, onSuccess) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [localFiles, setLocalFiles] = useState([]);
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setLocalFiles(files);
   };
 
   const handleSubmit = async (e) => {
@@ -38,10 +44,19 @@ export const usePropertyForm = (initialData = null, onSuccess) => {
     };
 
     try {
+      let property;
       if (initialData?.id) {
-        await propertiesService.update(initialData.id, payload);
+        property = await propertiesService.update(initialData.id, payload);
       } else {
-        await propertiesService.create(payload);
+        property = await propertiesService.create(payload);
+      }
+
+      // Handle local file uploads if any
+      if (localFiles.length > 0) {
+        const uploadPromises = localFiles.map(file => 
+          propertiesService.uploadImage(property.id, file)
+        );
+        await Promise.all(uploadPromises);
       }
       
       if (onSuccess) onSuccess();
@@ -60,8 +75,11 @@ export const usePropertyForm = (initialData = null, onSuccess) => {
     isLoading,
     error,
     handleChange,
-    handleSubmit
+    handleFileChange,
+    handleSubmit,
+    localFilesCount: localFiles.length
   };
 };
+
 
 export default usePropertyForm;

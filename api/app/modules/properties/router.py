@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, File, UploadFile
 from sqlalchemy.orm import Session
 
 from app.persistence.deps import get_db
@@ -13,6 +13,7 @@ from app.modules.properties.schemas import (
 )
 from app.modules.properties.service import PropertyService
 from app.modules.properties.repository import PropertyRepository
+from app.utils.storage import storage
 
 router = APIRouter(tags=["properties"])
 service = PropertyService()
@@ -57,6 +58,29 @@ def set_availability(
 ):
     prop = service.update_availability(db, uuid.UUID(property_id), owner.id, payload.is_available)
     return service.to_response(prop)
+
+@owner_router.post("/properties/{property_id}/images")
+async def upload_property_image(
+    property_id: str,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    owner: User = Depends(require_owner),
+):
+    prop_id = uuid.UUID(property_id)
+    # Verify ownership
+    service.get_for_owner(db, prop_id, owner.id)
+    
+    # Upload
+    url = await storage.upload(file, folder=f"properties/{property_id}")
+    
+    # Save to DB
+    from app.modules.properties.model import PropertyImage
+    img = PropertyImage(property_id=prop_id, url=url)
+    db.add(img)
+    db.commit()
+    
+    return {"id": str(img.id), "url": url}
+
 
 # PUBLIC endpoints
 public_router = APIRouter(prefix="/properties", tags=["public-properties"])

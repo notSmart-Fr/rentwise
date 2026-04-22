@@ -1,6 +1,7 @@
 import uuid
 from sqlalchemy.orm import Session
 from app.persistence.base_service import BaseService
+from app.core.errors import ForbiddenException
 from app.modules.properties.model import Property, PropertyImage
 from app.modules.properties.repository import PropertyRepository
 
@@ -31,8 +32,9 @@ class PropertyService(BaseService[Property]):
     def get_for_owner(self, db: Session, property_id: uuid.UUID, owner_id: uuid.UUID) -> Property:
         prop = self.get_or_404(db, property_id)
         if prop.owner_id != owner_id:
-            raise ValueError("Unauthorized access to property")
+            raise ForbiddenException(f"You do not have permission to access property {property_id}")
         return prop
+
 
     def update(self, db: Session, property_id: uuid.UUID, owner_id: uuid.UUID, data) -> Property:
         prop = self.get_for_owner(db, property_id, owner_id)

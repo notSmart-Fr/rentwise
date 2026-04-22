@@ -2,7 +2,7 @@ import React from 'react';
 import { usePropertyForm } from '../hooks/usePropertyForm';
 
 const AddPropertyModal = ({ isOpen, onClose, onSuccess }) => {
-  const { formData, isLoading, error, handleChange, handleSubmit } = usePropertyForm(null, () => {
+  const { formData, isLoading, error, handleChange, handleFileChange, handleSubmit, localFilesCount } = usePropertyForm(null, () => {
     onSuccess();
     onClose();
   });
@@ -180,18 +180,42 @@ const AddPropertyModal = ({ isOpen, onClose, onSuccess }) => {
 
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-text-secondary pl-1 flex items-center justify-between">
-                  <span>Image URLs</span>
+                  <span>Upload Images</span>
+                  <span className="text-[10px] text-primary uppercase font-bold">{localFilesCount} files selected</span>
+                </label>
+                <div className="relative group">
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    accept="image/*"
+                  />
+                  <div className="w-full border-2 border-dashed border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center bg-white/2 group-hover:bg-white/5 group-hover:border-primary/30 transition-all">
+                    <svg className="w-8 h-8 text-slate-500 mb-2 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-sm font-bold text-white">Drop images or click to browse</p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">High-res photos recommended</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-text-secondary pl-1 flex items-center justify-between">
+                  <span>External Image URLs (Legacy)</span>
                   <span className="text-[10px] text-text-secondary opacity-50 uppercase">One URL per line</span>
                 </label>
                 <textarea
                   name="image_urls"
                   value={formData.image_urls}
                   onChange={handleChange}
-                  rows="3"
+                  rows="2"
                   placeholder="https://images.com/property-1.jpg"
-                  className="input-field min-h-[100px] py-3 font-mono text-xs"
+                  className="input-field min-h-[60px] py-3 font-mono text-[10px]"
                 ></textarea>
               </div>
+
             </div>
 
             {/* Footer Buttons */}

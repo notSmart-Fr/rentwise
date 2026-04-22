@@ -20,7 +20,6 @@ export async function apiRequest(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Handle FormData (like file uploads) where we don't want Content-Type to be application/json
   if (options.body instanceof FormData) {
     delete headers['Content-Type'];
   }
@@ -30,7 +29,6 @@ export async function apiRequest(endpoint, options = {}) {
     headers,
   };
 
-  // Stringify the body if it's a plain object (not FormData)
   if (config.body && typeof config.body === 'object' && !(config.body instanceof FormData)) {
     config.body = JSON.stringify(config.body);
   }
@@ -38,33 +36,45 @@ export async function apiRequest(endpoint, options = {}) {
   try {
     const response = await fetch(url, config);
     
-    // If response is 204 No Content, don't try to parse JSON
-    if (response.status === 204) {
-      return null;
-    }
+    if (response.status === 204) return null;
 
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      // Throw a custom error object containing the API error message
-      throw {
+      const errorObj = {
         status: response.status,
         message: data.detail || 'An unexpected error occurred',
+        errorType: data.error_type || 'UnknownError',
         data,
       };
+
+      // Emit global event for interceptors (like AlertProvider)
+      window.dispatchEvent(new CustomEvent('API_ERROR', { detail: errorObj }));
+
+      // Handle session expiration
+      if (response.status === 401 && !endpoint.includes('/login')) {
+        removeAuthToken();
+        window.location.href = '/login?expired=true';
+      }
+
+      throw errorObj;
     }
 
     return data;
   } catch (error) {
     if (error.message === 'Failed to fetch') {
-      throw {
+      const networkError = {
         status: 0,
         message: 'Network error. Please check if the server is running.',
+        errorType: 'NetworkError'
       };
+      window.dispatchEvent(new CustomEvent('API_ERROR', { detail: networkError }));
+      throw networkError;
     }
     throw error;
   }
 }
+
 
 // ----------------------------------------------------------------------------
 // Specific API methods (Vertical slices will use these)

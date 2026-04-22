@@ -35,7 +35,17 @@ class PropertiesService extends BaseApiService {
       body: JSON.stringify({ is_available: isAvailable }),
     });
   }
+
+  async uploadImage(propertyId, file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return await apiRequest(`${this.ownerPath}/${propertyId}/images`, {
+      method: 'POST',
+      body: formData,
+    });
+  }
 }
+
 
 export const propertiesService = new PropertiesService();
 export default propertiesService;

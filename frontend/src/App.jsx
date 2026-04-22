@@ -1,11 +1,12 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth, Login, Register, ForgotPassword, ResetPassword } from './features/auth';
+import { useAuth, Login, Register, ForgotPassword, ResetPassword, ProfileSettings } from './features/auth';
 import { ChatProvider, useChat, Messages } from './features/messaging';
 import { Home } from './features/home';
 import { OwnerDashboard, TenantDashboard } from './features/dashboard';
 import { PropertyDetails } from './features/properties';
 import MainLayout from './shared/components/MainLayout';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { AlertProvider } from './shared/context/AlertContext';
 
 
 // Protected Route Wrapper Component
@@ -114,6 +115,12 @@ function AppInner() {
               <Messages />
             </ProtectedRoute>
           } />
+
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <ProfileSettings />
+            </ProtectedRoute>
+          } />
         </Routes>
       </MainLayout>
 
@@ -124,11 +131,14 @@ function AppInner() {
 function App() {
   return (
     <GoogleOAuthProvider clientId="782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com">
-      <ChatProvider>
-        <AppInner />
-      </ChatProvider>
+      <AlertProvider>
+        <ChatProvider>
+          <AppInner />
+        </ChatProvider>
+      </AlertProvider>
     </GoogleOAuthProvider>
   );
 }
+
 
 export default App;

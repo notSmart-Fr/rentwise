@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -13,6 +13,8 @@ from app.modules.auth.deps import oauth2_scheme, get_current_user
 from app.core.security import decode_token, create_reset_token, decode_reset_token
 from app.core.emails import send_password_reset_email
 from app.core.config import settings
+from app.modules.auth.schemas import UserUpdateSchema
+from app.utils.storage import storage
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -102,5 +104,32 @@ def me(current: User = Depends(get_current_user)):
         full_name=current.full_name,
         email=current.email,
         phone=current.phone,
+        avatar_url=current.avatar_url,
         is_verified=current.is_verified,
     )
+
+@router.patch("/me", response_model=MeResponse)
+def update_profile(payload: UserUpdateSchema, db: Session = Depends(get_db), current: User = Depends(get_current_user)):
+    user = service.update_profile(db, current.id, payload.model_dump(exclude_unset=True))
+    return MeResponse(
+        id=str(user.id),
+        is_owner=user.is_owner,
+        is_tenant=user.is_tenant,
+        role="OWNER" if user.is_owner else "TENANT",
+        full_name=user.full_name,
+        email=user.email,
+        phone=user.phone,
+        avatar_url=user.avatar_url,
+        is_verified=user.is_verified,
+    )
+
+@router.post("/avatar")
+async def upload_avatar(file: UploadFile = File(...), db: Session = Depends(get_db), current: User = Depends(get_current_user)):
+    # 1. Upload to storage
+    avatar_url = await storage.upload(file, folder="avatars")
+    
+    # 2. Update user record
+    service.update_profile(db, current.id, {"avatar_url": avatar_url})
+    
+    return {"avatar_url": avatar_url}
+

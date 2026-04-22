@@ -25,8 +25,14 @@ class MeResponse(BaseModel):
     full_name: str
     email: EmailStr
     phone: str | None = None
+    avatar_url: str | None = None
     is_verified: bool
 
 class GoogleLoginRequest(BaseModel):
     id_token: str
     role: UserRole | None = None
+
+class UserUpdateSchema(BaseModel):
+    full_name: str | None = Field(None, min_length=2, max_length=100)
+    phone: str | None = None
+    # avatar_url is usually handled separately via upload endpoint

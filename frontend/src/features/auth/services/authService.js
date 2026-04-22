@@ -31,7 +31,25 @@ class AuthService extends BaseApiService {
   async getMe() {
     return await apiRequest(`${this.resourcePath}/me`, { method: 'GET' });
   }
+
+  async updateProfile(data) {
+    return await apiRequest(`${this.resourcePath}/me`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async uploadAvatar(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return await apiRequest(`${this.resourcePath}/avatar`, {
+      method: 'POST',
+      body: formData,
+      // Note: apiRequest should handle removing Content-Type for FormData
+    });
+  }
 }
+
 
 export const authService = new AuthService();
 export default authService;

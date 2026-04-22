@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.persistence.base import Base
 from app.persistence.base_repo import BaseRepository
 
+from app.core.errors import NotFoundException
+
 T = TypeVar("T", bound=Base)
 
 class BaseService(Generic[T]):
@@ -17,13 +19,13 @@ class BaseService(Generic[T]):
 
     def get_or_404(self, db: Session, id: Any) -> T:
         """
-        Fetches an object by ID or raises a ValueError if not found.
-        The global exception handler will catch this and return a 400.
+        Fetches an object by ID or raises a NotFoundException if not found.
         """
         obj = self.repo.get_by_id(db, id)
         if not obj:
-            raise ValueError(f"{self.model.__name__} with ID {id} not found")
+            raise NotFoundException(f"{self.model.__name__} with ID {id} not found")
         return obj
+
 
     def list_all(self, db: Session, **kwargs) -> List[T]:
         """Generic list all."""

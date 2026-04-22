@@ -88,3 +88,13 @@ class AuthService:
             error_detail = str(e)
             print(f"Google Auth Error: {error_detail}")
             raise ValueError(f"GOOGLE_AUTH_FAILED: {error_detail}")
+    def update_profile(self, db: Session, user_id: uuid.UUID, data: dict) -> User:
+        user = self.repo.get_by_id(db, user_id)
+        if not user:
+            raise ValueError("User not found")
+        
+        for key, value in data.items():
+            if hasattr(user, key) and value is not None:
+                setattr(user, key, value)
+        
+        return self.repo.create(db, user)
