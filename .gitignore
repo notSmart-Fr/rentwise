@@ -12,6 +12,7 @@
 *.local
 
 # --- Backend (api/) ---
+.venv/
 api/.venv/
 api/__pycache__/
 api/*.pyc
