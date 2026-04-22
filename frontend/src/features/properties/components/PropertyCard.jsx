@@ -22,9 +22,9 @@ const PropertyCard = ({ property, onEdit }) => {
           loading="lazy"
         />
         <div className="absolute top-4 left-4 flex gap-2">
-          <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider shadow-lg backdrop-blur-md ${property?.is_available
-              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-              : 'bg-red-500/20 text-red-400 border border-red-500/30'
+          <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] shadow-2xl backdrop-blur-xl ${property?.is_available
+              ? 'bg-emerald-500 text-white border border-emerald-400/30'
+              : 'bg-red-500 text-white border border-red-400/30'
             }`}>
             {property?.is_available ? 'Available' : 'Rented'}
           </span>
