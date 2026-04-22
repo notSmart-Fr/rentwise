@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../features/auth';
 import { useChat, useConversations } from '../../features/messaging';
-import { useNotifications } from '../hooks/useNotifications';
+import { useNotifications } from '../hooks';
 import InboxDropdown from './InboxDropdown';
 
 const Navbar = () => {

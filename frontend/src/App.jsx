@@ -4,9 +4,8 @@ import { ChatProvider, useChat, Messages } from './features/messaging';
 import { Home } from './features/home';
 import { OwnerDashboard, TenantDashboard } from './features/dashboard';
 import { PropertyDetails } from './features/properties';
-import MainLayout from './shared/components/MainLayout';
+import { MainLayout, AlertProvider } from './shared';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { AlertProvider } from './shared/context/AlertContext';
 
 
 // Protected Route Wrapper Component
