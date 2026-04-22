@@ -45,37 +45,38 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ## 4. Implementation Status & Roadmap
 
-### ✅ Completed: Foundation & Phase 1
-- **Robust Exception System**: Custom domain exceptions with a global backend handler and frontend interceptor.
-- **Global Alert System**: Premium toast notification system (`AlertProvider`) integrated with the API client.
-- **User Profiles**: Profile settings page with phone verification and name updates.
-- **Media Engine (v1)**: Local storage provider for multi-file property uploads and user avatars.
-- **Universal Accounts**: Single-account dual-role (Owner/Tenant) logic with mode switching.
-- **Messaging & Ledgers**: Core real-time chat and simulated payment ledger.
+### ✅ Completed: Foundation, Phase 1 & 2
+- **Robust Exception System**: Custom domain exceptions with global backend handlers.
+- **Global Alert System**: Premium toast notification system (`AlertProvider`).
+- **Financial Dashboard**: Interactive charts (Recharts) for income tracking.
+- **Dual-Mode Identity**: Single-account architecture with instant mode switching.
+- **Cloud Infrastructure (V2.0)**: Fully automated CI/CD pipeline on Google Cloud Run.
+- **Production Persistence**: Supabase PostgreSQL with session pooling.
 
-### 🚀 Phase 2: Analytics & Reporting (Current)
-- **Financial Dashboard**: Interactive charts (Recharts) for owners to track monthly income and occupancy rates.
-- **Automated Receipts**: Server-side PDF generation for digital payment receipts.
-- **Data Export**: Export payment ledgers and maintenance logs to CSV/Excel for accounting.
-- **Verification Badges (Advanced)**: Implement a "Verify Identity" flow (simulated) to unlock "Verified" badges for properties.
-
-### 🏗️ Phase 3: Automation & Cloud Scale
-- **Cloud Asset Management**: Transition from Local Storage to Cloudinary/S3 for production scalability.
+### 🚀 Phase 3: Automation & Future Scale (Current)
+- **Cloud Asset Management**: Integration of Google Cloud Storage (GCS) for production media.
 - **Real Notifications**: Integration with SendGrid (Email) and Twilio (SMS) for automated alerts.
-- **Advanced Search**: PostgreSQL full-text search implementation and Map-based discovery (Leaflet/Mapbox).
+- **Advanced Search**: Map-based discovery (Leaflet/Mapbox) for local areas.
 - **Calendar Integration**: Google Calendar sync for property viewings and payment reminders.
 
 ---
 
 ## 5. Technical Standards (Ground Truth)
 - **Backend**: FastAPI | SQLAlchemy 2.0 | PostgreSQL | Pydantic v2.
-- **Frontend**: React | Vite | Tailwind CSS v4 (Glassmorphism) | Context API.
+- **Frontend**: React | Vite | Vanilla CSS (Production Nginx) | Context API.
+- **Cloud**: Google Cloud Run | Cloud Build | GCS | Supabase.
 - **API**: Domain-Driven exceptions (`NotFoundException`, `ForbiddenException`).
-- **Files**: Modular storage provider (`LocalStorage` -> `StorageProvider` interface).
+- **Files**: Modular storage provider (`LocalStorage` -> `CloudStorage`).
 
 ---
 
-## 6. Test Credentials Dictionary
+## 6. Deployment Endpoints
+- **Frontend**: [https://rentwise-frontend-724618883283.asia-northeast1.run.app](https://rentwise-frontend-724618883283.asia-northeast1.run.app)
+- **Backend**: [https://rentwise-api-724618883283.asia-northeast1.run.app](https://rentwise-api-724618883283.asia-northeast1.run.app)
+
+---
+
+## 7. Test Credentials Dictionary
 *Standard dev accounts for rapid local testing.*
 - **Universal Account**: `owner@test.com` / `password123`
 - **Alt Account**: `tenant_real@test.com` / `password123`

@@ -6,6 +6,31 @@ This document serves as the "Ground Truth" for all development on the RentWise p
 1. **Spec-First Development:** The `spec.md` is the source of truth. Any change to architecture, dependencies, or project structure MUST be reflected here immediately.
 2. **Agent Responsibility:** AI Agents are required to update this document whenever they introduce a legacy technology, a new dependency, or restructure a module.
 
+## ☁️ Cloud Infrastructure & Hosting
+RentWise is designed for cloud-native scalability using Google Cloud Platform (GCP).
+
+### 🚀 Compute & Hosting
+- **Backend (API):** Deployed on **Google Cloud Run**. Containerized via `api/Dockerfile`.
+- **Frontend (UI):** Deployed on **Google Cloud Run**. Containerized via `frontend/Dockerfile` using an Nginx multi-stage build.
+
+### 🗄️ Persistence & Storage
+- **Database:** Managed **Supabase PostgreSQL**. 
+    - **Connection Strategy:** Use the **Supabase Session Pooler** (`aws-1-...pooler.supabase.com:5432`) for IPv4 compatibility and connection resilience.
+- **File Storage:** **Google Cloud Storage (GCS)**.
+    - **Implementation:** Abstracted via `app.utils.storage.CloudStorage`.
+    - **Credentials:** Uses Cloud Run's Service Account Identity (no manual keys in production).
+
+### ⚙️ Production Environment Variables
+To maintain security and flexibility, environment variables are managed at runtime.
+- **Frontend Strategy:** Uses a **Placeholder Replacement Strategy**.
+    - JS files are built with `VITE_API_URL_PLACEHOLDER`.
+    - At container startup, `sed` replaces these with real values from Cloud Run.
+- **Key Variables:**
+    - `DATABASE_URL`: Full PostgreSQL connection string.
+    - `CORS_ORIGINS`: Comma-separated list of allowed frontend URLs.
+    - `VITE_API_URL`: URL of the deployed API service.
+    - `VITE_GOOGLE_CLIENT_ID`: Google OAuth 2.0 Client ID.
+
 ---
 
 ## 🐍 Backend: Layered & Shared Standards
