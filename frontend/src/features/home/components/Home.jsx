@@ -23,36 +23,33 @@ const Home = () => {
         <div className="absolute top-[-5%] left-[-2%] w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
         <div className="absolute top-[15%] right-[-5%] w-[350px] h-[350px] bg-accent/5 rounded-full blur-[80px] pointer-events-none animate-pulse-slow delay-1000"></div>
 
-        <div className="container relative z-10 px-6 mx-auto flex flex-col items-center">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.98] tracking-tight text-white mb-10">
-              Find Your Next <br />
-              <span className="bg-linear-to-r from-primary via-accent to-white bg-clip-text text-transparent italic">Perfect Home.</span>
-            </h1>
-            <p className="max-w-3xl mx-auto text-lg sm:text-xl text-text-secondary leading-relaxed mb-16 opacity-70 font-medium">
-              The smartest way to rent in the city. RentWise connects premium properties with verified tenants through a seamless, stress-free experience.
-            </p>
+        <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-6xl">
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.98] tracking-tight text-white mb-10">
+            Find Your Next <br />
+            <span className="bg-linear-to-r from-primary via-accent to-white bg-clip-text text-transparent italic">Perfect Home.</span>
+          </h1>
+          <p className="max-w-3xl mx-auto text-lg sm:text-xl text-text-secondary leading-relaxed mb-16 opacity-70 font-medium">
+            The smartest way to rent in the city. RentWise connects premium properties with verified tenants through a seamless, stress-free experience.
+          </p>
 
-            <div className="mb-12 w-full max-w-3xl mx-auto">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                onSearch={handleSearch}
-              />
-            </div>
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            onSearch={handleSearch}
+            className="mb-12 w-full max-w-3xl mx-auto"
+          />
 
-            <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
-              <span className="text-text-muted uppercase tracking-[0.2em] text-[10px] w-full mb-2">Popular Areas</span>
-              {['Banani', 'Gulshan', 'Dhanmondi'].map(area => (
-                <button
-                  key={area}
-                  className="rounded-full border border-white/5 bg-white/5 px-4 py-2 text-text-secondary transition-all hover:bg-primary/20 hover:text-white hover:border-primary/20 active:scale-95"
-                  onClick={() => handleSearch(area)}
-                >
-                  {area}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
+            <span className="text-text-muted uppercase tracking-[0.2em] text-[10px] w-full mb-2">Popular Areas</span>
+            {['Banani', 'Gulshan', 'Dhanmondi'].map(area => (
+              <button
+                key={area}
+                className="rounded-full border border-white/5 bg-white/5 px-4 py-2 text-text-secondary transition-all hover:bg-primary/20 hover:text-white hover:border-primary/20 active:scale-95"
+                onClick={() => handleSearch(area)}
+              >
+                {area}
+              </button>
+            ))}
           </div>
         </div>
       </section>

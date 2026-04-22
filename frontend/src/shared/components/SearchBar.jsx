@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-const SearchBar = ({ value, onChange, onSearch }) => {
+const SearchBar = ({ value, onChange, onSearch, className = "" }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(value);
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <div className={`w-full relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700 ${className}`}>
       <form
         className="flex bg-white/5 backdrop-blur-xl border border-white/10 rounded-full p-2 shadow-2xl transition-all duration-300 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 focus-within:-translate-y-1"
         onSubmit={handleSubmit}
