@@ -11,7 +11,24 @@ const ProfileSettings = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [vStatus, setVStatus] = useState(null);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [vFile, setVFile] = useState(null);
+  const [docType, setDocType] = useState('NID');
   const fileInputRef = useRef(null);
+
+  React.useEffect(() => {
+    const fetchVStatus = async () => {
+      try {
+        const status = await authService.getVerificationStatus();
+        setVStatus(status);
+      } catch (err) {
+        console.error('Failed to fetch verification status:', err);
+      }
+    };
+    fetchVStatus();
+  }, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,6 +79,23 @@ const ProfileSettings = () => {
       setIsUploading(false);
     }
   };
+
+  const handleVerificationSubmit = async (e) => {
+    e.preventDefault();
+    if (!vFile) return;
+
+    setIsVerifying(true);
+    try {
+      await authService.requestVerification(docType, vFile);
+      setVStatus({ status: 'PENDING', submitted_at: new Date().toISOString() });
+      setMessage({ type: 'success', text: 'Verification request submitted successfully!' });
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message || 'Failed to submit verification' });
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
 
   return (
     <div className="container mx-auto px-6 py-32 max-w-4xl">
@@ -180,7 +214,72 @@ const ProfileSettings = () => {
               </div>
             </form>
           </div>
+
+          {/* Verification Section */}
+          {!user?.is_verified && (
+            <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 md:p-12 shadow-2xl">
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-white flex items-center gap-3">
+                  <span className="text-2xl">🛡️</span> Identity Verification
+                </h3>
+                <p className="text-sm text-text-secondary mt-2">Verified users get a badge and priority listing status.</p>
+              </div>
+
+              {vStatus?.status === 'PENDING' ? (
+                <div className="p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 animate-pulse">⏳</div>
+                  <div>
+                    <p className="text-sm font-bold text-amber-400 uppercase tracking-widest">Verification Pending</p>
+                    <p className="text-xs text-amber-400/60 mt-1">Submitted on {new Date(vStatus.submitted_at).toLocaleDateString()}. We will notify you once reviewed.</p>
+                  </div>
+                </div>
+              ) : vStatus?.status === 'REJECTED' ? (
+                <div className="space-y-6">
+                  <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-2xl">
+                    <p className="text-sm font-bold text-red-400 uppercase tracking-widest">Verification Rejected</p>
+                    <p className="text-xs text-red-400/60 mt-1">{vStatus.notes || 'Please try again with a clearer document.'}</p>
+                  </div>
+                  <button onClick={() => setVStatus(null)} className="text-xs font-black text-primary uppercase tracking-widest hover:underline">Try Again</button>
+                </div>
+              ) : (
+                <form onSubmit={handleVerificationSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Document Type</label>
+                      <select 
+                        value={docType}
+                        onChange={(e) => setDocType(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-medium outline-none focus:border-primary/50 transition-all appearance-none"
+                      >
+                        <option value="NID" className="bg-slate-900">National ID Card</option>
+                        <option value="Passport" className="bg-slate-900">Passport</option>
+                        <option value="TradeLicense" className="bg-slate-900">Trade License (Owner)</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Upload File</label>
+                      <input 
+                        type="file" 
+                        onChange={(e) => setVFile(e.target.files[0])}
+                        required
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-[14px] text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-primary file:text-white hover:file:bg-primary/80" 
+                        accept="image/*,.pdf"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isVerifying || !vFile}
+                    className="btn btn-secondary w-full md:w-auto px-8 py-3 text-xs font-black uppercase tracking-widest border-white/10 disabled:opacity-50"
+                  >
+                    {isVerifying ? 'Submitting...' : 'Submit for Verification'}
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
+
       </div>
     </div>
   );

@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173"
 
     google_client_id: str = "782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com"
+    
+    # Storage Settings
+    storage_type: str = "local" # local or gcs
+    gcs_bucket: str = ""
+    gcs_credentials: str = "" # Path to JSON or JSON string
+
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

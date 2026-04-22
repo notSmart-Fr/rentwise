@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -132,4 +132,35 @@ async def upload_avatar(file: UploadFile = File(...), db: Session = Depends(get_
     service.update_profile(db, current.id, {"avatar_url": avatar_url})
     
     return {"avatar_url": avatar_url}
+
+@router.post("/verify")
+async def request_verification(
+    doc_type: str = Form(...), 
+    file: UploadFile = File(...), 
+    db: Session = Depends(get_db), 
+    current: User = Depends(get_current_user)
+):
+    # 1. Upload document
+    doc_url = await storage.upload(file, folder="verifications")
+    
+    # 2. Create request
+    req = service.create_verification_request(db, current.id, doc_type, doc_url)
+    
+    return {"status": "PENDING", "request_id": str(req.id)}
+
+@router.get("/verify/status")
+def check_verification_status(
+    db: Session = Depends(get_db), 
+    current: User = Depends(get_current_user)
+):
+    req = service.get_verification_status(db, current.id)
+    if not req:
+        return {"status": "NONE"}
+    
+    return {
+        "status": req.status,
+        "submitted_at": req.submitted_at.isoformat(),
+        "notes": req.reviewer_notes
+    }
+
 

@@ -40,3 +40,7 @@ psycopg[binary]
 google-auth
 requests
 xhtml2pdf
+google-cloud-storage
+jinja2
+
+

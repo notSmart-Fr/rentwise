@@ -5,10 +5,11 @@ from app.modules.auth.enums import UserRole
 import uuid
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from app.modules.auth.model import User
+from app.modules.auth.model import User, VerificationRequest
 from app.modules.auth.repository import UserRepository
 
 class AuthService:
+
     def __init__(self) -> None:
         self.repo = UserRepository()
 
@@ -98,3 +99,36 @@ class AuthService:
                 setattr(user, key, value)
         
         return self.repo.create(db, user)
+
+    def create_verification_request(self, db: Session, user_id: uuid.UUID, doc_type: str, doc_url: str) -> VerificationRequest:
+        # 1. Check if there's already a pending request
+        from sqlalchemy import select
+        existing = db.execute(
+            select(VerificationRequest)
+            .where(VerificationRequest.user_id == user_id, VerificationRequest.status == "PENDING")
+        ).scalar_one_or_none()
+        
+        if existing:
+            raise ValueError("You already have a pending verification request")
+
+        req = VerificationRequest(
+            user_id=user_id,
+            document_type=doc_type,
+            document_url=doc_url,
+            status="PENDING"
+        )
+        db.add(req)
+        db.commit()
+        return req
+
+    def get_verification_status(self, db: Session, user_id: uuid.UUID):
+        from sqlalchemy import select
+        # Get the latest request
+        req = db.execute(
+            select(VerificationRequest)
+            .where(VerificationRequest.user_id == user_id)
+            .order_by(VerificationRequest.submitted_at.desc())
+        ).scalars().first()
+        
+        return req
+

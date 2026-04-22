@@ -48,7 +48,22 @@ class AuthService extends BaseApiService {
       // Note: apiRequest should handle removing Content-Type for FormData
     });
   }
+
+  async requestVerification(docType, file) {
+    const formData = new FormData();
+    formData.append('doc_type', docType);
+    formData.append('file', file);
+    return await apiRequest(`${this.resourcePath}/verify`, {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async getVerificationStatus() {
+    return await apiRequest(`${this.resourcePath}/verify/status`, { method: 'GET' });
+  }
 }
+
 
 
 export const authService = new AuthService();

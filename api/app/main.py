@@ -17,6 +17,18 @@ from app.modules.messages.router import router as messages_router
 from app.modules.notifications.router import router as notifications_router
 
 
+# Model imports for SQLAlchemy to detect tables
+from app.modules.auth.model import User, VerificationRequest
+from app.modules.properties.model import Property
+from app.modules.requests.model import RentalRequest
+from app.modules.payments.model import Payment
+
+from app.modules.tickets.model import Ticket
+
+from app.modules.messages.model import Message, Conversation
+from app.modules.notifications.model import Notification
+
+
 
 from app.core.errors import (
     AppException, 
@@ -45,8 +57,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Using Alembic for migrations now
-# Base.metadata.create_all(bind=engine)
+# Automatic table creation (useful for quick cloud setup)
+print(f"🚀 Connecting to Database: {settings.database_url.split('@')[-1]}") # Log host only for safety
+Base.metadata.create_all(bind=engine)
+
 
 app.include_router(auth_router)
 app.include_router(owner_router)

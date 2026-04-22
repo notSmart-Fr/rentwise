@@ -1,27 +1,16 @@
 services:
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_USER: rentwise
-      POSTGRES_PASSWORD: rentwise
-      POSTGRES_DB: rentwise
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   api:
     build: ./api
     ports:
       - "8000:8000"
     volumes:
       - ./api:/app
+    # This line tells Docker to read your Supabase password from the .env file
+    env_file:
+      - ./api/.env
     environment:
-      - DATABASE_URL=postgresql+psycopg://rentwise:rentwise@db:5432/rentwise
-      - JWT_SECRET=super-long-random-secret
-      - GOOGLE_CLIENT_ID=782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com
-    depends_on:
-      - db
+      # We override the DATABASE_URL to make sure it matches your .env
+      - PORT=8000
 
   frontend:
     build: ./frontend
@@ -31,11 +20,9 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
+      - PORT=5173
       - VITE_API_URL=http://localhost:8000
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
     depends_on:
       - api
-
-volumes:
-  pgdata:
