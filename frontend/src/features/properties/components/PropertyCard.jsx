@@ -4,7 +4,7 @@ import { useAuth } from '../../auth';
 import { usePropertyActions } from '../hooks/usePropertyActions';
 
 const PropertyCard = ({ property, onEdit }) => {
-  const { isTenant, isAuthenticated } = useAuth();
+  const { isTenant, isAuthenticated, user } = useAuth();
   const { requestStatus, handleQuickRequest } = usePropertyActions(property);
 
   const mainImage = property?.images && property.images.length > 0
@@ -95,7 +95,7 @@ const PropertyCard = ({ property, onEdit }) => {
             </button>
           )}
 
-          {!isTenant && isAuthenticated && (
+          {!isTenant && isAuthenticated && user?.id === property?.owner_id && (
             <button
               onClick={() => onEdit?.(property)}
               className="text-sm font-medium text-slate-500 underline transition-colors hover:text-white"
