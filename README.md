@@ -45,9 +45,10 @@ The platform is fully automated via CI/CD. Pushing to the `main` branch triggers
 * **Cloud Infrastructure**: Scalable backend and frontend services running on Google Cloud Run.
 * **Persistent Storage**: Media assets are stored in Google Cloud Storage buckets for infinite scalability.
 * **Production Database**: Managed Supabase PostgreSQL with IPv4-compatible session pooling.
-* **Visual Discovery**: Property listings with high-res image galleries.
-* **Smart Search**: Real-time filtering by keyword, city, and area.
-* **Advanced Dashboards**: Distinct, data-driven experiences for Owners and Tenants.
+* **How It Works**: A dedicated, interactive discovery page for onboarding new users.
+* **Visual Discovery**: Property listings with high-res image galleries and flexible, parent-controlled layouts.
+* **Smart Search**: Real-time filtering by keyword, city, and area via a global SearchBar.
+* **Advanced Dashboards**: Distinct, data-driven experiences for **Owners (Hosting)** and **Tenants (Renting)**.
 
 ---
 

@@ -110,12 +110,14 @@ Every feature and shared directory MUST contain an `index.js` file that acts as 
 - **Usage:** Developers/Agents should import from the feature root (e.g., `import { requestsService } from '@/features/requests'`) rather than deep-nesting.
 
 ## 🔒 Security & Identity
-- **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both `is_owner` and `is_tenant` capabilities.
-- **Active Role State**: The frontend manages an `activeRole` (persisted in local storage) to toggle between Tenant and Owner dashboards without logging out.
+- **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both **Tenant** and **Owner** capabilities.
+- **Dynamic Modes**: The platform distinguishes between the **Role** (Owner/Tenant) and the active **Mode** (Hosting/Renting).
+- **Active Role State**: The frontend manages an `activeRole` (persisted in local storage) to toggle between **Hosting** and **Renting** dashboards instantly.
+- **How It Works**: A dedicated, public-facing discovery page explains the dual-mode lifecycle to users.
 - **Role-Based Access Control (RBAC)**: Backend endpoints verify permissions based on the user's boolean flags (`is_owner`/`is_tenant`).
 - **Social Integration (Google)**: 
     - Google One Tap and standard login are supported.
-    - **Origin Rule**: All frontend URLs (e.g., `http://localhost:5173`) MUST be added to the Google Cloud Console's "Authorized JavaScript origins."
+    - **Origin Rule**: All frontend URLs MUST be added to the Google Cloud Console's "Authorized JavaScript origins."
     - **Auto-Provisioning**: Google logins automatically provision dual-mode accounts with `is_owner=True` and `is_tenant=True`.
 
 ---

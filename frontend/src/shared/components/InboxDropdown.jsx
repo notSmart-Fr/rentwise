@@ -33,7 +33,7 @@ const MessageItem = ({ conversation, onClick }) => {
               {other_participant_name}
             </h4>
             <span className="text-[8px] font-black uppercase px-1 rounded bg-white/5 text-slate-500 border border-white/5">
-              {user_role === 'OWNER' ? 'Tenant' : 'Host'}
+              {user_role === 'OWNER' ? 'Tenant' : 'Owner'}
             </span>
           </div>
           <span className="text-[10px] text-slate-500 whitespace-nowrap font-medium">

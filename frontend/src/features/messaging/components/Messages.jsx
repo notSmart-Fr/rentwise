@@ -209,7 +209,7 @@ const Messages = () => {
                                {selectedConv.other_participant_name}
                              </h3>
                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-text-muted uppercase tracking-tighter">
-                                {selectedConv.user_role === 'OWNER' ? 'Tenant' : 'Host'}
+                                {selectedConv.user_role === 'OWNER' ? 'Tenant' : 'Owner'}
                              </span>
                           </div>
                           <p className="text-[10px] uppercase tracking-widest text-primary font-bold mt-0.5">
@@ -258,7 +258,7 @@ const Messages = () => {
                     <div className="pt-4 border-t border-white/5 flex flex-col gap-4">
                        <div className="flex justify-between items-center text-[11px]">
                           <span className="text-text-muted font-medium italic">
-                             {selectedConv.user_role === 'OWNER' ? 'Applicant' : 'Property Owner'}
+                             {selectedConv.user_role === 'OWNER' ? 'Tenant' : 'Owner'}
                           </span>
                           <span className="text-white font-bold">{selectedConv.other_participant_name}</span>
                        </div>

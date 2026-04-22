@@ -23,13 +23,14 @@ Organize code by business domain in `src/features/` or `src/shared/`.
 - **Styling**: Use **Tailwind CSS v4**. Ensure you use the latest v4 utility patterns and avoid legacy Vanilla CSS unless necessary for complex custom animations.
 
 ## 🔒 4. Identity & Security
-- **Dual-Mode Identity**: Every user is both an `Owner` and a `Tenant`.
+- **Dual-Mode Identity**: Every user is both an **Owner** and a **Tenant**.
+- **Modes**: Distinguish between the **Role** (Owner/Tenant) and the active **Mode** (Hosting/Renting).
 - **RBAC**: Verify permissions based on the user's `is_owner` or `is_tenant` flags in the Service layer.
-- **Active Role**: Respect the `activeRole` state managed by the frontend for dashboard toggling.
+- **Active Role**: Respect the `activeRole` state managed by the frontend for toggling between **Hosting** and **Renting** dashboards.
 
 ## 📜 5. Documentation & Ground Truth
 - **Spec-First**: The `spec.md` is the "Ground Truth." Update it immediately if you change architecture or dependencies.
-- **Preservation**: Maintain all existing comments and docstrings unless they are directly related to your changes.
+- **How It Works**: Refer to the dedicated discovery page logic when implementing onboarding or role-specific flows.
 
 ## 🧪 6. Testing & Verification
 - **Framework**: Use **Pytest** for all backend tests.
@@ -40,5 +41,5 @@ Organize code by business domain in `src/features/` or `src/shared/`.
 
 ## 🛠️ 7. Tech Stack Reference
 - **Backend**: FastAPI, SQLAlchemy 2.0, Pydantic v2, PostgreSQL (Supabase).
-- **Frontend**: React, Vite, Vanilla CSS, Context API (no Redux).
+- **Frontend**: React, Vite, **Tailwind CSS v4**, Context API.
 - **Cloud**: Google Cloud Run, Google Cloud Storage (GCS).

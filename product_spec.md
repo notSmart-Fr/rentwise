@@ -17,15 +17,16 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 ## 3. Current Capabilities (Core Engine)
 
 ### 🔑 Secure Authentication (Airbnb Style)
-- **Universal Accounts**: Every user is both a **Tenant** and an **Owner** registered via a single email.
+- **Dual-Mode Identity**: Every user account has both **Tenant** and **Owner** capabilities enabled by default.
 - **Google Social Login**: Integrated Google One Tap and button authentication for seamless onboarding.
-- **Toggle Mode**: A global switcher allows users to flip between "Renting" and "Hosting" modes instantly.
+- **Toggle System**: A global switcher allows users to flip between **"Renting"** and **"Hosting"** modes instantly, changing the dashboard and messaging context.
 - **Smart Validation**: In-depth backend verification of email existence and password strength.
 
 ### 🏠 Property Discovery
-- Responsive masonry grid with modern property cards.
-- Real-time search and filter logic (City, Area, Price, Keywords).
-- Detail view for properties with image carousels.
+- **Dedicated "How It Works"**: A high-fidelity, multi-step guide explaining the platform journey for both parties.
+- **Responsive Discovery**: Masonry grid with modern property cards and parent-controlled width constraints.
+- **Real-time Search**: Refined search and filter logic (City, Area, Price, Keywords) with a flexible, global SearchBar.
+- **Detail View**: Full-screen property details with image carousels and instant "Rent Now" applications.
 
 ### 📝 Lease & Maintenance Lifecycle
 - **Lease Applications**: PENDING -> APPROVED -> SUCCESS flow.

@@ -85,14 +85,14 @@ const Login = () => {
                 {error === 'ACCOUNT_NOT_FOUND' ? (
                   <Link to="/register" className="flex items-center gap-1.5 font-semibold text-danger hover:underline">
                     <span>Create an account</span>
-                    <svg viewBox="0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
                 ) : error === 'INCORRECT_PASSWORD' ? (
                   <Link to="/forgot-password" state={{ email }} className="flex items-center gap-1.5 font-semibold text-danger hover:underline">
                     <span>Reset password?</span>
-                    <svg viewBox="0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
