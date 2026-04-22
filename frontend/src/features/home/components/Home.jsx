@@ -162,43 +162,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-section-py bg-linear-to-b from-transparent to-white/2 border-t border-white/5">
-        <div className="container px-6 mx-auto">
-          <div className="text-center mb-header-mb">
-            <h2 className="text-[10px] font-black tracking-[0.5em] text-accent uppercase mb-4">Community</h2>
-            <h3 className="text-2xl sm:text-4xl font-black text-white">Trust & Stability</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                text: "RentWise transformed my experience. Found an amazing flat in Banani and signed the lease within 24 hours. Minimalistic and fast.",
-                author: "Sarah Ahmed",
-                role: "Tenant"
-              },
-              {
-                text: "The high-end interface and filtered listings mean I only deal with serious inquiries now. Highly recommended for owners.",
-                author: "Imran Khan",
-                role: "Property Owner"
-              }
-            ].map((t, i) => (
-              <div key={i} className="glass-panel p-8 relative group transition-all duration-300 hover:bg-white/3">
-                <p className="text-lg italic text-text-secondary leading-relaxed mb-8 relative z-10 opacity-90">
-                  "{t.text}"
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-linear-to-tr from-primary to-accent opacity-60" />
-                  <div>
-                    <h5 className="font-bold text-white text-sm">{t.author}</h5>
-                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

@@ -1,0 +1,37 @@
+# RentWise AI Agent Guidelines (.cursorrules)
+
+You are an expert full-stack developer working on the RentWise platform. You MUST adhere to these rules at all times to ensure consistency, scalability, and efficiency.
+
+## 🛑 1. The Golden Rule: No Automated Testing
+- **DO NOT** use the browser subagent tool for automated testing, debugging, or visual verification.
+- **Protocol**: You write the code. The User (Technical Product Owner) performs all browser-based verification.
+- **Debugging**: If an error occurs, wait for the user to provide the visual behavior or console logs.
+
+## 🐍 2. Backend Standards (Layered Architecture)
+All modules in `api/app/modules/` must follow the **Router -> Service -> Repository** hierarchy.
+- **Routers**: Entry points only. Input validation (Pydantic) and Dependency Injection. **No business logic.**
+- **Services**: The "Brain." All business logic, authorization, and permission checks happen here.
+- **Repositories**: Pure data persistence. Raw SQLAlchemy queries. **No business logic or user context.**
+- **Migrations**: NEVER modify the DB schema manually. Use `alembic revision --autogenerate` for all model changes.
+- **Exceptions**: Use domain-specific exceptions (e.g., `NotFoundException`, `ForbiddenException`).
+
+## ⚛️ 3. Frontend Standards (Feature-Based Slicing)
+Organize code by business domain in `src/features/` or `src/shared/`.
+- **Barrel Policy**: Every feature and shared folder MUST contain an `index.js` file acting as the Public API.
+- **Exports**: Use **Named Exports** for all Services and Hooks (e.g., `export const useAuth = ...`).
+- **Imports**: Import from the feature root (e.g., `@/features/auth`) rather than deep-nesting.
+- **Styling**: Use **Tailwind CSS v4**. Ensure you use the latest v4 utility patterns and avoid legacy Vanilla CSS unless necessary for complex custom animations.
+
+## 🔒 4. Identity & Security
+- **Dual-Mode Identity**: Every user is both an `Owner` and a `Tenant`.
+- **RBAC**: Verify permissions based on the user's `is_owner` or `is_tenant` flags in the Service layer.
+- **Active Role**: Respect the `activeRole` state managed by the frontend for dashboard toggling.
+
+## 📜 5. Documentation & Ground Truth
+- **Spec-First**: The `spec.md` is the "Ground Truth." Update it immediately if you change architecture or dependencies.
+- **Preservation**: Maintain all existing comments and docstrings unless they are directly related to your changes.
+
+## 🛠️ 6. Tech Stack Reference
+- **Backend**: FastAPI, SQLAlchemy 2.0, Pydantic v2, PostgreSQL (Supabase).
+- **Frontend**: React, Vite, Vanilla CSS, Context API (no Redux).
+- **Cloud**: Google Cloud Run, Google Cloud Storage (GCS).

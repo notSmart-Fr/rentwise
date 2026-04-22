@@ -63,7 +63,7 @@ To preserve AI processing tokens and ensure human-approved design aesthetics:
 
 ## 5. Technical Standards (Ground Truth)
 - **Backend**: FastAPI | SQLAlchemy 2.0 | PostgreSQL | Pydantic v2.
-- **Frontend**: React | Vite | Vanilla CSS (Production Nginx) | Context API.
+- **Frontend**: React | Vite | Tailwind CSS v4 (Production Nginx) | Context API.
 - **Cloud**: Google Cloud Run | Cloud Build | GCS | Supabase.
 - **API**: Domain-Driven exceptions (`NotFoundException`, `ForbiddenException`).
 - **Files**: Modular storage provider (`LocalStorage` -> `CloudStorage`).
