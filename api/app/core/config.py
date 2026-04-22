@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     # Frontend URL for links in emails
     frontend_url: str = "http://localhost:5173"
 
-    google_client_id: str = "782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com"
+    google_client_id: str = ""
     
     # Storage Settings
     storage_type: str = "local" # local or gcs
