@@ -33,7 +33,7 @@
   /* Spacing Tokens - Refined for "Sleek" rhythm */
   --spacing-layout-top: 6rem; /* Standard navbar clearance */
   --spacing-section-py: clamp(6rem, 12vh, 12rem);
-  --spacing-hero-pt: clamp(4rem, 8vh, 8rem);
+  --spacing-hero-pt: clamp(8rem, 12vh, 12rem); /* Increased to clear fixed navbar */
   --spacing-header-mb: clamp(3rem, 6vh, 6rem);
 
   /* Transitions */
