@@ -220,4 +220,35 @@ class PaymentService(BaseService[Payment]):
 
         return render_to_pdf("receipt.html", context)
 
+    def export_payments_csv(self, db: Session, owner_id: uuid.UUID):
+        """
+        Generates a CSV of all payments for an owner.
+        """
+        import csv
+        from io import StringIO
+        
+        payments = self.list_payments_for_owner(db, owner_id)
+        
+        output = StringIO()
+        writer = csv.writer(output)
+        
+        # Headers
+        writer.writerow(["Date", "Transaction ID", "Tenant", "Property", "Amount", "Method", "Status", "Reference"])
+        
+        for p in payments:
+            writer.writerow([
+                p.created_at.strftime('%Y-%m-%d %H:%M'),
+                p.transaction_id,
+                p.tenant.full_name if p.tenant else "N/A",
+                p.request.property.title if p.request and p.request.property else "N/A",
+                p.amount,
+                p.method,
+                p.status,
+                p.provider_reference or p.reference or ""
+            ])
+            
+        output.seek(0)
+        return output
+
+
 

@@ -115,4 +115,18 @@ def download_receipt(
         headers={"Content-Disposition": f"attachment; filename=receipt-{payment.transaction_id}.pdf"}
     )
 
+@router.get("/payments/export/csv")
+def export_payments(
+    db: Session = Depends(get_db),
+    owner: User = Depends(require_owner),
+):
+    csv_output = service.export_payments_csv(db, owner.id)
+    
+    return StreamingResponse(
+        iter([csv_output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=rentwise-payments-export.csv"}
+    )
+
+
 

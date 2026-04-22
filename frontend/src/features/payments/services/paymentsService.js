@@ -53,7 +53,28 @@ class PaymentsService extends BaseApiService {
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
   }
+
+  async exportPaymentsCsv() {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/owner/payments/export/csv`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to export payments');
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rentwise-export-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 }
+
 
 
 

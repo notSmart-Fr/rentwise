@@ -1,9 +1,17 @@
-import React from 'react';
 import { useOwnerPayments } from '../hooks/useOwnerPayments';
 import StatsCard from '../../../shared/components/StatsCard';
+import { paymentsService } from '../services/paymentsService';
 
 const OwnerPayments = () => {
   const { payments, loading, error, revenueStats, refresh } = useOwnerPayments();
+
+  const handleExport = async () => {
+    try {
+      await paymentsService.exportPaymentsCsv();
+    } catch (err) {
+      console.error('Export failed:', err);
+    }
+  };
 
   if (loading && payments.length === 0) {
     return (
@@ -21,13 +29,27 @@ const OwnerPayments = () => {
           <h2 className="text-3xl font-black text-white">Financial Hub</h2>
           <p className="text-text-secondary mt-1">Master ledger and revenue tracking for your portfolio.</p>
         </div>
-        <button 
-          onClick={refresh}
-          className="btn btn-secondary px-6 text-xs font-bold uppercase tracking-widest border-white/5 bg-white/5 hover:bg-white/10"
-        >
-          Refresh Data
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={handleExport}
+            className="btn btn-secondary px-6 text-xs font-bold uppercase tracking-widest border-white/10 bg-white/5 hover:bg-white/10 flex items-center gap-2"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export CSV
+          </button>
+          <button 
+            onClick={refresh}
+            className="btn btn-secondary px-6 text-xs font-bold uppercase tracking-widest border-white/5 bg-white/5 hover:bg-white/10"
+          >
+            Refresh Data
+          </button>
+        </div>
       </div>
+
 
       {/* Hero Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
