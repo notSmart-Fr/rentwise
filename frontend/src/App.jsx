@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth, Login, Register, ForgotPassword, ResetPassword, ProfileSettings } from './features/auth';
 import { ChatProvider, useChat, Messages } from './features/messaging';
-import { Home } from './features/home';
+import { Home, HowItWorks } from './features/home';
 import { OwnerDashboard, TenantDashboard } from './features/dashboard';
 import { PropertyDetails } from './features/properties';
 import { MainLayout, AlertProvider } from './shared';
@@ -114,6 +114,8 @@ function AppInner() {
               <Messages />
             </ProtectedRoute>
           } />
+
+          <Route path="/how-it-works" element={<HowItWorks />} />
 
           <Route path="/settings" element={
             <ProtectedRoute>

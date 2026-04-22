@@ -122,42 +122,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-section-py bg-white/1 relative border-t border-white/5">
-        <div className="absolute inset-0 bg-primary/2 opacity-5 pointer-events-none"></div>
-        <div className="container px-6 mx-auto relative z-10">
-          <div className="text-center mb-header-mb">
-            <h2 className="text-[11px] font-black tracking-[0.6em] text-primary uppercase mb-6">The Process</h2>
-            <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight">Simple. Secure. Fast.</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: '🔍',
-                title: 'Search & Explore',
-                desc: 'Browse curated listings with verified data and high-quality photography.'
-              },
-              {
-                icon: '🤝',
-                title: 'Apply Instantly',
-                desc: 'Lodge requests directly and chat with owners in a secure environment.'
-              },
-              {
-                icon: '🔑',
-                title: 'Move In',
-                desc: 'Finalize terms and move into your dream home with zero stress.'
-              }
-            ].map((step, i) => (
-              <div key={i} className="glass-panel p-8 flex flex-col items-center text-center group transition-all duration-500 hover:bg-white/3">
-                <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">{step.icon}</div>
-                <h4 className="text-lg font-bold text-white mb-3">{step.title}</h4>
-                <p className="text-text-secondary text-sm leading-relaxed max-w-[240px] opacity-80">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
     </div>
   );
