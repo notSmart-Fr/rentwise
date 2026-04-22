@@ -116,7 +116,7 @@ class MessageService(BaseService[Conversation]):
                 if entity and entity.owner_id == user_id: user_role = "OWNER"
             elif conv.context_type == "RENTAL_REQUEST":
                 entity = db.query(RentalRequest).filter(RentalRequest.id == conv.context_id).first()
-                title = f"Lease: {entity.property_title}" if entity else "Rental Request"
+                title = f"Lease: {entity.property.title}" if entity and entity.property else "Rental Request"
                 status = entity.status if entity else "Unknown"
                 if entity and entity.owner_id == user_id: user_role = "OWNER"
             elif conv.context_type == "TICKET":
