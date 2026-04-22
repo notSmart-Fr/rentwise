@@ -69,7 +69,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col -gap-1">
             <span className="font-display text-2xl font-black text-white tracking-tighter uppercase leading-none">
-              Rent<span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic">Wise</span>
+              Rent<span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic pr-1">Wise</span>
             </span>
             {isAuthenticated && (
               <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/80 animate-in fade-in slide-in-from-left-1 duration-500">

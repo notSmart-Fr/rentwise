@@ -26,7 +26,7 @@ const Home = () => {
         <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-6xl">
           <h1 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.98] tracking-tight text-white mb-10">
             Find Your Next <br />
-            <span className="bg-linear-to-r from-primary via-accent to-white bg-clip-text text-transparent italic">Perfect Home.</span>
+            <span className="bg-linear-to-r from-primary via-accent to-white bg-clip-text text-transparent italic pr-4">Perfect Home.</span>
           </h1>
           <p className="max-w-3xl mx-auto text-lg sm:text-xl text-text-secondary leading-relaxed mb-16 opacity-70 font-medium">
             The smartest way to rent in the city. RentWise connects premium properties with verified tenants through a seamless, stress-free experience.

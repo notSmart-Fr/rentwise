@@ -9,7 +9,7 @@ const HowItWorks = () => {
         
         <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-4xl">
           <h1 className="text-5xl sm:text-7xl font-black leading-[0.98] tracking-tight text-white mb-8">
-            How <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic">RentWise</span> Works
+            How <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic pr-4">RentWise</span> Works
           </h1>
           <p className="text-lg sm:text-xl text-text-secondary leading-relaxed opacity-70 font-medium">
             We've simplified the rental journey. Whether you're looking for a home or hosting one, 
