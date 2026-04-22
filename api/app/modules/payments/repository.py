@@ -27,12 +27,12 @@ class PaymentRepository(BaseRepository[Payment]):
         stmt = (
             select(
                 func.date_trunc('month', Payment.created_at).label('month'),
-                func.sum(Payment.amount).label('total')
+                func.coalesce(func.sum(Payment.amount), 0).label('total')
             )
             .where(Payment.owner_id == owner_id, Payment.status == 'SUCCESS')
-            .group_by('month')
-            .order_by('month')
+            .group_by(func.date_trunc('month', Payment.created_at))
+            .order_by(func.date_trunc('month', Payment.created_at))
         )
         results = db.execute(stmt).all()
-        return [{"month": r.month.strftime('%b %Y'), "amount": int(r.total)} for r in results]
+        return [{"month": r.month.strftime('%b %Y') if r.month else "Unknown", "amount": int(r.total)} for r in results]
 
