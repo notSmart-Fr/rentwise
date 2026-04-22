@@ -130,7 +130,7 @@ function AppInner() {
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="782896589415-p7jjq4mkbjmulsp2aol6okvt80dckpk4.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "VITE_GOOGLE_CLIENT_ID_PLACEHOLDER"}>
       <AlertProvider>
         <ChatProvider>
           <AppInner />

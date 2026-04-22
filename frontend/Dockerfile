@@ -13,5 +13,5 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Copy our custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Use a startup script to handle the dynamic PORT and VITE_API_URL for Google Cloud Run
-CMD ["sh", "-c", "find /usr/share/nginx/html -type f -name '*.js' -exec sed -i \"s|VITE_API_URL_PLACEHOLDER|$VITE_API_URL|g\" {} + && sed -i \"s/listen       80;/listen       $PORT;/\" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# Use a startup script to handle the dynamic PORT and Environment Variables for Google Cloud Run
+CMD ["sh", "-c", "find /usr/share/nginx/html -type f -name '*.js' -exec sed -i \"s|VITE_API_URL_PLACEHOLDER|$VITE_API_URL|g\" {} + && find /usr/share/nginx/html -type f -name '*.js' -exec sed -i \"s|VITE_GOOGLE_CLIENT_ID_PLACEHOLDER|$VITE_GOOGLE_CLIENT_ID|g\" {} + && sed -i \"s/listen       80;/listen       $PORT;/\" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
