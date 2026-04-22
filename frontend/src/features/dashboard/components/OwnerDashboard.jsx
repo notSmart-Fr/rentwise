@@ -7,6 +7,8 @@ import { PaymentModal, OwnerPayments } from '../../payments';
 import { OwnerTicketsTab } from '../../tickets';
 import { InboxRow } from '../../messaging';
 import { useDashboard } from '../hooks/useDashboard';
+import RevenueChart from './analytics/RevenueChart';
+import OccupancyChart from './analytics/OccupancyChart';
 
 const OwnerDashboard = () => {
   const {
@@ -124,6 +126,15 @@ const OwnerDashboard = () => {
               />
             </div>
 
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <RevenueChart data={analytics.revenue} />
+              </div>
+              <div className="lg:col-span-1">
+                <OccupancyChart data={analytics.occupancy} />
+              </div>
+            </div>
+
             <div className="glass-panel p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-dashed bg-white/1">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center text-success">✓</div>
@@ -140,6 +151,7 @@ const OwnerDashboard = () => {
               </button>
             </div>
           </div>
+
         )}
 
         {/* Properties Tab */}

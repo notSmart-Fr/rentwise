@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RentWise - Payment Receipt</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: right;
+            border-bottom: 2px solid #7C3AED;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            float: left;
+            font-size: 24px;
+            font-weight: bold;
+            color: #7C3AED;
+        }
+        .receipt-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #111;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .details-grid {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        .details-grid td {
+            vertical-align: top;
+            width: 50%;
+        }
+        .label {
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+        }
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        .item-table th {
+            background-color: #F8FAFC;
+            border-bottom: 2px solid #E2E8F0;
+            text-align: left;
+            padding: 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #64748B;
+        }
+        .item-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 14px;
+        }
+        .amount-section {
+            float: right;
+            width: 250px;
+        }
+        .amount-row {
+            display: table;
+            width: 100%;
+            padding: 8px 0;
+        }
+        .amount-label {
+            display: table-cell;
+            font-size: 12px;
+            color: #64748B;
+        }
+        .amount-value {
+            display: table-cell;
+            text-align: right;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .total-row {
+            border-top: 2px solid #7C3AED;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+        .total-row .amount-value {
+            font-size: 24px;
+            color: #7C3AED;
+        }
+        .footer {
+            margin-top: 100px;
+            text-align: center;
+            font-size: 10px;
+            color: #94A3B8;
+            border-top: 1px solid #F1F5F9;
+            padding-top: 20px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background-color: #ECFDF5;
+            color: #10B981;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">RentWise</div>
+        <h1 class="receipt-title">Receipt</h1>
+        <div style="font-size: 12px; color: #64748B; margin-top: 5px;">
+            Transaction ID: {{ transaction_id }}
+        </div>
+    </div>
+
+    <table class="details-grid">
+        <tr>
+            <td>
+                <div class="label">Billed To</div>
+                <div class="value">{{ tenant_name }}</div>
+                <div style="font-size: 12px; color: #64748B;">{{ tenant_email }}</div>
+            </td>
+            <td>
+                <div class="label">Issued By</div>
+                <div class="value">{{ owner_name }}</div>
+                <div style="font-size: 12px; color: #64748B;">{{ owner_email }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-top: 20px;">
+                <div class="label">Date Issued</div>
+                <div class="value">{{ date }}</div>
+            </td>
+            <td style="padding-top: 20px;">
+                <div class="label">Payment Method</div>
+                <div class="value">{{ method }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="item-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Property</th>
+                <th style="text-align: right;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Monthly Rent Payment</td>
+                <td>
+                    <div style="font-weight: bold;">{{ property_title }}</div>
+                    <div style="font-size: 11px; color: #64748B;">{{ property_area }}, {{ property_city }}</div>
+                </td>
+                <td style="text-align: right; font-weight: bold;">৳ {{ amount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="amount-section">
+        <div class="amount-row">
+            <div class="amount-label">Subtotal</div>
+            <div class="amount-value">৳ {{ amount }}</div>
+        </div>
+        <div class="amount-row">
+            <div class="amount-label">Platform Fee</div>
+            <div class="amount-value">৳ 0</div>
+        </div>
+        <div class="amount-row total-row">
+            <div class="amount-label" style="font-weight: bold; color: #111;">Total Paid</div>
+            <div class="amount-value">৳ {{ amount }}</div>
+        </div>
+        <div style="text-align: right; margin-top: 10px;">
+            <div class="badge">Payment Successful</div>
+        </div>
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <div class="footer">
+        This is a computer-generated document. No signature is required. <br>
+        RentWise Property Management Solutions | Dhaka, Bangladesh
+    </div>
+</body>
+</html>

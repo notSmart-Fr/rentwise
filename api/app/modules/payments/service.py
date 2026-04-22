@@ -7,6 +7,7 @@ from app.modules.payments.repository import PaymentRepository
 from app.modules.properties.repository import PropertyRepository
 from app.modules.requests.repository import RequestRepository
 from app.modules.notifications.service import NotificationService
+from app.utils.pdf import render_to_pdf
 
 class PaymentService(BaseService[Payment]):
     def __init__(self) -> None:
@@ -163,3 +164,60 @@ class PaymentService(BaseService[Payment]):
 
     def list_payments_for_tenant(self, db: Session, tenant_id: uuid.UUID) -> list[Payment]:
         return self.repo.list_for_tenant(db, tenant_id)
+
+    def get_analytics(self, db: Session, owner_id: uuid.UUID) -> dict:
+        """
+        Gathers both revenue and occupancy analytics for an owner.
+        """
+        # 1. Revenue Analytics
+        revenue_data = self.repo.get_revenue_by_month(db, owner_id)
+        
+        # 2. Occupancy Analytics
+        my_properties = self.property_repo.list_by_owner(db, owner_id)
+        total = len(my_properties)
+        rented = len([p for p in my_properties if not p.is_available])
+        available = total - rented
+        
+        occupancy_data = [
+            {"name": "Rented", "value": rented},
+            {"name": "Available", "value": available}
+        ] if total > 0 else []
+
+        return {
+            "revenue": revenue_data,
+            "occupancy": occupancy_data,
+            "summary": {
+                "total_properties": total,
+                "active_leases": rented,
+                "total_revenue": sum(d["amount"] for d in revenue_data)
+            }
+        }
+
+    def generate_receipt_pdf(self, db: Session, payment_id: uuid.UUID):
+        """
+        Gathers all necessary data and renders a professional PDF receipt.
+        """
+        payment = self.get_or_404(db, payment_id)
+        if payment.status != "SUCCESS":
+            raise ValueError("Receipts can only be generated for successful payments")
+
+        req = self.request_repo.get_by_id(db, payment.request_id)
+        prop = self.property_repo.get_by_id(db, req.property_id)
+
+        context = {
+            "transaction_id": payment.transaction_id,
+            "tenant_name": req.tenant.full_name,
+            "tenant_email": req.tenant.email,
+            "owner_name": req.owner.full_name,
+            "owner_email": req.owner.email,
+            "date": payment.created_at.strftime('%d %B %Y'),
+            "method": payment.method,
+            "property_title": prop.title,
+            "property_area": prop.area,
+            "property_city": prop.city,
+            "amount": f"{payment.amount:,}"
+        }
+
+        return render_to_pdf("receipt.html", context)
+
+

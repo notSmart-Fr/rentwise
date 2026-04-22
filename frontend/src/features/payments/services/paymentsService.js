@@ -28,7 +28,34 @@ class PaymentsService extends BaseApiService {
   async listTenantPayments() {
     return await apiRequest('/tenant/payments', { method: 'GET' });
   }
+
+  async getAnalytics() {
+    return await apiRequest('/owner/analytics', { method: 'GET' });
+  }
+
+  async downloadReceipt(paymentId, isOwner = false) {
+    const rolePrefix = isOwner ? '/owner' : '/tenant';
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${rolePrefix}/payments/${paymentId}/receipt`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to download receipt');
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `receipt-${paymentId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 }
+
+
 
 export const paymentsService = new PaymentsService();
 export default paymentsService;

@@ -53,14 +53,30 @@ const TenantPayments = () => {
                    <span className="text-2xl font-black text-accent tracking-tighter">
                      ৳ {p.amount?.toLocaleString()}
                    </span>
-                   <span className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
-                     p.status === 'PAID' 
-                     ? 'bg-success/10 text-success border border-success/20' 
-                     : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                   }`}>
-                     {p.status}
-                   </span>
+                   <div className="flex items-center gap-2">
+                     <span className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
+                       p.status === 'PAID' || p.status === 'SUCCESS'
+                       ? 'bg-success/10 text-success border border-success/20' 
+                       : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                     }`}>
+                       {p.status}
+                     </span>
+                     {(p.status === 'PAID' || p.status === 'SUCCESS') && (
+                        <button
+                          onClick={() => paymentsService.downloadReceipt(p.id, false)}
+                          className="p-1.5 bg-white/5 hover:bg-accent/20 rounded-lg text-white transition-all"
+                          title="Download PDF Receipt"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                        </button>
+                      )}
+                   </div>
                 </div>
+
               </div>
 
               {/* Instant Receipt Preview */}

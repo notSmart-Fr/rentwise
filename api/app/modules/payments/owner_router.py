@@ -1,5 +1,6 @@
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.persistence.deps import get_db
@@ -86,3 +87,32 @@ def update_payment(
         **payload.model_dump(exclude_none=True)
     )
     return service.to_response(payment)
+
+@router.get("/analytics")
+def get_analytics(
+    db: Session = Depends(get_db),
+    owner: User = Depends(require_owner),
+):
+    return service.get_analytics(db, owner.id)
+
+@router.get("/payments/{payment_id}/receipt")
+def download_receipt(
+    payment_id: str,
+    db: Session = Depends(get_db),
+    owner: User = Depends(require_owner),
+):
+    pid = uuid.UUID(payment_id)
+    payment = service.get_or_404(db, pid)
+    
+    if payment.owner_id != owner.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+        
+    pdf_buffer = service.generate_receipt_pdf(db, pid)
+    
+    return StreamingResponse(
+        pdf_buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=receipt-{payment.transaction_id}.pdf"}
+    )
+
+

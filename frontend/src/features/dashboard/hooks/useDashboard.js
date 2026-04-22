@@ -4,6 +4,8 @@ import { useOwnerRequests } from '../../requests';
 import { useOwnerPayments } from '../../payments';
 import { useConversations } from '../../messaging';
 import { useChat } from '../../messaging';
+import { useEffect } from 'react';
+import { paymentsService } from '../../payments';
 
 export const useDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview'); // overview, properties, requests, inbox
@@ -42,6 +44,24 @@ export const useDashboard = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [analytics, setAnalytics] = useState({ revenue: [], occupancy: [], summary: {} });
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+
+  const fetchAnalytics = async () => {
+    setAnalyticsLoading(true);
+    try {
+      const data = await paymentsService.getAnalytics();
+      setAnalytics(data);
+    } catch (err) {
+      console.error('Failed to fetch analytics:', err);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
 
   // Derivations
   const totalRevenue = useMemo(() => {
@@ -58,7 +78,7 @@ export const useDashboard = () => {
     return requests.filter(r => r.status === 'PENDING').length;
   }, [requests]);
 
-  const isLoading = propsLoading || reqsLoading || paymentsLoading || convsLoading;
+  const isLoading = propsLoading || reqsLoading || paymentsLoading || convsLoading || analyticsLoading;
 
   // Handlers
   const handleOpenConversation = async (conv) => {
@@ -110,6 +130,7 @@ export const useDashboard = () => {
     totalRevenue,
     activeLeasesCount,
     pendingRequestsCount,
+    analytics,
     
     // Modals
     isModalOpen,

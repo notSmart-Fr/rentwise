@@ -39,3 +39,4 @@ python-multipart
 psycopg[binary]
 google-auth
 requests
+xhtml2pdf
