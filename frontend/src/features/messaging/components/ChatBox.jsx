@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../../auth';
 import { useMessages } from '../hooks/useMessages';
 
 const ChatBox = ({ contextType, contextId, receiverId }) => {
   const { user } = useAuth();
+  const scrollContainerRef = useRef(null);
   const {
     messages,
     loading,
     error,
-    messagesEndRef,
     sendMessage
-  } = useMessages(contextType, contextId, receiverId);
+  } = useMessages(contextType, contextId, receiverId, scrollContainerRef);
   const [inputText, setInputText] = useState('');
 
   const handleSend = async (e) => {
@@ -33,7 +33,10 @@ const ChatBox = ({ contextType, contextId, receiverId }) => {
   return (
     <div className="flex flex-col h-full bg-white/1">
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+      <div 
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar"
+      >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[200px] opacity-40 text-center">
             <div className="text-4xl mb-4">💬</div>
@@ -70,7 +73,6 @@ const ChatBox = ({ contextType, contextId, receiverId }) => {
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input area */}

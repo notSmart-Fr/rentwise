@@ -3,13 +3,12 @@ import messageService from '../services/messageService';
 import { useAuth } from '../../auth';
 import { useWebSocket } from '../../../shared/context/WebSocketContext';
 
-export const useMessages = (contextType, contextId, receiverId = null) => {
+export const useMessages = (contextType, contextId, receiverId = null, scrollContainerRef = null) => {
   const { user } = useAuth();
   const { subscribe } = useWebSocket();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const messagesEndRef = useRef(null);
 
   const fetchMessages = useCallback(async (isInitial = false) => {
     if (isInitial) setLoading(true);
@@ -50,7 +49,13 @@ export const useMessages = (contextType, contextId, receiverId = null) => {
   }, [fetchMessages, subscribe, contextType, contextId]);
 
   const scrollToBottom = (behavior = 'smooth') => {
-    messagesEndRef.current?.scrollIntoView({ behavior });
+    if (scrollContainerRef?.current) {
+      const container = scrollContainerRef.current;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior
+      });
+    }
   };
 
   useEffect(() => {
@@ -87,7 +92,6 @@ export const useMessages = (contextType, contextId, receiverId = null) => {
     messages,
     loading,
     error,
-    messagesEndRef,
     sendMessage,
     refresh: fetchMessages,
     scrollToBottom
