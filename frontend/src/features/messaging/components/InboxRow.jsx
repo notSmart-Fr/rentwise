@@ -26,9 +26,16 @@ const InboxRow = ({ conversation, onClick, active }) => {
             <h4 className={`text-lg transition-colors group-hover:text-white truncate ${isUnread ? 'font-black text-white' : 'font-bold text-text-primary'}`}>
               {conversation.other_participant_name || 'Resident'}
             </h4>
-            <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-text-muted uppercase tracking-tighter">
-              {conversation.user_role === 'OWNER' ? 'Tenant' : 'Host'}
-            </span>
+            <div className="flex gap-1">
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-text-muted uppercase tracking-tighter">
+                {conversation.user_role === 'OWNER' ? 'Tenant' : 'Host'}
+              </span>
+              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter ${
+                conversation.user_role === 'OWNER' ? 'bg-primary/20 text-primary border border-primary/20' : 'bg-accent/20 text-accent border border-accent/20'
+              }`}>
+                {conversation.user_role === 'OWNER' ? 'Hosting' : 'Renting'}
+              </span>
+            </div>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted shrink-0">
             {new Date(conversation.last_message_at || conversation.last_message_time).toLocaleDateString([], { month: 'short', day: 'numeric' })}

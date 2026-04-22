@@ -50,8 +50,14 @@ const Messages = () => {
     }
   }, [chat, conversations, markAsRead, activeRole, loading]);
 
-  // Airbnb Style: Filter inbox based on the current active role (Hosting vs Traveling)
-  const filteredConversations = conversations.filter(conv => conv.user_role === activeRole);
+  // Role filtering for the inbox list
+  const [inboxFilter, setInboxFilter] = useState(activeRole);
+  const filteredConversations = conversations.filter(conv => conv.user_role === inboxFilter);
+
+  // Sync filter if global role changes (e.g. from navbar)
+  useEffect(() => {
+    setInboxFilter(activeRole);
+  }, [activeRole]);
 
   const handleSelectConv = async (conv) => {
     setSelectedConv(conv);
@@ -60,12 +66,12 @@ const Messages = () => {
     }
   };
 
-  // Reset selected conversation if role switches and it's no longer in view
+  // Reset selected conversation if filter switches and it's no longer in view
   useEffect(() => {
     if (selectedConv && !selectedConv.id.startsWith('v-') && !filteredConversations.find(c => c.id === selectedConv.id)) {
       setSelectedConv(null);
     }
-  }, [activeRole, filteredConversations, selectedConv]);
+  }, [inboxFilter, filteredConversations, selectedConv]);
 
   const handleRequestAction = async (action) => {
     if (!selectedConv || actionLoading) return;
@@ -102,10 +108,10 @@ const Messages = () => {
       {/* Header */}
       <div className="mb-8 border-l-4 border-primary pl-6">
         <h1 className="text-4xl font-black text-white">
-          {activeRole === 'OWNER' ? 'Hosting Inbox' : 'Inbox'}
+          Inbox
         </h1>
         <p className="text-text-secondary mt-1">
-          {activeRole === 'OWNER' 
+          {inboxFilter === 'OWNER' 
             ? 'Manage inquiries and requests for your properties.' 
             : 'Track your applications and messages with owners.'}
         </p>
@@ -117,11 +123,37 @@ const Messages = () => {
         <div className={`flex-col border-r border-white/5 bg-white/1 transition-all duration-500 overflow-hidden ${
           selectedConv ? 'hidden lg:flex lg:w-96' : 'flex w-full lg:w-96'
         }`}>
-          <div className="p-6 border-b border-white/5 bg-white/2">
+          {/* Role Toggle Sidebar */}
+          <div className="p-4 bg-white/2 border-b border-white/5 flex gap-2">
+            <button 
+              onClick={() => setInboxFilter('TENANT')}
+              className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 ${
+                inboxFilter === 'TENANT' ? 'bg-accent text-white shadow-lg' : 'text-text-muted hover:bg-white/5'
+              }`}
+            >
+              Renting
+              {conversations.filter(c => c.user_role === 'TENANT' && c.unread_count > 0).length > 0 && (
+                <span className="w-2 h-2 rounded-full bg-danger animate-pulse"></span>
+              )}
+            </button>
+            <button 
+              onClick={() => setInboxFilter('OWNER')}
+              className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 ${
+                inboxFilter === 'OWNER' ? 'bg-primary text-white shadow-lg' : 'text-text-muted hover:bg-white/5'
+              }`}
+            >
+              Hosting
+              {conversations.filter(c => c.user_role === 'OWNER' && c.unread_count > 0).length > 0 && (
+                <span className="w-2 h-2 rounded-full bg-danger animate-pulse"></span>
+              )}
+            </button>
+          </div>
+
+          <div className="p-4 border-b border-white/5 bg-white/1">
              <div className="relative">
                 <input 
                   type="text" 
-                  placeholder="Filter inquiries..."
+                  placeholder="Search messages..."
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-xs text-white focus:border-primary/50 outline-none transition-all placeholder:text-text-muted/50"
                 />
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted">🔍</span>
@@ -141,12 +173,9 @@ const Messages = () => {
               ))
             ) : (
               <div className="p-12 text-center opacity-70">
-                 <div className="text-4xl mb-4">{activeRole === 'OWNER' ? '🏠' : '📭'}</div>
+                 <div className="text-4xl mb-4">{inboxFilter === 'OWNER' ? '🏠' : '📭'}</div>
                  <p className="text-sm font-bold uppercase tracking-widest text-text-muted">
-                   No {activeRole === 'OWNER' ? 'hosting' : 'renting'} messages
-                 </p>
-                 <p className="text-xs text-text-muted mt-2 px-4">
-                   Switch your role in the navbar to see other messages.
+                   No {inboxFilter === 'OWNER' ? 'hosting' : 'renting'} messages
                  </p>
               </div>
             )}

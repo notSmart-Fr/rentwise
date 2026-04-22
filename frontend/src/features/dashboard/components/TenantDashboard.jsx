@@ -162,10 +162,12 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
             <h2 className="text-2xl font-black text-white">Recent Chats</h2>
             <div className="grid grid-cols-1 gap-4">
-              {conversations.length > 0 ? (
-                conversations.map(conv => (
-                  <InboxRow key={conv.id} conversation={conv} onClick={handleOpenConversation} />
-                ))
+              {conversations.filter(c => c.user_role === 'TENANT').length > 0 ? (
+                conversations
+                  .filter(c => c.user_role === 'TENANT')
+                  .map(conv => (
+                    <InboxRow key={conv.id} conversation={conv} onClick={handleOpenConversation} />
+                  ))
               ) : (
                 <div className="glass-panel py-24 text-center opacity-70 border-dashed">
                   <div className="text-5xl mb-6">💬</div>
