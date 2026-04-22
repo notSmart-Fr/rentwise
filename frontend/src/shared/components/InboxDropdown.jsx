@@ -114,10 +114,13 @@ const InboxDropdown = ({ onClose }) => {
           <div className="animate-in fade-in slide-in-from-left-2 duration-300">
             {loadingMsgs ? (
               <div className="p-12 text-center text-[10px] font-black uppercase tracking-widest text-slate-600 animate-pulse">Syncing Inbox...</div>
-            ) : conversations.length > 0 ? (
-              conversations.slice(0, 6).map(conv => (
-                <MessageItem key={conv.id} conversation={conv} onClick={handleChatClick} />
-              ))
+            ) : conversations.filter(c => c.unread_count > 0).length > 0 ? (
+              conversations
+                .filter(c => c.unread_count > 0)
+                .slice(0, 6)
+                .map(conv => (
+                  <MessageItem key={conv.id} conversation={conv} onClick={handleChatClick} />
+                ))
             ) : (
               <div className="flex flex-col items-center justify-center py-16 px-8 text-center opacity-40">
                 <div className="text-4xl mb-4">💬</div>
