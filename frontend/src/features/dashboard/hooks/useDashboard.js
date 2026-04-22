@@ -1,10 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useOwnerProperties } from '../../properties';
 import { useOwnerRequests } from '../../requests';
 import { useOwnerPayments } from '../../payments';
 import { useConversations } from '../../messaging';
 import { useChat } from '../../messaging';
-import { useEffect } from 'react';
 import { paymentsService } from '../../payments';
 
 export const useDashboard = () => {
@@ -62,6 +62,19 @@ export const useDashboard = () => {
   useEffect(() => {
     fetchAnalytics();
   }, []);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('addProperty') === 'true') {
+      setActiveTab('properties');
+      setIsModalOpen(true);
+      
+      // Clean up the URL so it doesn't reopen on refresh
+      window.history.replaceState({}, '', location.pathname);
+    }
+  }, [location]);
 
   // Derivations
   const totalRevenue = useMemo(() => {

@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../auth';
+import { AddPropertyModal } from '../../properties';
 
 const HowItWorks = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleListProperty = () => {
+    if (!isAuthenticated) {
+      navigate('/login?redirect=/how-it-works');
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
+  const handlePropertyAdded = () => {
+    setIsModalOpen(false);
+    // After success, take them to the dashboard to see their listing
+    navigate('/owner-dashboard');
+  };
   return (
     <div className="animate-fade-in bg-bg-base min-h-screen">
       {/* Hero Section */}
@@ -61,15 +81,24 @@ const HowItWorks = () => {
           <h3 className="text-3xl font-black text-white mb-6">Ready to find your next home?</h3>
           <p className="text-text-secondary mb-10 opacity-70">Join thousands of verified renters and owners on the most advanced rental platform in the city.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="btn btn-primary px-10 py-4 text-lg font-bold shadow-xl shadow-primary/20" onClick={() => window.location.href = '/'}>
+            <button className="btn btn-primary px-10 py-4 text-lg font-bold shadow-xl shadow-primary/20" onClick={() => navigate('/')}>
               Start Exploring
             </button>
-            <button className="bg-white/5 hover:bg-white/10 text-white px-10 py-4 rounded-xl border border-white/10 font-bold transition-all">
+            <button 
+              className="bg-white/5 hover:bg-white/10 text-white px-10 py-4 rounded-xl border border-white/10 font-bold transition-all active:scale-95"
+              onClick={handleListProperty}
+            >
               List Your Property
             </button>
           </div>
         </div>
       </section>
+
+      <AddPropertyModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={handlePropertyAdded} 
+      />
     </div>
   );
 };

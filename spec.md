@@ -137,4 +137,19 @@ When adding a new feature:
 - Build the **Components** (UI).
 
 ---
+
+## 🧪 Testing Strategy (Pytest)
+RentWise uses **Pytest** for backend logic verification. Focus on "Service" layer logic and high-risk API endpoints.
+
+### 🛠️ Testing Principles
+1. **Focus on Services:** Test the "Brain" of the application (`app/modules/*/service.py`).
+2. **Integration Tests:** Use `httpx.AsyncClient` to test full API flows (Auth -> Create Property -> Payment).
+3. **Database Isolation:** Use a separate test database or transaction-based rollback for each test to ensure a clean state.
+4. **Mocking:** Mock external services (GCS, Google OAuth) using `pytest-mock` or `unittest.mock`.
+
+### 📂 Structure (`api/tests/`)
+- `conftest.py`: Global fixtures (client, database session, test data).
+- `test_*.py`: Feature-specific tests.
+
+---
 *Failure to follow these standards will result in broken builds and awkward PR reviews.*

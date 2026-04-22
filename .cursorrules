@@ -31,7 +31,14 @@ Organize code by business domain in `src/features/` or `src/shared/`.
 - **Spec-First**: The `spec.md` is the "Ground Truth." Update it immediately if you change architecture or dependencies.
 - **Preservation**: Maintain all existing comments and docstrings unless they are directly related to your changes.
 
-## 🛠️ 6. Tech Stack Reference
+## 🧪 6. Testing & Verification
+- **Framework**: Use **Pytest** for all backend tests.
+- **Priority**: Prioritize testing **Services** (business logic) and **Auth** (security).
+- **Fixtures**: Define shared test resources (DB sessions, mock clients) in `api/tests/conftest.py`.
+- **Async**: Use `@pytest.mark.asyncio` for testing async routes or services.
+- **Verification**: Always run `pytest` before declaring a backend task complete if logic was modified.
+
+## 🛠️ 7. Tech Stack Reference
 - **Backend**: FastAPI, SQLAlchemy 2.0, Pydantic v2, PostgreSQL (Supabase).
 - **Frontend**: React, Vite, Vanilla CSS, Context API (no Redux).
 - **Cloud**: Google Cloud Run, Google Cloud Storage (GCS).

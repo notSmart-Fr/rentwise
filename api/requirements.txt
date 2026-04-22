@@ -42,5 +42,8 @@ requests
 xhtml2pdf
 google-cloud-storage
 jinja2
+pytest
+pytest-asyncio
+httpx
 
 
