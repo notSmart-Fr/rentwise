@@ -25,7 +25,7 @@ const OccupancyChart = ({ data }) => {
       </div>
 
       <div className="relative flex items-center justify-center h-56">
-        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50} aspect={1}>
           <PieChart>
             <Pie
               data={data}
