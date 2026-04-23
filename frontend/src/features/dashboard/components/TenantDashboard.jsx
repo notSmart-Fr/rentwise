@@ -49,7 +49,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
           <p className="text-slate-400 text-xl font-medium max-w-xl">Welcome home. Manage your portfolio and residency in one architectural interface.</p>
         </div>
 
-        <div className="flex gap-2 p-2 bg-[#131b2e] rounded-[2rem] w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
+        <div className="flex gap-2 p-2 bg-[#131b2e] rounded-4xl w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
           {[
             { id: 'overview', label: 'Portfolio' },
             { id: 'leases', label: 'Agreements' },
@@ -60,7 +60,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex-1 lg:flex-none rounded-[1.5rem] px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-700 ${activeTab === tab.id
+              className={`relative flex-1 lg:flex-none rounded-3xl px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-700 ${activeTab === tab.id
                 ? 'bg-white text-slate-950 shadow-2xl scale-105'
                 : 'text-slate-500 hover:text-white hover:bg-white/5'
                 }`}
@@ -117,7 +117,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
                 
                 <div className="space-y-6">
                   {activeLeases.length > 0 ? (
-                    <div className="flex items-center justify-between p-10 bg-white/5 rounded-[2rem] border border-white/5 hover:border-primary/20 transition-all group/item cursor-pointer">
+                    <div className="flex items-center justify-between p-10 bg-white/5 rounded-4xl border border-white/5 hover:border-primary/20 transition-all group/item cursor-pointer">
                       <div>
                         <p className="text-2xl font-black text-white tracking-tight">{activeLeases[0].property_title}</p>
                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">Upcoming financial commitment</p>
@@ -134,7 +134,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
                   )}
                   <button
                     onClick={() => setActiveTab('leases')}
-                    className="w-full text-center text-[10px] font-black text-primary uppercase tracking-[0.4em] py-6 rounded-[1.5rem] border border-dashed border-white/10 hover:border-primary/40 hover:bg-primary/5 transition-all"
+                    className="w-full text-center text-[10px] font-black text-primary uppercase tracking-[0.4em] py-6 rounded-3xl border border-dashed border-white/10 hover:border-primary/40 hover:bg-primary/5 transition-all"
                   >
                     Manage Full Portfolio
                   </button>

@@ -67,7 +67,7 @@ const OwnerDashboard = () => {
           <p className="text-slate-400 text-xl font-medium max-w-2xl">Manage your architectural portfolio. Your assets are performing at <span className="text-emerald-400 font-black">92% efficiency</span> today.</p>
         </div>
 
-        <div className="flex gap-2 p-2 bg-[#131b2e] rounded-[2rem] w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
+        <div className="flex gap-2 p-2 bg-[#131b2e] rounded-4xl w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
           {[
             { id: 'overview', label: 'Overview' },
             { id: 'properties', label: 'Portfolio' },
@@ -79,7 +79,7 @@ const OwnerDashboard = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex-1 lg:flex-none rounded-[1.5rem] px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-700 ${activeTab === tab.id
+              className={`relative flex-1 lg:flex-none rounded-3xl px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-700 ${activeTab === tab.id
                 ? 'bg-white text-slate-950 shadow-2xl scale-105'
                 : 'text-slate-500 hover:text-white hover:bg-white/5'
                 }`}
@@ -154,7 +154,7 @@ const OwnerDashboard = () => {
                 </div>
               </div>
               <button
-                className="relative z-10 px-12 py-6 bg-white text-slate-950 rounded-[1.5rem] text-[10px] font-black uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl"
+                className="relative z-10 px-12 py-6 bg-white text-slate-950 rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl"
                 onClick={() => setActiveTab('properties')}
               >
                 Expand Portfolio
@@ -170,7 +170,7 @@ const OwnerDashboard = () => {
               <h2 className="text-3xl font-black text-white uppercase tracking-tightest">Managed Portfolio</h2>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-primary text-white px-10 py-5 rounded-[1.5rem] text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/20 hover:scale-105 transition-all"
+                className="bg-primary text-white px-10 py-5 rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/20 hover:scale-105 transition-all"
               >
                 + Acquire Asset
               </button>

@@ -26,13 +26,13 @@ const HowItWorks = () => {
       {/* Hero Section */}
       <section className="relative pt-48 pb-24 overflow-hidden flex flex-col items-center justify-center text-center">
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
-        
+
         <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-4xl">
           <h1 className="text-6xl sm:text-[8rem] font-black leading-[0.85] tracking-tightest text-white mb-10">
             The <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Sovereign</span> Journey
           </h1>
           <p className="text-xl sm:text-2xl text-slate-400 leading-relaxed font-medium max-w-3xl">
-            We've redefined the rental lifecycle. Whether you're acquiring a residence or managing a portfolio, 
+            We've redefined the rental lifecycle. Whether you're acquiring a residence or managing a portfolio,
             our platform ensures architectural excellence at every step.
           </p>
         </div>
@@ -81,11 +81,11 @@ const HowItWorks = () => {
           <h3 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tightest">Start Your Next Chapter.</h3>
           <p className="text-xl text-slate-400 mb-16 font-medium">Join the elite network of residents and owners leveraging the Sovereign Ledger.</p>
           <div className="flex flex-wrap justify-center gap-6">
-            <button className="bg-primary text-on-primary px-16 py-6 text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-2xl shadow-primary/30 hover:scale-105 transition-all" onClick={() => navigate('/')}>
+            <button className="bg-primary text-on-primary px-16 py-6 text-xs font-black uppercase tracking-[0.3em] rounded-4xl shadow-2xl shadow-primary/30 hover:scale-105 transition-all" onClick={() => navigate('/')}>
               Explore Portfolio
             </button>
-            <button 
-              className="bg-white/5 hover:bg-white/10 text-white px-16 py-6 rounded-[2rem] border border-white/10 text-xs font-black uppercase tracking-[0.3em] transition-all active:scale-95"
+            <button
+              className="bg-white/5 hover:bg-white/10 text-white px-16 py-6 rounded-4xl border border-white/10 text-xs font-black uppercase tracking-[0.3em] transition-all active:scale-95"
               onClick={handleListProperty}
             >
               List Property
@@ -94,10 +94,10 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      <AddPropertyModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSuccess={handlePropertyAdded} 
+      <AddPropertyModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handlePropertyAdded}
       />
     </div>
   );

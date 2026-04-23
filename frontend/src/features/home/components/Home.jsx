@@ -27,10 +27,10 @@ const Home = () => {
       <section className="relative min-h-screen flex flex-col items-start justify-center pt-32 pb-20 px-6 lg:px-12 max-w-[1920px] mx-auto overflow-hidden">
         {/* Background Image Overlay */}
         <div className="absolute top-0 right-0 w-2/3 h-full opacity-20 -z-10 select-none pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-l from-[#0b1326] via-[#0b1326]/40 to-transparent"></div>
-          <img 
-            alt="Luxury property" 
-            className="w-full h-full object-cover grayscale opacity-50" 
+          <div className="absolute inset-0 bg-linear-to-l from-[#0b1326] via-[#0b1326]/40 to-transparent"></div>
+          <img
+            alt="Luxury property"
+            className="w-full h-full object-cover grayscale opacity-50"
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600"
           />
         </div>
@@ -40,7 +40,7 @@ const Home = () => {
             Find Your Next <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Perfect Home.</span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-slate-400 max-w-2xl font-medium leading-relaxed">
             The Sovereign Ledger of elite property management. High-performance acquisitions meet architectural living.
           </p>
@@ -50,9 +50,9 @@ const Home = () => {
             <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
               <div className="px-8 py-4 flex flex-col justify-center">
                 <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Location</span>
-                <input 
-                  className="bg-transparent border-none p-0 text-white placeholder:text-slate-600 focus:ring-0 text-lg font-bold" 
-                  placeholder="Dhaka, BD" 
+                <input
+                  className="bg-transparent border-none p-0 text-white placeholder:text-slate-600 focus:ring-0 text-lg font-bold"
+                  placeholder="Dhaka, BD"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -61,7 +61,7 @@ const Home = () => {
               </div>
               <div className="px-8 py-4 flex flex-col justify-center">
                 <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Property Type</span>
-                <select 
+                <select
                   className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
                   onChange={(e) => handleFilterChange('type', e.target.value)}
                 >
@@ -75,25 +75,25 @@ const Home = () => {
                 <div className="text-white text-lg font-bold">৳50k - ৳250k</div>
               </div>
             </div>
-            <button 
+            <button
               onClick={() => handleSearch()}
-              className="w-full md:w-auto bg-primary text-on-primary px-12 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-105 hover:shadow-[0_0_30px_rgba(128,131,255,0.4)] transition-all active:scale-95"
+              className="w-full md:w-auto bg-primary text-on-primary px-12 py-5 rounded-4xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-105 hover:shadow-[0_0_30px_rgba(128,131,255,0.4)] transition-all active:scale-95"
             >
               Search
             </button>
           </div>
 
           <div className="flex items-center gap-8 pt-8">
-             <div className="flex -space-x-4">
-                {[1,2,3,4].map(i => (
-                  <div key={i} className="w-12 h-12 rounded-full border-4 border-[#0b1326] bg-slate-800 overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
-                  </div>
-                ))}
-             </div>
-             <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-                <span className="text-white">500+</span> Residents found their home this month
-             </p>
+            <div className="flex -space-x-4">
+              {[1, 2, 3, 4].map(i => (
+                <div key={i} className="w-12 h-12 rounded-full border-4 border-[#0b1326] bg-slate-800 overflow-hidden">
+                  <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
+                </div>
+              ))}
+            </div>
+            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
+              <span className="text-white">500+</span> Residents found their home this month
+            </p>
           </div>
         </div>
       </section>

@@ -11,13 +11,12 @@ const StatsCard = ({ title, value, icon, trend, color = 'blue', onClick }) => {
   const selectedColor = colorMap[color] || colorMap.blue;
 
   return (
-    <div 
+    <div
       onClick={onClick}
-      className={`bg-[#131b2e] rounded-[2rem] group p-8 flex items-center gap-8 transition-all duration-700 border border-white/5 ${
-        onClick 
-          ? 'cursor-pointer hover:-translate-y-2 hover:border-primary/40 hover:bg-white/8 active:scale-95' 
-          : 'hover:border-white/10'
-      }`}
+      className={`bg-[#131b2e] rounded-4xl group p-8 flex items-center gap-8 transition-all duration-700 border border-white/5 ${onClick
+        ? 'cursor-pointer hover:-translate-y-2 hover:border-primary/40 hover:bg-white/8 active:scale-95'
+        : 'hover:border-white/10'
+        }`}
     >
       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl border ${selectedColor} transition-all duration-700 group-hover:scale-110 grayscale-[0.5] group-hover:grayscale-0 shadow-2xl`}>
         {icon}
@@ -26,10 +25,10 @@ const StatsCard = ({ title, value, icon, trend, color = 'blue', onClick }) => {
         <h3 className="text-4xl font-black text-white leading-none tracking-tight">{value}</h3>
         <p className="text-[10px] uppercase tracking-[0.3em] font-black text-slate-500 mt-2">{title}</p>
         {trend && (
-           <div className="flex items-center gap-1 mt-2">
-             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow shadow-emerald-500"></span>
-             <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">{trend}</span>
-           </div>
+          <div className="flex items-center gap-1 mt-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow shadow-emerald-500"></span>
+            <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">{trend}</span>
+          </div>
         )}
       </div>
     </div>
