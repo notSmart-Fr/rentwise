@@ -56,12 +56,18 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col grow min-h-[calc(100vh-80px)] py-16 px-4 animate-fade-in">
-      <div className="container flex items-center justify-center min-h-full">
-        <div className="glass-panel w-full max-w-[440px] p-10 mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2 text-text-primary">Welcome Back</h1>
-            <p className="text-text-secondary text-sm">Log in to manage your properties or view requests.</p>
+    <div className="min-h-screen bg-[#0b1326] text-white flex flex-col items-center justify-center py-20 px-4 relative overflow-hidden font-manrope">
+      {/* Cinematic Ambient Orbs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/10 blur-[150px] rounded-full opacity-60"></div>
+      </div>
+
+      <div className="container relative z-10 flex items-center justify-center">
+        <div className="bg-[#131b2e] w-full max-w-[480px] p-12 rounded-[2.5rem] shadow-[40px_80px_160px_rgba(0,0,0,0.8)] border border-white/5 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-black mb-3 text-white tracking-tighter">Welcome Back</h1>
+            <p className="text-slate-400 font-medium">Log in to your architectural rental hub.</p>
           </div>
 
           {error && (
@@ -159,7 +165,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="btn btn-primary w-full mt-4 py-3.5 text-base shadow-lg shadow-primary/20"
+                className="w-full mt-6 py-4 rounded-2xl bg-linear-to-r from-primary to-accent text-white font-black uppercase tracking-widest transition-all hover:shadow-[0_12px_24px_rgba(124,58,237,0.4)] hover:scale-[1.02] active:scale-95 flex items-center justify-center"
                 disabled={isLoading}
               >
                 {isLoading ? (

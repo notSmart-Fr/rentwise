@@ -24,8 +24,8 @@ const RevenueChart = ({ data }) => {
   }
 
   return (
-    <div className="w-full h-80 p-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl shadow-2xl overflow-hidden relative group flex flex-col">
-      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary to-accent opacity-50"></div>
+    <div className="w-full h-full p-8 bg-[#131b2e] rounded-[2.5rem] shadow-2xl overflow-hidden relative group flex flex-col outline-none" tabIndex="-1">
+      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary to-accent opacity-60"></div>
       
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -39,7 +39,14 @@ const RevenueChart = ({ data }) => {
       </div>
       <div className="relative w-full h-64 mt-auto" ref={containerRef}>
         {dimensions.width > 0 && dimensions.height > 0 && (
-          <BarChart width={dimensions.width} height={dimensions.height} data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+          <BarChart 
+            width={dimensions.width} 
+            height={dimensions.height} 
+            data={data} 
+            margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+            className="outline-none"
+            accessibilityLayer={false}
+          >
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
             <XAxis 
               dataKey="month" 
@@ -54,13 +61,14 @@ const RevenueChart = ({ data }) => {
               tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }}
             />
             <Tooltip 
-              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              cursor={false}
               contentStyle={{ 
                 backgroundColor: 'rgba(15, 23, 42, 0.9)', 
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '16px',
                 backdropFilter: 'blur(16px)',
-                padding: '12px'
+                padding: '12px',
+                pointerEvents: 'none'
               }}
               itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}
               labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'black' }}

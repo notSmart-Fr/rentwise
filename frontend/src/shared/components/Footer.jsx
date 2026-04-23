@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="relative mt-auto border-t border-white/5 bg-bg-base overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <footer className="relative mt-auto bg-[#0b1326] overflow-hidden pt-24">
+      {/* Cinematic ambient glow */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none opacity-40"></div>
       
-      <div className="container mx-auto px-6 py-16 relative z-10">
+      <div className="container mx-auto px-6 py-24 relative z-10 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand Column */}
           <div className="flex flex-col gap-6">
@@ -81,9 +81,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-text-muted text-[10px] font-bold uppercase tracking-widest">
-            © 2026 RentWise Technologies. All rights reserved.
+        <div className="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 pb-12">
+          <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">
+            © 2026 RentWise. Architectural Rental Intelligence.
           </p>
           <div className="flex gap-8">
             {['Privacy Policy', 'Terms of Service', 'Cookie Settings'].map(item => (

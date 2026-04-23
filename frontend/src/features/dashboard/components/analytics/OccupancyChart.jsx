@@ -18,8 +18,8 @@ const OccupancyChart = ({ data }) => {
   const rentedPercentage = Math.round((data.find(d => d.name === 'Rented')?.value || 0) / total * 100);
 
   return (
-    <div className="w-full h-80 p-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl shadow-2xl overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-emerald-500 to-primary opacity-50"></div>
+    <div className="w-full h-full p-8 bg-[#131b2e] rounded-[2.5rem] shadow-2xl overflow-hidden relative outline-none" tabIndex="-1">
+      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-emerald-500 to-primary opacity-60"></div>
       
       <div className="mb-4">
         <h3 className="text-white font-black uppercase tracking-widest text-xs">Property Occupancy</h3>
@@ -28,7 +28,12 @@ const OccupancyChart = ({ data }) => {
 
       <div className="relative w-full h-56" ref={containerRef}>
         {dimensions.width > 0 && dimensions.height > 0 && (
-          <PieChart width={dimensions.width} height={dimensions.height}>
+          <PieChart 
+            width={dimensions.width} 
+            height={dimensions.height}
+            className="outline-none"
+            accessibilityLayer={false}
+          >
             <Pie
               data={data}
               cx="50%"

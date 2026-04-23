@@ -31,20 +31,26 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
   }
 
   return (
-    <div className="container pb-24 pt-hero-pt animate-fade-in mx-auto px-6">
-      {/* Background Ambience */}
-      <div className="fixed top-20 left-[-5%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] pointer-events-none"></div>
+    <div className="min-h-screen bg-[#0b1326] text-white px-4 pb-12 pt-24 lg:px-12 lg:pb-12 lg:pt-32 font-manrope selection:bg-accent/30">
+      {/* Ambient Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-accent/10 blur-[150px] rounded-full opacity-60"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
+      </div>
 
-      {/* Header */}
-      <header className="relative z-10 mb-header-mb flex flex-col justify-between gap-8 lg:flex-row lg:items-end border-l-4 border-accent pl-6">
-        <div>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-            Resident <span className="text-accent italic">Hub</span>
-          </h1>
-          <p className="mt-2 text-text-secondary text-lg">Manage your home, lease, and maintenance requests in one place.</p>
+      {/* Header Section */}
+      <header className="relative z-10 mb-16 flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
+        <div className="animate-in fade-in slide-in-from-left-8 duration-700">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-2.5 h-10 bg-linear-to-b from-accent to-primary rounded-full shadow-[0_0_20px_rgba(56,189,248,0.4)]"></div>
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+              Resident <span className="text-transparent bg-clip-text bg-linear-to-r from-accent to-primary">Hub</span>
+            </h1>
+          </div>
+          <p className="ml-6 text-slate-400 text-lg font-medium">Welcome home. Manage your sanctuary and lease in one place.</p>
         </div>
 
-        <div className="flex gap-1 p-1 bg-white/5 border border-white/5 backdrop-blur-xl rounded-2xl w-full lg:w-auto overflow-x-auto">
+        <div className="flex gap-1.5 p-1.5 bg-[#171f33] rounded-3xl w-full lg:w-auto overflow-x-auto shadow-2xl">
           {[
             { id: 'overview', label: 'Overview' },
             { id: 'leases', label: 'My Leases' },
@@ -55,12 +61,12 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex-1 lg:flex-none rounded-xl px-8 py-3 text-sm font-bold transition-all duration-300 ${activeTab === tab.id
-                ? 'bg-accent text-white shadow-[0_8px_20px_rgba(56,189,248,0.3)]'
-                : 'text-text-secondary hover:text-white hover:bg-white/5'
+              className={`relative flex-1 lg:flex-none rounded-2xl px-10 py-4 text-xs font-black uppercase tracking-widest transition-all duration-500 ${activeTab === tab.id
+                ? 'bg-linear-to-br from-accent to-primary text-white shadow-[0_12px_24px_rgba(56,189,248,0.4)] scale-105'
+                : 'text-slate-500 hover:text-white hover:bg-white/5'
                 }`}
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
                 {tab.label}
                 {tab.id === 'chats' && totalUnread > 0 && (
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] text-white shadow-lg">
@@ -99,38 +105,40 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="glass-panel p-8 space-y-6">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span>📅</span> Recent Activity
+              <div className="bg-[#131b2e] p-10 space-y-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+                <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                  <span className="p-3 bg-white/5 rounded-2xl">📅</span> Recent Activity
                 </h3>
                 <div className="space-y-4">
                   {activeLeases.length > 0 ? (
-                    <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5">
+                    <div className="flex items-center justify-between p-6 bg-white/5 rounded-4xl border-none">
                       <div>
-                        <p className="font-bold text-white">{activeLeases[0].property_title}</p>
-                        <p className="text-xs text-text-secondary">Next rent due soon</p>
+                        <p className="text-lg font-black text-white">{activeLeases[0].property_title}</p>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Next rent due soon</p>
                       </div>
-                      <span className="text-accent text-sm font-bold">৳{activeLeases[0].property_rent?.toLocaleString()}</span>
+                      <div className="text-right">
+                        <span className="text-accent text-2xl font-black">৳{activeLeases[0].property_rent?.toLocaleString()}</span>
+                      </div>
                     </div>
                   ) : (
-                    <p className="text-text-secondary text-sm italic">No recent lease activity to show.</p>
+                    <p className="text-slate-500 text-sm italic font-medium">No recent lease activity to show.</p>
                   )}
                   <button
                     onClick={() => setActiveTab('leases')}
-                    className="w-full text-center text-xs font-bold text-accent uppercase tracking-widest py-2 hover:text-white transition-colors"
+                    className="w-full text-center text-xs font-black text-accent uppercase tracking-[0.2em] py-4 hover:text-white transition-all"
                   >
                     Manage all leases
                   </button>
                 </div>
               </div>
 
-              <div className="glass-panel p-8 space-y-6">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span>💡</span> Resident Tip
+              <div className="bg-[#131b2e] p-10 space-y-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+                <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                  <span className="p-3 bg-white/5 rounded-2xl">💡</span> Resident Tip
                 </h3>
-                <div className="bg-primary/5 border border-primary/20 p-6 rounded-2xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 text-4xl opacity-10">✨</div>
-                  <p className="text-text-secondary text-base leading-relaxed relative z-10 italic">
+                <div className="bg-linear-to-br from-accent/10 to-primary/5 p-8 rounded-4xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 text-6xl opacity-5 group-hover:scale-110 transition-transform duration-1000">✨</div>
+                  <p className="text-slate-300 text-lg leading-relaxed relative z-10 italic font-medium">
                     "Keep your maintenance tickets updated! Owners can coordinate faster with clear photos and descriptions."
                   </p>
                 </div>

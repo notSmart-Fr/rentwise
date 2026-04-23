@@ -16,53 +16,66 @@ const Home = () => {
   } = useProperties();
 
   return (
-    <div className="animate-fade-in bg-bg-base overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative pt-hero-pt pb-section-py border-b border-white/5 overflow-hidden flex flex-col items-center justify-center text-center">
-        {/* Subtle Background Elements */}
-        <div className="absolute top-[-5%] left-[-2%] w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
-        <div className="absolute top-[15%] right-[-5%] w-[350px] h-[350px] bg-accent/5 rounded-full blur-[80px] pointer-events-none animate-pulse-slow delay-1000"></div>
+    <div className="min-h-screen bg-[#0b1326] text-white selection:bg-primary/30 font-manrope">
+      {/* Cinematic Ambient Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-accent/10 blur-[150px] rounded-full opacity-60"></div>
+      </div>
+      {/* Hero Section - The Sovereign Entry */}
+      <section className="relative pt-32 pb-24 lg:pt-48 lg:pb-40 overflow-hidden">
+        <div className="container relative z-10 px-6 lg:px-12 mx-auto max-w-7xl">
+          <div className="animate-in fade-in slide-in-from-left-12 duration-1000">
+            <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tighter text-white mb-12">
+              Find Your Next <br />
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic pr-8">Perfect Home.</span>
+            </h1>
+            <p className="max-w-2xl text-xl lg:text-2xl text-slate-400 leading-relaxed mb-16 font-medium">
+              The smartest way to rent in the city. RentWise connects premium properties with verified tenants through a seamless, <span className="text-white">high-end experience</span>.
+            </p>
+          </div>
 
-        <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-6xl">
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.98] tracking-tight text-white mb-10">
-            Find Your Next <br />
-            <span className="bg-linear-to-r from-primary via-accent to-white bg-clip-text text-transparent italic pr-4">Perfect Home.</span>
-          </h1>
-          <p className="max-w-3xl mx-auto text-lg sm:text-xl text-text-secondary leading-relaxed mb-16 opacity-70 font-medium">
-            The smartest way to rent in the city. RentWise connects premium properties with verified tenants through a seamless, stress-free experience.
-          </p>
+          <div className="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+            <div className="relative group max-w-4xl">
+              {/* Floating Glass Search Bar */}
+              <div className="absolute -inset-1 bg-linear-to-r from-primary to-accent rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+              <div className="relative bg-[#171f33]/80 backdrop-blur-3xl p-4 lg:p-6 rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row items-center gap-4 border border-white/5">
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  onSearch={handleSearch}
+                  className="w-full bg-transparent border-none focus:ring-0 text-lg lg:text-xl font-bold placeholder:text-slate-600"
+                />
+              </div>
+            </div>
 
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            onSearch={handleSearch}
-            className="mb-12 w-full max-w-3xl mx-auto"
-          />
-
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
-            <span className="text-text-muted uppercase tracking-[0.2em] text-[10px] w-full mb-2">Popular Areas</span>
-            {['Banani', 'Gulshan', 'Dhanmondi'].map(area => (
-              <button
-                key={area}
-                className="rounded-full border border-white/5 bg-white/5 px-4 py-2 text-text-secondary transition-all hover:bg-primary/20 hover:text-white hover:border-primary/20 active:scale-95"
-                onClick={() => handleSearch(area)}
-              >
-                {area}
-              </button>
-            ))}
+            <div className="mt-12 flex flex-wrap items-center gap-6">
+              <span className="text-slate-500 uppercase tracking-widest text-xs font-black">Trending Areas</span>
+              <div className="flex gap-3">
+                {['Banani', 'Gulshan', 'Dhanmondi'].map(area => (
+                  <button
+                    key={area}
+                    className="rounded-2xl bg-white/5 px-6 py-3 text-sm font-bold text-slate-400 transition-all hover:bg-white/10 hover:text-white active:scale-95 border border-white/5"
+                    onClick={() => handleSearch(area)}
+                  >
+                    {area}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Featured Properties Section */}
-      <section id="results" className="py-section-py border-t border-white/5">
-        <div className="container px-6 mx-auto">
-          <div className="flex flex-col sm:flex-row items-baseline justify-between mb-header-mb gap-8">
-            <div>
-              <h2 className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tight">
+      <section id="results" className="py-24 lg:py-32 relative z-10">
+        <div className="container px-6 lg:px-12 mx-auto max-w-7xl">
+          <div className="flex flex-col sm:flex-row items-end justify-between mb-16 gap-10">
+            <div className="animate-in fade-in slide-in-from-left-8 duration-700">
+              <h2 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
                 {searchParams.search ? `Results for "${searchParams.search}"` : 'Latest Listings'}
               </h2>
-              <p className="text-text-secondary text-lg font-medium opacity-60">Experience the finest properties available today</p>
+              <p className="text-slate-400 text-xl font-medium">Experience the finest properties available today</p>
             </div>
 
             <div className="flex items-center gap-4">

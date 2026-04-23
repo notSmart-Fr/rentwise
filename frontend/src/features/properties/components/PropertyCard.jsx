@@ -12,7 +12,7 @@ const PropertyCard = ({ property, onEdit }) => {
     : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80';
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-white/2 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-primary/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(124,58,237,0.1)] h-full">
+    <div className="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-[#131b2e] shadow-2xl transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] h-full">
       {/* Image Section */}
       <Link to={`/properties/${property?.id}`} className="relative block h-56 overflow-hidden">
         <img
@@ -54,7 +54,7 @@ const PropertyCard = ({ property, onEdit }) => {
         </div>
 
         {/* Specs */}
-        <div className="mb-6 flex gap-6 border-y border-white/5 py-3">
+        <div className="mb-6 flex gap-6 py-1">
           <div className="flex items-center gap-2">
             <span className="text-lg">🛏️</span>
             <div>

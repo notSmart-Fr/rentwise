@@ -11,12 +11,12 @@ const Navbar = () => {
   const { closeChat } = useChat();
   const { totalUnread: unreadMessages } = useConversations();
   const { unreadCount: unreadAlerts } = useNotifications();
-  
+
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
-  
+
   const chatRef = useRef(null);
   const alertsRef = useRef(null);
 
@@ -45,11 +45,10 @@ const Navbar = () => {
     switchRole();
     setIsMenuOpen(false);
   };
-
   return (
-    <nav className={`fixed top-0 left-0 w-full z-100 transition-all duration-300 ease-in-out ${scrolled
-      ? 'bg-bg-base/80 backdrop-blur-3xl border-b border-white/5 py-3.5 shadow-[0_20px_50px_rgba(0,0,0,0.6)]'
-      : 'bg-transparent py-6'
+    <nav className={`fixed top-0 left-0 w-full z-100 transition-all duration-500 ease-in-out ${scrolled
+      ? 'bg-[#0b1326]/80 backdrop-blur-2xl py-4 shadow-[0_30px_60px_rgba(0,0,0,0.5)]'
+      : 'bg-transparent py-8'
       }`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
 
@@ -85,115 +84,114 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
-               {/* Unified Inbox */}
-               <div className="relative ml-2" ref={chatRef}>
-                  <button 
-                    onClick={() => { setIsChatOpen(!isChatOpen); setIsAlertsOpen(false); }}
-                    className={`group relative flex items-center justify-center p-2 rounded-xl transition-all duration-300 ${
-                       isChatOpen ? 'bg-white/10 text-white' : 'text-text-secondary hover:text-white hover:bg-white/5'
+              {/* Unified Inbox */}
+              <div className="relative ml-2" ref={chatRef}>
+                <button
+                  onClick={() => { setIsChatOpen(!isChatOpen); setIsAlertsOpen(false); }}
+                  className={`group relative flex items-center justify-center p-2 rounded-xl transition-all duration-300 ${isChatOpen ? 'bg-white/10 text-white' : 'text-text-secondary hover:text-white hover:bg-white/5'
                     }`}
-                  >
-                    <span className="text-[11px] font-black uppercase tracking-widest mr-2">Inbox</span>
-                    <div className="relative flex h-5 w-5 items-center justify-center">
-                       <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                          <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                       </svg>
-                       {(unreadMessages + unreadAlerts) > 0 && (
-                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-black text-white shadow-[0_0_12px_rgba(124,58,237,0.6)] animate-bounce">
-                             {unreadMessages + unreadAlerts}
+                >
+                  <span className="text-[11px] font-black uppercase tracking-widest mr-2">Inbox</span>
+                  <div className="relative flex h-5 w-5 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                      <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {(unreadMessages + unreadAlerts) > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-black text-white shadow-[0_0_12px_rgba(124,58,237,0.6)] animate-bounce">
+                        {unreadMessages + unreadAlerts}
+                      </span>
+                    )}
+                  </div>
+                </button>
+                {isChatOpen && (
+                  <InboxDropdown onClose={() => setIsChatOpen(false)} />
+                )}
+              </div>
+
+              <div className="w-px h-6 bg-white/5 mx-2" />
+
+              {/* Profile Menu (Airbnb Style) */}
+              <div className="relative" ref={alertsRef}>
+                <button
+                  onClick={() => setIsAlertsOpen(!isAlertsOpen)}
+                  className="flex items-center gap-3 p-1.5 pl-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 shadow-lg active:scale-95"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                    {user?.full_name?.split(' ')[0] || 'Menu'}
+                  </span>
+                  <div className="w-8 h-8 rounded-full border border-white/20 bg-linear-to-tr from-primary to-accent flex items-center justify-center text-[10px] font-black text-white shadow-inner overflow-hidden">
+                    {user?.avatar_url ? (
+                      <img src={user.avatar_url} alt={user.full_name} className="w-full h-full object-cover" />
+                    ) : (
+                      user?.full_name?.[0] || '👤'
+                    )}
+                  </div>
+                </button>
+
+                {isAlertsOpen && (
+                  <div className="absolute right-0 top-full mt-6 w-72 rounded-[2.5rem] bg-[#131b2e]/95 p-3 shadow-[40px_80px_160px_rgba(0,0,0,0.8)] backdrop-blur-3xl animate-in fade-in slide-in-from-top-6 duration-500 z-110 border border-white/5">
+                    <div className="flex flex-col">
+                      <div className="p-6 border-b border-white/5">
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Portfolio Presence</p>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-primary shadow-glow shadow-primary" />
+                          <span className="font-bold text-white text-sm">
+                            {activeRole === 'OWNER' ? 'Hosting' : 'Renting'}
                           </span>
-                       )}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={handleSwitchRole}
+                        className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                      >
+                        <span className="text-lg">↻</span>
+                        <span className="text-xs font-bold text-white">Switch to {activeRole === 'OWNER' ? 'Renting' : 'Hosting'}</span>
+                      </button>
+
+                      <Link
+                        to={activeRole === 'OWNER' ? "/owner-dashboard" : "/tenant-dashboard"}
+                        onClick={() => setIsAlertsOpen(false)}
+                        className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                      >
+                        <span className="text-lg">📊</span>
+                        <span className="text-xs font-bold text-white">Dashboard</span>
+                      </Link>
+
+                      <Link
+                        to="/settings"
+                        onClick={() => setIsAlertsOpen(false)}
+                        className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                      >
+                        <span className="text-lg">⚙️</span>
+                        <span className="text-xs font-bold text-white">Settings</span>
+                      </Link>
+
+                      {activeRole === 'TENANT' && (
+                        <Link
+                          to="/my-tickets"
+                          onClick={() => setIsAlertsOpen(false)}
+                          className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
+                        >
+                          <span className="text-lg">🔧</span>
+                          <span className="text-xs font-bold text-white">Maintenance</span>
+                        </Link>
+                      )}
+
+                      <div className="h-px bg-white/5 my-1" />
+
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors group"
+                      >
+                        <span className="text-lg group-hover:rotate-12 transition-transform">🔒</span>
+                        <span className="text-xs font-bold text-danger">Log Out</span>
+                      </button>
                     </div>
-                  </button>
-                  {isChatOpen && (
-                    <InboxDropdown onClose={() => setIsChatOpen(false)} />
-                  )}
-               </div>
-
-               <div className="w-px h-6 bg-white/5 mx-2" />
-
-               {/* Profile Menu (Airbnb Style) */}
-               <div className="relative" ref={alertsRef}>
-                  <button 
-                    onClick={() => setIsAlertsOpen(!isAlertsOpen)}
-                    className="flex items-center gap-3 p-1.5 pl-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 shadow-lg active:scale-95"
-                  >
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
-                       {user?.full_name?.split(' ')[0] || 'Menu'}
-                    </span>
-                    <div className="w-8 h-8 rounded-full border border-white/20 bg-linear-to-tr from-primary to-accent flex items-center justify-center text-[10px] font-black text-white shadow-inner overflow-hidden">
-                       {user?.avatar_url ? (
-                         <img src={user.avatar_url} alt={user.full_name} className="w-full h-full object-cover" />
-                       ) : (
-                         user?.full_name?.[0] || '👤'
-                       )}
-                    </div>
-                  </button>
-
-                  {isAlertsOpen && (
-                    <div className="absolute right-0 top-full mt-4 w-64 rounded-3xl border border-white/10 bg-bg-base/95 p-2 shadow-[20px_40px_80px_rgba(0,0,0,0.6)] backdrop-blur-3xl animate-in fade-in slide-in-from-top-4 duration-300 z-110">
-                       <div className="flex flex-col">
-                          <div className="p-4 border-b border-white/5">
-                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Current Mode</p>
-                             <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-primary shadow-glow shadow-primary" />
-                                <span className="font-bold text-white text-sm">
-                                   {activeRole === 'OWNER' ? 'Hosting' : 'Renting'}
-                                </span>
-                             </div>
-                          </div>
-
-                          <button 
-                            onClick={handleSwitchRole}
-                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
-                          >
-                             <span className="text-lg">↻</span>
-                             <span className="text-xs font-bold text-white">Switch to {activeRole === 'OWNER' ? 'Renting' : 'Hosting'}</span>
-                          </button>
-
-                          <Link 
-                            to={activeRole === 'OWNER' ? "/owner-dashboard" : "/tenant-dashboard"}
-                            onClick={() => setIsAlertsOpen(false)}
-                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
-                          >
-                             <span className="text-lg">📊</span>
-                             <span className="text-xs font-bold text-white">Dashboard</span>
-                          </Link>
-
-                          <Link 
-                            to="/settings"
-                            onClick={() => setIsAlertsOpen(false)}
-                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
-                          >
-                             <span className="text-lg">⚙️</span>
-                             <span className="text-xs font-bold text-white">Settings</span>
-                          </Link>
-
-                          {activeRole === 'TENANT' && (
-                             <Link 
-                               to="/my-tickets"
-                               onClick={() => setIsAlertsOpen(false)}
-                               className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors"
-                             >
-                                <span className="text-lg">🔧</span>
-                                <span className="text-xs font-bold text-white">Maintenance</span>
-                             </Link>
-                          )}
-
-                          <div className="h-px bg-white/5 my-1" />
-
-                          <button 
-                            onClick={handleLogout}
-                            className="flex items-center gap-3 w-full p-4 hover:bg-white/5 text-left transition-colors group"
-                          >
-                             <span className="text-lg group-hover:rotate-12 transition-transform">🔒</span>
-                             <span className="text-xs font-bold text-danger">Log Out</span>
-                          </button>
-                       </div>
-                    </div>
-                  )}
-               </div>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div className="flex items-center gap-4">
@@ -225,13 +223,13 @@ const Navbar = () => {
             </Link>
             {isAuthenticated ? (
               <>
-                <button 
+                <button
                   onClick={handleSwitchRole}
                   className="w-full text-left text-2xl font-black text-primary py-6 border-b border-white/5 uppercase tracking-widest"
                 >
-                   ↻ {activeRole === 'OWNER' ? 'Switch to Renting' : 'Switch to Hosting'}
+                  ↻ {activeRole === 'OWNER' ? 'Switch to Renting' : 'Switch to Hosting'}
                 </button>
-                
+
                 {activeRole === 'OWNER' ? (
                   <Link to="/owner-dashboard" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 ) : (
@@ -240,7 +238,7 @@ const Navbar = () => {
                     <Link to="/my-tickets" className="text-4xl font-black text-white py-6 border-b border-white/5" onClick={() => setIsMenuOpen(false)}>Maintenance</Link>
                   </>
                 )}
-                
+
                 <Link to="/messages" className="text-4xl font-black text-white py-6 border-b border-white/5 relative" onClick={() => setIsMenuOpen(false)}>
                   Inbox
                   {unreadMessages > 0 && (

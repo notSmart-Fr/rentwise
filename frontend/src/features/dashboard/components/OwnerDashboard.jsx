@@ -51,35 +51,39 @@ const OwnerDashboard = () => {
   }
 
   return (
-    <div className="container pb-24 pt-hero-pt animate-fade-in mx-auto px-6">
-      {/* Dynamic Background Elements */}
-      <div className="fixed top-20 right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none"></div>
-      <div className="fixed bottom-0 left-[-10%] w-[400px] h-[400px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div className="min-h-screen bg-[#0b1326] text-white px-4 pb-12 pt-24 lg:px-12 lg:pb-12 lg:pt-32 font-manrope selection:bg-primary/30">
+      {/* Ambient Design Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full opacity-60"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/10 blur-[120px] rounded-full opacity-60"></div>
+      </div>
 
-      {/* Header */}
-      <header className="relative z-10 mb-header-mb flex flex-col justify-between gap-8 lg:flex-row lg:items-end border-l-4 border-primary pl-6">
-        <div>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-            Owner <span className="text-primary italic">Dashboard</span>
-          </h1>
-          <p className="mt-2 text-text-secondary text-lg">Central command for your property portfolio and tenancies.</p>
+      {/* Header Section */}
+      <header className="relative z-10 mb-16 flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
+        <div className="animate-in fade-in slide-in-from-left-8 duration-700">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-2.5 h-10 bg-linear-to-b from-primary to-accent rounded-full shadow-[0_0_20px_rgba(124,58,237,0.4)]"></div>
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+              Command <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-accent">Center</span>
+            </h1>
+          </div>
+          <p className="ml-6 text-slate-400 text-lg font-medium">Welcome back. Your portfolio is performing at <span className="text-success">92% efficiency</span> today.</p>
         </div>
 
-        <div className="flex gap-1 p-1 bg-white/5 border border-white/5 backdrop-blur-xl rounded-2xl w-full lg:w-auto overflow-x-auto">
+        <div className="flex gap-1.5 p-1.5 bg-[#171f33] rounded-3xl w-full lg:w-auto overflow-x-auto shadow-2xl">
           {['overview', 'properties', 'requests', 'revenue', 'maintenance', 'chats'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`relative flex-1 lg:flex-none rounded-xl px-8 py-3 text-sm font-bold capitalize transition-all duration-300 ${activeTab === tab
-                ? 'bg-primary text-white shadow-[0_8px_20px_rgba(124,58,237,0.3)]'
-                : 'text-text-secondary hover:text-white hover:bg-white/5'
+              className={`relative flex-1 lg:flex-none rounded-2xl px-10 py-4 text-xs font-black uppercase tracking-widest transition-all duration-500 ${activeTab === tab
+                ? 'bg-linear-to-br from-primary to-accent text-white shadow-[0_12px_24px_rgba(124,58,237,0.4)] scale-105'
+                : 'text-slate-500 hover:text-white hover:bg-white/5'
                 }`}
             >
               <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
-                {tab === 'properties' ? 'Properties' : tab}
-                {tab === 'properties' && <span className="text-[10px] opacity-60">({properties.length})</span>}
+                {tab === 'properties' ? 'Portfolio' : tab}
                 {tab === 'chats' && totalUnread > 0 && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] text-white animate-bounce-slow shadow-lg">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] text-white shadow-lg">
                     {totalUnread}
                   </span>
                 )}
@@ -90,7 +94,7 @@ const OwnerDashboard = () => {
       </header>
 
       {/* Main View Area */}
-      <div className="relative z-10 min-h-[50vh]">
+      <div className="relative z-10 min-h-[50vh] outline-none" tabIndex="-1">
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
@@ -127,28 +131,29 @@ const OwnerDashboard = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 min-w-0">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 outline-none">
+              <div className="lg:col-span-2 min-w-0 outline-none" tabIndex="-1">
                 <RevenueChart data={analytics.revenue} />
               </div>
-              <div className="lg:col-span-1 min-w-0">
+              <div className="lg:col-span-1 min-w-0 outline-none" tabIndex="-1">
                 <OccupancyChart data={analytics.occupancy} />
               </div>
             </div>
 
-            <div className="glass-panel p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-dashed bg-white/1">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center text-success">✓</div>
+            <div className="bg-[#131b2e] p-8 flex flex-col sm:flex-row items-center justify-between gap-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="flex items-center gap-6 relative z-10">
+                <div className="w-16 h-16 rounded-2xl bg-success/10 flex items-center justify-center text-3xl shadow-inner">✓</div>
                 <div>
-                  <h4 className="font-bold text-white">System Status: Optimal</h4>
-                  <p className="text-sm text-text-secondary">All listings and payments are staying up to date.</p>
+                  <h4 className="text-xl font-black text-white">System Status: Optimal</h4>
+                  <p className="text-slate-400 font-medium">All property listings and tenant payments are staying up to date.</p>
                 </div>
               </div>
               <button
-                className="btn btn-secondary text-sm border-white/10"
+                className="relative z-10 px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold transition-all active:scale-95"
                 onClick={() => setActiveTab('properties')}
               >
-                Manage My Properties
+                Manage My Portfolio
               </button>
             </div>
           </div>
