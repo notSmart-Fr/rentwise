@@ -12,6 +12,7 @@ from app.modules.properties.router import owner_router, public_router
 from app.modules.requests.router import router as request_router
 from app.modules.payments.owner_router import router as payments_router
 from app.modules.payments.tenant_router import router as tenant_payments_router
+from app.modules.leases.router import router as leases_router
 from app.modules.tickets.router import router as tickets_router
 from app.modules.messages.router import router as messages_router
 from app.modules.notifications.router import router as notifications_router
@@ -66,6 +67,7 @@ app.include_router(auth_router)
 app.include_router(owner_router)
 app.include_router(public_router)
 app.include_router(request_router)
+app.include_router(leases_router)
 app.include_router(payments_router)
 app.include_router(tenant_payments_router)
 app.include_router(tickets_router)

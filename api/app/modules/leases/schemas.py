@@ -1,22 +1,34 @@
 import uuid
-from datetime import date
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
-class LeaseCreateSchema(BaseModel):
+
+class LeaseBase(BaseModel):
     tenant_id: uuid.UUID
     property_id: uuid.UUID
-    start_date: date
-    end_date: date
+    start_date: datetime
+    end_date: datetime
     monthly_rent: int
-class LeaseUpdateSchema(BaseModel):
-    start_date: date | None = None
-    end_date: date | None = None
+    due_day: int = 1
+    status: str = "ACTIVE"
+
+class LeaseCreate(LeaseBase):
+    request_id: uuid.UUID | None = None
+
+class LeaseUpdate(BaseModel):
+    end_date: datetime | None = None
     monthly_rent: int | None = None
-class LeaseResponseSchema(BaseModel):
+    status: str | None = None
+    next_payment_date: datetime | None = None
+
+class LeaseResponse(LeaseBase):
     id: uuid.UUID
-    tenant_id: uuid.UUID
-    property_id: uuid.UUID
-    start_date: date
-    end_date: date
-    monthly_rent: int
+    request_id: uuid.UUID | None = None
+    next_payment_date: datetime | None = None
+    created_at: datetime
+    
+    # Metadata for frontend
+    property_title: str | None = None
+    property_image: str | None = None
+    tenant_name: str | None = None
     
     model_config = ConfigDict(from_attributes=True)

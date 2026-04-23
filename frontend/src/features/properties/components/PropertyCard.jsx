@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth';
 import { usePropertyActions } from '../hooks/usePropertyActions';
 
-const PropertyCard = ({ property, onEdit }) => {
+const PropertyCard = ({ property, onEdit, isHero = false }) => {
   const { isTenant, isAuthenticated, user } = useAuth();
   const { requestStatus, handleQuickRequest } = usePropertyActions(property);
 
@@ -12,95 +12,104 @@ const PropertyCard = ({ property, onEdit }) => {
     : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80';
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-[#131b2e] shadow-2xl transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] h-full">
+    <div className={`group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-[#131b2e] shadow-2xl transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] h-full border border-white/5`}>
+      {/* Ambient hover glow */}
+      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+
       {/* Image Section */}
-      <Link to={`/properties/${property?.id}`} className="relative block h-56 overflow-hidden">
+      <Link to={`/properties/${property?.id}`} className={`relative block overflow-hidden m-4 rounded-3xl ${isHero ? 'h-[500px]' : 'h-72'}`}>
         <img
           src={mainImage}
           alt={property?.title || 'Property'}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0"
           loading="lazy"
         />
-        <div className="absolute top-4 left-4 flex gap-2">
-          <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-2xl backdrop-blur-xl ${property?.is_available
-            ? 'bg-emerald-500 text-white border border-emerald-400/30'
-            : 'bg-red-500 text-white border border-red-400/30'
+        <div className="absolute inset-0 bg-linear-to-t from-[#131b2e]/60 to-transparent"></div>
+        
+        <div className="absolute top-4 left-4">
+          <span className={`rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl backdrop-blur-md border ${property?.is_available
+            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-400/30'
+            : 'bg-red-500/20 text-red-400 border-red-400/30'
             }`}>
-            {property?.is_available ? 'Available' : 'Rented'}
+            {isHero ? 'Featured Estate' : property?.is_available ? 'Available' : 'Rented'}
           </span>
+        </div>
+
+        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+            <div className="flex shrink-0 items-baseline gap-1 bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+                <span className="text-sm font-bold text-white">৳</span>
+                <span className={`${isHero ? 'text-4xl' : 'text-xl'} font-black text-white transition-all`}>{property?.rent_amount?.toLocaleString() || '0'}</span>
+                <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest">/mo</span>
+            </div>
         </div>
       </Link>
 
       {/* Content Section */}
-      <div className="flex flex-1 flex-col p-6">
-        <div className="mb-4 flex items-start justify-between">
-          <div className="flex-1">
-            <h3 className="line-clamp-1 text-xl font-black text-white transition-colors group-hover:text-primary-hover tracking-tight">
+      <div className={`flex flex-1 flex-col px-8 pb-8 pt-4 relative z-10 ${isHero ? 'justify-center' : ''}`}>
+        <div className="mb-6 flex flex-col gap-2">
+            <h3 className={`${isHero ? 'text-4xl' : 'text-2xl'} font-black text-white transition-colors group-hover:text-primary tracking-tight`}>
               {property?.title || 'Untitled Property'}
             </h3>
-            <div className="mt-1 flex items-center gap-2 text-sm text-slate-400">
-              <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
+              <span className="material-symbols-outlined text-sm text-primary" data-icon="location_on">location_on</span>
               <span>{property?.area || 'N/A'}, {property?.city || 'Unknown'}</span>
             </div>
-          </div>
-          <div className="ml-4 flex shrink-0 items-baseline gap-1 font-display bg-primary/10 px-3 py-1 rounded-lg border border-primary/20">
-            <span className="text-sm font-bold text-primary">৳</span>
-            <span className="text-2xl font-black text-white">{property?.rent_amount?.toLocaleString() || '0'}</span>
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">/mo</span>
-          </div>
         </div>
 
-        {/* Specs */}
-        <div className="mb-6 flex gap-6 py-1">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🛏️</span>
+        {/* Specs - Grid Layout */}
+        <div className={`grid ${isHero ? 'grid-cols-4' : 'grid-cols-2'} gap-4 mb-8 transition-all`}>
+          <div className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-primary/10 transition-colors">
+            <span className="text-xl">🛏️</span>
             <div>
-              <p className="text-sm font-bold text-white">{property?.bedrooms || 0}</p>
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Beds</p>
+              <p className="text-sm font-black text-white leading-none">{property?.bedrooms || 0}</p>
+              <p className="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Beds</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🚿</span>
+          <div className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-accent/10 transition-colors">
+            <span className="text-xl">🚿</span>
             <div>
-              <p className="text-sm font-bold text-white">{property?.bathrooms || 0}</p>
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Baths</p>
+              <p className="text-sm font-black text-white leading-none">{property?.bathrooms || 0}</p>
+              <p className="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Baths</p>
             </div>
           </div>
+          {isHero && (
+            <>
+              <div className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-primary/10 transition-colors">
+                <span className="text-xl">📐</span>
+                <div>
+                  <p className="text-sm font-black text-white leading-none">2,400</p>
+                  <p className="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Sqft</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-accent/10 transition-colors">
+                <span className="text-xl">🛡️</span>
+                <div>
+                  <p className="text-sm font-black text-white leading-none">Secured</p>
+                  <p className="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Verified</p>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Footer Actions */}
-        <div className="mt-auto flex items-center justify-between gap-4">
+        <div className="mt-auto flex items-center gap-3">
           <Link
             to={`/properties/${property?.id}`}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary/10 px-4 py-3 text-sm font-bold text-primary-hover transition-all hover:bg-primary hover:text-white"
+            className="flex-1 flex items-center justify-center gap-3 rounded-2xl bg-white text-[#0b1326] px-6 py-4 text-xs font-black uppercase tracking-[0.2em] transition-all hover:bg-primary hover:text-white hover:scale-105"
           >
-            View Details
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            {isHero ? 'Explore Residency' : 'Explore'}
           </Link>
 
           {isTenant && property?.is_available && (
             <button
               onClick={handleQuickRequest}
               disabled={requestStatus === 'loading' || requestStatus === 'success'}
-              className={`flex h-11 w-11 items-center justify-center rounded-lg border border-white/5 bg-white/5 text-lg transition-all hover:scale-110 active:scale-95 ${requestStatus === 'success' ? 'bg-emerald-500 text-white border-emerald-500' : 'hover:bg-emerald-500 hover:text-white'
+              className={`flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-white/5 bg-white/5 text-xl transition-all hover:scale-110 active:scale-95 ${requestStatus === 'success' ? 'bg-emerald-500 text-white border-emerald-500' : 'hover:bg-primary hover:text-white'
                 }`}
               title="Quick Lease Request"
             >
               {requestStatus === 'loading' ? '...' : requestStatus === 'success' ? '✓' : '⚡'}
-            </button>
-          )}
-
-          {!isTenant && isAuthenticated && user?.id === property?.owner_id && (
-            <button
-              onClick={() => onEdit?.(property)}
-              className="text-sm font-medium text-slate-500 underline transition-colors hover:text-white"
-            >
-              Edit
             </button>
           )}
         </div>

@@ -15,14 +15,19 @@ All modules in `api/app/modules/` must follow the **Router -> Service -> Reposit
 - **Migrations**: NEVER modify the DB schema manually. Use `alembic revision --autogenerate` for all model changes.
 - **Exceptions**: Use domain-specific exceptions (e.g., `NotFoundException`, `ForbiddenException`).
 
-## ⚛️ 3. Frontend Standards (Feature-Based Slicing)
+## 🎨 3. Ground Truth & Stitch Integration
+- **Single Source of Truth**: The **`spec.md`** is the absolute technical and operational authority. You MUST adhere to its protocols at all times.
+- **Visual Manifest**: Consult **`design_system.md`** for all aesthetic tokens.
+- **Stitch Protocol**: Follow the **StitchMCP Operational Protocol** in `spec.md` Section 2 before any UI work. Do not invent styles; sync with `projects/11449056074467872328`.
+
+## ⚛️ 4. Frontend Standards (Feature-Based Slicing)
 Organize code by business domain in `src/features/` or `src/shared/`.
 - **Barrel Policy**: Every feature and shared folder MUST contain an `index.js` file acting as the Public API.
 - **Exports**: Use **Named Exports** for all Services and Hooks (e.g., `export const useAuth = ...`).
 - **Imports**: Import from the feature root (e.g., `@/features/auth`) rather than deep-nesting.
-- **Styling**: Use **Tailwind CSS v4**. Ensure you use the latest v4 utility patterns and avoid legacy Vanilla CSS unless necessary for complex custom animations.
+- **Styling (Sovereign Ledger)**: You MUST follow the **`design_system.md`** manifest for all UI changes. Use Tailwind CSS v4 to implement the "No-Line" rule, obsidian palettes, and 2.5rem corner radii. Avoid default browser colors.
 
-## 🔒 4. Identity & Security
+## 🔒 5. Identity & Security
 - **Dual-Mode Identity**: Every user is both an **Owner** and a **Tenant**.
 - **Modes**: Distinguish between the **Role** (Owner/Tenant) and the active **Mode** (Hosting/Renting).
 - **RBAC**: Verify permissions based on the user's `is_owner` or `is_tenant` flags in the Service layer.

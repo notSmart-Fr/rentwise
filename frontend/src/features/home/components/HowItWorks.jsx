@@ -22,53 +22,53 @@ const HowItWorks = () => {
     navigate('/owner-dashboard');
   };
   return (
-    <div className="animate-fade-in bg-bg-base min-h-screen">
+    <div className="animate-fade-in bg-[#0b1326] min-h-screen font-manrope">
       {/* Hero Section */}
-      <section className="relative pt-hero-pt pb-20 border-b border-white/5 overflow-hidden flex flex-col items-center justify-center text-center">
-        <div className="absolute top-[-5%] left-[-2%] w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <section className="relative pt-48 pb-24 overflow-hidden flex flex-col items-center justify-center text-center">
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
         
         <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-4xl">
-          <h1 className="text-5xl sm:text-7xl font-black leading-[0.98] tracking-tight text-white mb-8">
-            How <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent italic pr-4">RentWise</span> Works
+          <h1 className="text-6xl sm:text-[8rem] font-black leading-[0.85] tracking-tightest text-white mb-10">
+            The <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Sovereign</span> Journey
           </h1>
-          <p className="text-lg sm:text-xl text-text-secondary leading-relaxed opacity-70 font-medium">
-            We've simplified the rental journey. Whether you're looking for a home or hosting one, 
-            our platform ensures a secure and seamless experience from start to finish.
+          <p className="text-xl sm:text-2xl text-slate-400 leading-relaxed font-medium max-w-3xl">
+            We've redefined the rental lifecycle. Whether you're acquiring a residence or managing a portfolio, 
+            our platform ensures architectural excellence at every step.
           </p>
         </div>
       </section>
 
       {/* The Process Details */}
-      <section className="py-section-py relative">
-        <div className="container px-6 mx-auto">
+      <section className="py-32 relative">
+        <div className="container px-6 mx-auto max-w-[1920px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               {
                 icon: '🔍',
                 step: '01',
-                title: 'Search & Explore',
-                desc: 'Browse through our curated collection of premium listings. Each property is verified and features high-resolution photography and detailed specifications.'
+                title: 'Curated Discovery',
+                desc: 'Explore our Bento Grid of verified, high-performance properties. Each listing is an architectural masterpiece with zero-compromise specifications.'
               },
               {
-                icon: '🤝',
+                icon: '🏦',
                 step: '02',
-                title: 'Apply & Connect',
-                desc: 'Found a place you love? Submit your digital application instantly. Our built-in messaging system lets you chat directly with owners to discuss details.'
+                title: 'Ledger Integration',
+                desc: 'Apply through a high-fidelity digital process. Our Sovereign Ledger ensures transparent communication and secure financial transitions.'
               },
               {
                 icon: '🔑',
                 step: '03',
-                title: 'Move In Securely',
-                desc: 'Review digital lease terms, finalize payments through our secure ledger, and get your keys. We stay with you throughout your tenancy for any maintenance needs.'
+                title: 'Architectural Living',
+                desc: 'Finalize your agreement, access your digital keys, and enjoy premium support. We provide 24/7 maintenance for every unit in our portfolio.'
               }
             ].map((step, i) => (
-              <div key={i} className="glass-panel p-10 flex flex-col items-start text-left group transition-all duration-500 hover:bg-white/3 border-white/5">
-                <div className="flex justify-between items-center w-full mb-8">
-                  <div className="text-5xl group-hover:scale-110 transition-transform duration-300">{step.icon}</div>
-                  <span className="text-4xl font-black text-white/5 group-hover:text-primary/20 transition-colors duration-500">{step.step}</span>
+              <div key={i} className="bg-[#131b2e] rounded-[2.5rem] p-12 flex flex-col items-start text-left group transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] border border-white/5">
+                <div className="flex justify-between items-center w-full mb-12">
+                  <div className="text-6xl group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">{step.icon}</div>
+                  <span className="text-5xl font-black text-white/5 group-hover:text-primary/10 transition-colors duration-700 tracking-tighter">{step.step}</span>
                 </div>
-                <h4 className="text-2xl font-bold text-white mb-4 tracking-tight">{step.title}</h4>
-                <p className="text-text-secondary text-base leading-relaxed opacity-70">{step.desc}</p>
+                <h4 className="text-3xl font-black text-white mb-6 tracking-tight">{step.title}</h4>
+                <p className="text-slate-400 text-lg leading-relaxed font-medium">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -76,19 +76,19 @@ const HowItWorks = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary/5 border-y border-white/5 text-center">
-        <div className="container px-6 mx-auto max-w-2xl">
-          <h3 className="text-3xl font-black text-white mb-6">Ready to find your next home?</h3>
-          <p className="text-text-secondary mb-10 opacity-70">Join thousands of verified renters and owners on the most advanced rental platform in the city.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <button className="btn btn-primary px-10 py-4 text-lg font-bold shadow-xl shadow-primary/20" onClick={() => navigate('/')}>
-              Start Exploring
+      <section className="py-40 bg-linear-to-b from-transparent to-primary/5 text-center">
+        <div className="container px-6 mx-auto max-w-4xl">
+          <h3 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tightest">Start Your Next Chapter.</h3>
+          <p className="text-xl text-slate-400 mb-16 font-medium">Join the elite network of residents and owners leveraging the Sovereign Ledger.</p>
+          <div className="flex flex-wrap justify-center gap-6">
+            <button className="bg-primary text-on-primary px-16 py-6 text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-2xl shadow-primary/30 hover:scale-105 transition-all" onClick={() => navigate('/')}>
+              Explore Portfolio
             </button>
             <button 
-              className="bg-white/5 hover:bg-white/10 text-white px-10 py-4 rounded-xl border border-white/10 font-bold transition-all active:scale-95"
+              className="bg-white/5 hover:bg-white/10 text-white px-16 py-6 rounded-[2rem] border border-white/10 text-xs font-black uppercase tracking-[0.3em] transition-all active:scale-95"
               onClick={handleListProperty}
             >
-              List Your Property
+              List Property
             </button>
           </div>
         </div>

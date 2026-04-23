@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { MyRequests } from '../../requests';
 import { MyTickets } from '../../tickets';
 import { TenantPayments } from '../../payments';
+import LeaseCard from '../../leases/components/LeaseCard';
 import { useTenantDashboard } from '../hooks/useTenantDashboard';
 import { InboxRow } from '../../messaging';
 import StatsCard from '../../../shared/components/StatsCard';
@@ -16,60 +17,58 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
     pendingApplicationsCount,
     conversations,
     totalUnread,
-    handleOpenConversation
+    handleOpenConversation,
+    leases
   } = useTenantDashboard(initialTab);
 
   if (isLoading && activeLeases.length === 0) {
     return (
       <div className="container flex min-h-[70vh] items-center justify-center pt-16 mx-auto">
-        <div className="flex flex-col items-center gap-6">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-accent border-t-transparent shadow-[0_0_20px_rgba(56,189,248,0.3)]"></div>
-          <p className="text-text-secondary font-medium animate-pulse">Preparing your personal hub...</p>
+        <div className="flex flex-col items-center gap-8">
+          <div className="h-20 w-20 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-glow shadow-primary/20"></div>
+          <p className="text-slate-500 font-black uppercase tracking-[0.4em] animate-pulse text-xs">Architecting your sanctuary...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0b1326] text-white px-4 pb-12 pt-24 lg:px-12 lg:pb-12 lg:pt-32 font-manrope selection:bg-accent/30">
+    <div className="min-h-screen bg-[#0b1326] text-white px-6 pb-20 pt-48 lg:px-24 lg:pb-24 lg:pt-56 font-manrope selection:bg-primary/30">
       {/* Ambient Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-accent/10 blur-[150px] rounded-full opacity-60"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/5 blur-[180px] rounded-full opacity-40"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-accent/5 blur-[180px] rounded-full opacity-40"></div>
       </div>
 
       {/* Header Section */}
-      <header className="relative z-10 mb-16 flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
-        <div className="animate-in fade-in slide-in-from-left-8 duration-700">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="w-2.5 h-10 bg-linear-to-b from-accent to-primary rounded-full shadow-[0_0_20px_rgba(56,189,248,0.4)]"></div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
-              Resident <span className="text-transparent bg-clip-text bg-linear-to-r from-accent to-primary">Hub</span>
-            </h1>
-          </div>
-          <p className="ml-6 text-slate-400 text-lg font-medium">Welcome home. Manage your sanctuary and lease in one place.</p>
+      <header className="relative z-10 mb-24 flex flex-col justify-between gap-12 lg:flex-row lg:items-end">
+        <div className="animate-in fade-in slide-in-from-left-12 duration-1000">
+          <h1 className="text-6xl sm:text-8xl font-black tracking-tightest text-white leading-[0.85] mb-6 uppercase">
+            Resident <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Hub</span>
+          </h1>
+          <p className="text-slate-400 text-xl font-medium max-w-xl">Welcome home. Manage your portfolio and residency in one architectural interface.</p>
         </div>
 
-        <div className="flex gap-1.5 p-1.5 bg-[#171f33] rounded-3xl w-full lg:w-auto overflow-x-auto shadow-2xl">
+        <div className="flex gap-2 p-2 bg-[#131b2e] rounded-[2rem] w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
           {[
-            { id: 'overview', label: 'Overview' },
-            { id: 'leases', label: 'My Leases' },
-            { id: 'maintenance', label: 'Maintenance' },
-            { id: 'payments', label: 'History' },
-            { id: 'chats', label: 'Chats' }
+            { id: 'overview', label: 'Portfolio' },
+            { id: 'leases', label: 'Agreements' },
+            { id: 'maintenance', label: 'Requests' },
+            { id: 'payments', label: 'Ledger' },
+            { id: 'chats', label: 'Concierge' }
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex-1 lg:flex-none rounded-2xl px-10 py-4 text-xs font-black uppercase tracking-widest transition-all duration-500 ${activeTab === tab.id
-                ? 'bg-linear-to-br from-accent to-primary text-white shadow-[0_12px_24px_rgba(56,189,248,0.4)] scale-105'
+              className={`relative flex-1 lg:flex-none rounded-[1.5rem] px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-700 ${activeTab === tab.id
+                ? 'bg-white text-slate-950 shadow-2xl scale-105'
                 : 'text-slate-500 hover:text-white hover:bg-white/5'
                 }`}
             >
-              <span className="relative z-10 flex items-center justify-center gap-2 whitespace-nowrap">
+              <span className="relative z-10 flex items-center justify-center gap-3 whitespace-nowrap">
                 {tab.label}
                 {tab.id === 'chats' && totalUnread > 0 && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] text-white shadow-lg">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[8px] text-white shadow-glow shadow-primary">
                     {totalUnread}
                   </span>
                 )}
@@ -82,65 +81,76 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
       {/* Tab Panels */}
       <div className="relative z-10">
         {activeTab === 'overview' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-16">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               <StatsCard
-                title="Active Leases"
+                title="Portfolio Assets"
                 value={activeLeases.length}
-                icon="🏠"
+                icon="🏰"
                 color="blue"
+                trend="Active Agreement"
               />
               <StatsCard
-                title="Open Applications"
+                title="Verification Pipeline"
                 value={pendingApplicationsCount}
-                icon="📄"
+                icon="📜"
                 color="purple"
+                trend="In Review"
               />
               <StatsCard
-                title="Unresolved Issues"
+                title="Service Tickets"
                 value={openTicketsCount}
-                icon="🛠️"
+                icon="🔧"
                 color={openTicketsCount > 0 ? "orange" : "green"}
+                trend={openTicketsCount > 0 ? "Priority Attention" : "Clear Portfolio"}
               />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-[#131b2e] p-10 space-y-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
-                <h3 className="text-2xl font-black text-white flex items-center gap-3">
-                  <span className="p-3 bg-white/5 rounded-2xl">📅</span> Recent Activity
-                </h3>
-                <div className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+              <div className="lg:col-span-8 bg-[#131b2e] p-12 space-y-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden group border border-white/5">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-3xl font-black text-white uppercase tracking-tightest">
+                        Recent Ledger Activity
+                    </h3>
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-xl">📅</div>
+                </div>
+                
+                <div className="space-y-6">
                   {activeLeases.length > 0 ? (
-                    <div className="flex items-center justify-between p-6 bg-white/5 rounded-4xl border-none">
+                    <div className="flex items-center justify-between p-10 bg-white/5 rounded-[2rem] border border-white/5 hover:border-primary/20 transition-all group/item cursor-pointer">
                       <div>
-                        <p className="text-lg font-black text-white">{activeLeases[0].property_title}</p>
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Next rent due soon</p>
+                        <p className="text-2xl font-black text-white tracking-tight">{activeLeases[0].property_title}</p>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">Upcoming financial commitment</p>
                       </div>
                       <div className="text-right">
-                        <span className="text-accent text-2xl font-black">৳{activeLeases[0].property_rent?.toLocaleString()}</span>
+                        <span className="text-white text-4xl font-black tracking-tightest">৳{activeLeases[0].property_rent?.toLocaleString()}</span>
+                        <p className="text-[9px] font-black text-primary uppercase tracking-widest mt-2">Due in 4 days</p>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-slate-500 text-sm italic font-medium">No recent lease activity to show.</p>
+                    <div className="py-20 text-center">
+                        <p className="text-slate-500 text-sm italic font-black uppercase tracking-[0.3em]">No recent ledger activity detected.</p>
+                    </div>
                   )}
                   <button
                     onClick={() => setActiveTab('leases')}
-                    className="w-full text-center text-xs font-black text-accent uppercase tracking-[0.2em] py-4 hover:text-white transition-all"
+                    className="w-full text-center text-[10px] font-black text-primary uppercase tracking-[0.4em] py-6 rounded-[1.5rem] border border-dashed border-white/10 hover:border-primary/40 hover:bg-primary/5 transition-all"
                   >
-                    Manage all leases
+                    Manage Full Portfolio
                   </button>
                 </div>
               </div>
 
-              <div className="bg-[#131b2e] p-10 space-y-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-                <h3 className="text-2xl font-black text-white flex items-center gap-3">
-                  <span className="p-3 bg-white/5 rounded-2xl">💡</span> Resident Tip
+              <div className="lg:col-span-4 bg-linear-to-br from-primary/10 to-accent/5 p-12 space-y-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col justify-center border border-white/5">
+                <div className="absolute top-0 right-0 p-8 text-9xl opacity-5 group-hover:scale-110 transition-transform duration-1000">✨</div>
+                <h3 className="text-2xl font-black text-white uppercase tracking-widest">
+                  Intelligence Tip
                 </h3>
-                <div className="bg-linear-to-br from-accent/10 to-primary/5 p-8 rounded-4xl relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-4 text-6xl opacity-5 group-hover:scale-110 transition-transform duration-1000">✨</div>
-                  <p className="text-slate-300 text-lg leading-relaxed relative z-10 italic font-medium">
-                    "Keep your maintenance tickets updated! Owners can coordinate faster with clear photos and descriptions."
-                  </p>
+                <p className="text-slate-300 text-xl leading-relaxed relative z-10 italic font-medium">
+                  "Ensure your Sovereign Ledger is synchronized. Verified payments accelerate your portfolio reputation."
+                </p>
+                <div className="pt-8">
+                    <div className="h-1 w-20 bg-primary rounded-full"></div>
                 </div>
               </div>
             </div>
@@ -148,28 +158,50 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
         )}
 
         {activeTab === 'leases' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <MyRequests />
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-20">
+            {/* Active Agreements Section */}
+            {leases && leases.length > 0 && (
+              <div className="space-y-12">
+                <div className="flex items-center gap-6">
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tightest">Active Portfolio</h2>
+                  <div className="flex-1 h-px bg-white/5"></div>
+                </div>
+                <div className="grid grid-cols-1 gap-10">
+                  {leases.map(lease => (
+                    <LeaseCard key={lease.id} lease={lease} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Applications Section */}
+            <div className="space-y-12">
+              <div className="flex items-center gap-6">
+                <h2 className="text-3xl font-black text-white uppercase tracking-tightest">Verification History</h2>
+                <div className="flex-1 h-px bg-white/5"></div>
+              </div>
+              <MyRequests hideHeader={true} />
+            </div>
           </div>
         )}
 
         {activeTab === 'maintenance' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <MyTickets />
           </div>
         )}
 
         {activeTab === 'payments' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <TenantPayments />
           </div>
         )}
 
         {/* Chats Tab - Direct interactive list */}
         {activeTab === 'chats' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
-            <h2 className="text-2xl font-black text-white">Recent Chats</h2>
-            <div className="grid grid-cols-1 gap-4">
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-12">
+            <h2 className="text-3xl font-black text-white uppercase tracking-tightest">Intelligence Concierge</h2>
+            <div className="grid grid-cols-1 gap-6">
               {conversations.filter(c => c.user_role === 'TENANT').length > 0 ? (
                 conversations
                   .filter(c => c.user_role === 'TENANT')
@@ -177,10 +209,10 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
                     <InboxRow key={conv.id} conversation={conv} onClick={handleOpenConversation} />
                   ))
               ) : (
-                <div className="glass-panel py-24 text-center opacity-70 border-dashed">
-                  <div className="text-5xl mb-6">💬</div>
-                  <h3 className="text-xl font-bold text-white mb-2">No active chats</h3>
-                  <p className="text-text-secondary">Messages about your lease requests or tickets will appear here.</p>
+                <div className="bg-[#131b2e] py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
+                  <div className="text-7xl mb-10 grayscale opacity-20">💬</div>
+                  <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">No Active Sessions</h3>
+                  <p className="text-slate-500 font-medium max-w-sm mx-auto">Concierge logs will manifest here once you initiate communication regarding your assets.</p>
                 </div>
               )}
             </div>

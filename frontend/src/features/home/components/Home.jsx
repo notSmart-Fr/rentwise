@@ -16,53 +16,84 @@ const Home = () => {
   } = useProperties();
 
   return (
-    <div className="min-h-screen bg-[#0b1326] text-white selection:bg-primary/30 font-manrope">
+    <div className="min-h-screen bg-[#0b1326] text-white selection:bg-primary/30 font-manrope overflow-x-hidden">
       {/* Cinematic Ambient Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[150px] rounded-full opacity-60"></div>
         <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-accent/10 blur-[150px] rounded-full opacity-60"></div>
       </div>
-      {/* Hero Section - The Sovereign Entry */}
-      <section className="relative pt-32 pb-24 lg:pt-48 lg:pb-40 overflow-hidden">
-        <div className="container relative z-10 px-6 lg:px-12 mx-auto max-w-7xl">
-          <div className="animate-in fade-in slide-in-from-left-12 duration-1000">
-            <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tighter text-white mb-12">
-              Find Your Next <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic pr-8">Perfect Home.</span>
-            </h1>
-            <p className="max-w-2xl text-xl lg:text-2xl text-slate-400 leading-relaxed mb-16 font-medium">
-              The smartest way to rent in the city. RentWise connects premium properties with verified tenants through a seamless, <span className="text-white">high-end experience</span>.
-            </p>
-          </div>
 
-          <div className="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
-            <div className="relative group max-w-4xl">
-              {/* Floating Glass Search Bar */}
-              <div className="absolute -inset-1 bg-linear-to-r from-primary to-accent rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-              <div className="relative bg-[#171f33]/80 backdrop-blur-3xl p-4 lg:p-6 rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row items-center gap-4 border border-white/5">
-                <SearchBar
+      {/* Hero Section - The Sovereign Entry */}
+      <section className="relative min-h-screen flex flex-col items-start justify-center pt-32 pb-20 px-6 lg:px-12 max-w-[1920px] mx-auto overflow-hidden">
+        {/* Background Image Overlay */}
+        <div className="absolute top-0 right-0 w-2/3 h-full opacity-20 -z-10 select-none pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-l from-[#0b1326] via-[#0b1326]/40 to-transparent"></div>
+          <img 
+            alt="Luxury property" 
+            className="w-full h-full object-cover grayscale opacity-50" 
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600"
+          />
+        </div>
+
+        <div className="max-w-6xl space-y-12 relative z-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+          <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[0.85] text-white">
+            Find Your Next <br />
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Perfect Home.</span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-slate-400 max-w-2xl font-medium leading-relaxed">
+            The Sovereign Ledger of elite property management. High-performance acquisitions meet architectural living.
+          </p>
+
+          {/* Search Bar Sovereign Edition */}
+          <div className="w-full max-w-4xl bg-[#171f33]/60 backdrop-blur-3xl p-3 rounded-[2.5rem] shadow-2xl mt-12 flex flex-col md:flex-row items-center gap-2 border border-white/5 group hover:border-primary/20 transition-all duration-700">
+            <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
+              <div className="px-8 py-4 flex flex-col justify-center">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Location</span>
+                <input 
+                  className="bg-transparent border-none p-0 text-white placeholder:text-slate-600 focus:ring-0 text-lg font-bold" 
+                  placeholder="Dhaka, BD" 
+                  type="text"
                   value={searchQuery}
-                  onChange={setSearchQuery}
-                  onSearch={handleSearch}
-                  className="w-full bg-transparent border-none focus:ring-0 text-lg lg:text-xl font-bold placeholder:text-slate-600"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
-            </div>
-
-            <div className="mt-12 flex flex-wrap items-center gap-6">
-              <span className="text-slate-500 uppercase tracking-widest text-xs font-black">Trending Areas</span>
-              <div className="flex gap-3">
-                {['Banani', 'Gulshan', 'Dhanmondi'].map(area => (
-                  <button
-                    key={area}
-                    className="rounded-2xl bg-white/5 px-6 py-3 text-sm font-bold text-slate-400 transition-all hover:bg-white/10 hover:text-white active:scale-95 border border-white/5"
-                    onClick={() => handleSearch(area)}
-                  >
-                    {area}
-                  </button>
-                ))}
+              <div className="px-8 py-4 flex flex-col justify-center">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Property Type</span>
+                <select 
+                  className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
+                  onChange={(e) => handleFilterChange('type', e.target.value)}
+                >
+                  <option className="bg-[#0b1326]">Penthouse</option>
+                  <option className="bg-[#0b1326]">Modern Villa</option>
+                  <option className="bg-[#0b1326]">Townhouse</option>
+                </select>
+              </div>
+              <div className="px-8 py-4 flex flex-col justify-center">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Price Range</span>
+                <div className="text-white text-lg font-bold">৳50k - ৳250k</div>
               </div>
             </div>
+            <button 
+              onClick={() => handleSearch()}
+              className="w-full md:w-auto bg-primary text-on-primary px-12 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-105 hover:shadow-[0_0_30px_rgba(128,131,255,0.4)] transition-all active:scale-95"
+            >
+              Search
+            </button>
+          </div>
+
+          <div className="flex items-center gap-8 pt-8">
+             <div className="flex -space-x-4">
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="w-12 h-12 rounded-full border-4 border-[#0b1326] bg-slate-800 overflow-hidden">
+                    <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
+                  </div>
+                ))}
+             </div>
+             <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
+                <span className="text-white">500+</span> Residents found their home this month
+             </p>
           </div>
         </div>
       </section>
@@ -95,7 +126,7 @@ const Home = () => {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-40">
               <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
-              <p className="text-text-muted text-sm italic font-medium">Fine-tuning your search results...</p>
+              <p className="text-slate-500 text-sm italic font-black uppercase tracking-[0.3em]">Curating your portfolio...</p>
             </div>
           ) : error ? (
             <div className="glass-panel py-32 flex flex-col items-center justify-center text-center border-red-500/20">
@@ -112,10 +143,16 @@ const Home = () => {
           ) : (
             <>
               {properties.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
-                  {properties.map((prop, index) => (
-                    <PropertyCard key={prop?.id || index} property={prop} />
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                  {properties.map((prop, index) => {
+                    // Logic to create a Bento Grid pattern (8-4, 6-6, etc.)
+                    const spanClass = index % 4 === 0 ? 'md:col-span-8' : index % 4 === 1 ? 'md:col-span-4' : 'md:col-span-6';
+                    return (
+                      <div key={prop?.id || index} className={spanClass}>
+                        <PropertyCard property={prop} isHero={index % 4 === 0} />
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="glass-panel py-32 flex flex-col items-center justify-center text-center border-dashed border-white/10">

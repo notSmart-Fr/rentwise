@@ -1,5 +1,5 @@
 # RentWise - Property Management Platform
-**A full-stack rental ecosystem with automated ledgers and visual discovery.**
+**A premium rental ecosystem with Sovereign Ledger aesthetics and automated monthly residency tracking.**
 
 ## 🤖 Agentic Directions
 If you are an AI assistant or human developer working on this repository, **you MUST follow the architectural standards defined in [spec.md](./spec.md).**
@@ -45,7 +45,8 @@ The platform is fully automated via CI/CD. Pushing to the `main` branch triggers
 * **Cloud Infrastructure**: Scalable backend and frontend services running on Google Cloud Run.
 * **Persistent Storage**: Media assets are stored in Google Cloud Storage buckets for infinite scalability.
 * **Production Database**: Managed Supabase PostgreSQL with IPv4-compatible session pooling.
-* **How It Works**: A dedicated, interactive discovery page for onboarding new users.
+* **Sovereign Ledger**: High-fidelity, fintech-inspired UI with obsidian palettes and cinematic lighting.
+* **Monthly Ledger**: Automatic transition from "Request" to "Lease" with recurring payment tracking.
 * **Visual Discovery**: Property listings with high-res image galleries and flexible, parent-controlled layouts.
 * **Smart Search**: Real-time filtering by keyword, city, and area via a global SearchBar.
 * **Advanced Dashboards**: Distinct, data-driven experiences for **Owners (Hosting)** and **Tenants (Renting)**.

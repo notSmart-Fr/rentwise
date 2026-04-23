@@ -127,3 +127,8 @@ export const paymentsApi = {
   verifyAutomated: (paymentId) => 
     apiRequest(`/tenant/payments/${paymentId}/verify`, { method: 'POST' }),
 };
+
+export const leasesApi = {
+  getMy: () => apiRequest('/leases/my', { method: 'GET' }),
+  getById: (id) => apiRequest(`/leases/${id}`, { method: 'GET' }),
+};

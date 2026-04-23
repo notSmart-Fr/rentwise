@@ -1,12 +1,44 @@
 # RentWise Unified Architecture Specification (spec.md)
 
-This document serves as the "Ground Truth" for all development on the RentWise platform. It ensures consistency, scalability, and developer sanity.
+This document is the **Single Source of Truth** for the RentWise platform. It defines the technical architecture, project roadmap, and operational protocols.
 
-### 📜 Documentation Integrity
-1. **Spec-First Development:** The `spec.md` is the source of truth. Any change to architecture, dependencies, or project structure MUST be reflected here immediately.
-2. **Agent Responsibility:** AI Agents are required to update this document whenever they introduce a legacy technology, a new dependency, or restructure a module.
+---
 
-## ☁️ Cloud Infrastructure & Hosting
+## 🏗️ 1. Project Vision & Roadmap
+
+RentWise is a premium, full-stack rental ecosystem bridging property owners and tenants via a central hub for visual discovery, digital lease applications, and integrated financial ledgers.
+
+### ✅ Completed Milestones
+- **Sovereign Ledger (v3.0)**: High-fidelity UI overhaul with obsidian palettes and 2.5rem corner radii.
+- **Robust Exception System**: Custom domain exceptions with global backend handlers.
+- **Unified Identity**: Dual-mode (Owner/Tenant) account architecture.
+- **Cloud Infrastructure**: CI/CD on Google Cloud Run with Supabase persistence.
+
+### 🚀 Future Roadmap (Phase 3)
+- **Financial Hardening**: Integration of real Stripe/PayPal gateways and asynchronous webhooks.
+- **Cloud Asset Management**: Full migration of media assets to Google Cloud Storage (GCS).
+- **Communication Engine**: Automated Email (SendGrid) and SMS (Twilio) alerts.
+- **Advanced Discovery**: Map-based search (Leaflet/Mapbox) and calendar-sync for viewings.
+
+---
+
+## 🎨 2. StitchMCP Operational Protocol
+
+To maintain visual fidelity and adhere to the **Sovereign Ledger** manifest, developers MUST follow this protocol before any UI implementation.
+
+### Source of Truth
+- **Stitch Project**: `projects/11449056074467872328`
+- **Asset Hub**: All high-fidelity screens and component blueprints are housed here.
+
+### The Workflow
+1. **Discovery**: Use `StitchMCP_list_screens` and `StitchMCP_get_screen` to fetch the visual ground truth.
+2. **Architecture**: If a screen does not exist, use `StitchMCP_generate_screen_from_text` to architect the high-fidelity view first.
+3. **Implementation**: Replicate the Stitch-generated HTML and Tailwind structure 1:1. **Do not invent ad-hoc styles.**
+4. **Validation**: Compare implementation against the Stitch blueprint screenshot.
+
+---
+
+## ☁️ 3. Cloud Infrastructure & Hosting
 RentWise is designed for cloud-native scalability using Google Cloud Platform (GCP).
 
 ### 🚀 Compute & Hosting
@@ -85,6 +117,11 @@ Self-contained modules representing a single business domain (e.g., `messaging`,
 - `context/`: Feature-wide shared state. For example, `ChatContext` handles the entire messaging ecosystem (inbox, unread counts, and active chat).
 - `utils/`: Logic or formatters specific to this domain.
 
+### 🏢 Core Modules Detail (Lease Lifecycle)
+1. **Rental Request:** The "Application" phase.
+2. **Payment:** The "Trigger" phase. Successful payment for a request automatically spawns a Lease.
+3. **Lease:** The "Persistence" phase. Tracks `next_payment_date` and formal residency status.
+
 ### 🌐 Shared (`src/shared/`)
 Global assets used by two or more features.
 - `components/`: Generic UI units (Cards, Inputs, Modals, Navbar).
@@ -104,10 +141,14 @@ Services and Hooks must primarily use **Named Exports**. This provides strict na
 - **Hook Pattern:** `export const useMyHook = () => { ... };`
 *Note: Default exports are allowed only as fallback secondary exports.*
 
-### 2. Barrel Policy (`index.js`)
-Every feature and shared directory MUST contain an `index.js` file that acts as the "Public API" for that module.
-- **Rule:** Hooks, Services, and Main Components must be re-exported through the feature's `index.js`.
 - **Usage:** Developers/Agents should import from the feature root (e.g., `import { requestsService } from '@/features/requests'`) rather than deep-nesting.
+
+## 🎨 Design System: Sovereign Ledger
+RentWise adheres to the **Sovereign Ledger** design manifest (see `design_system.md`).
+- **Integrity Rule:** No UI element should be built or modified without first consulting the `design_system.md`. This is the "Visual Ground Truth" of the project.
+- **Core Aesthetic:** Obsidian Slate (#0b1326), frosted glass (40px blur), and 2.5rem corner radii.
+- **Editorial Typography:** Manrope font with high-contrast, black-weight headings.
+- **Atmospheric Depth:** Usage of ambient background orbs and tonal differentiation instead of rigid 1px borders.
 
 ## 🔒 Security & Identity
 - **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both **Tenant** and **Owner** capabilities.

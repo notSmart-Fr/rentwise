@@ -7,6 +7,7 @@ from app.modules.payments.repository import PaymentRepository
 from app.modules.properties.repository import PropertyRepository
 from app.modules.requests.repository import RequestRepository
 from app.modules.notifications.service import NotificationService
+from app.modules.leases.service import LeaseService
 from app.utils.pdf import render_to_pdf
 
 class PaymentService(BaseService[Payment]):
@@ -15,6 +16,7 @@ class PaymentService(BaseService[Payment]):
         self.property_repo = PropertyRepository()
         self.request_repo = RequestRepository()
         self.notif_service = NotificationService()
+        self.lease_service = LeaseService()
 
     async def create_manual_payment(
         self,
@@ -60,6 +62,15 @@ class PaymentService(BaseService[Payment]):
                 notif_type="PAYMENT",
                 context_type="RENTAL_REQUEST",
                 context_id=request_id
+            )
+            
+            # PHASE 2: Create Lease automatically
+            self.lease_service.create_lease_from_request(
+                db=db,
+                request_id=request_id,
+                tenant_id=tenant_id,
+                property_id=req.property_id,
+                monthly_rent=amount
             )
             
         return self.repo.create(db, payment)
@@ -145,6 +156,15 @@ class PaymentService(BaseService[Payment]):
                 notif_type="PAYMENT",
                 context_type="RENTAL_REQUEST",
                 context_id=payment.request_id
+            )
+            
+            # PHASE 2: Create Lease automatically
+            self.lease_service.create_lease_from_request(
+                db=db,
+                request_id=payment.request_id,
+                tenant_id=payment.tenant_id,
+                property_id=req.property_id,
+                monthly_rent=payment.amount
             )
         
         return self.repo.create(db, payment)

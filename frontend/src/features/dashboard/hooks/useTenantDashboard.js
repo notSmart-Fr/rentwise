@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useTenantRequests } from '../../requests/hooks/useTenantRequests';
 import { useTickets } from '../../tickets/hooks/useTickets';
+import { useLeases } from '../../leases/hooks/useLeases';
 import { useConversations } from '../../messaging/hooks/useConversations';
 import { useChat } from '../../messaging';
 
@@ -31,8 +32,14 @@ export const useTenantDashboard = (initialTab = 'overview') => {
     markAsRead,
     refresh: refreshConvs
   } = useConversations();
+  
+  const {
+    leases,
+    loading: leasesLoading,
+    refresh: refreshLeases
+  } = useLeases();
 
-  const isLoading = reqsLoading || ticketsLoading || convsLoading;
+  const isLoading = reqsLoading || ticketsLoading || convsLoading || leasesLoading;
 
   // Derivations
   const activeLeases = useMemo(() => {
@@ -66,6 +73,7 @@ export const useTenantDashboard = (initialTab = 'overview') => {
     refreshReqs();
     refreshTickets();
     refreshConvs();
+    refreshLeases();
   };
 
   return {
@@ -83,7 +91,9 @@ export const useTenantDashboard = (initialTab = 'overview') => {
     refreshAll,
     refreshReqs,
     refreshTickets,
-    refreshConvs
+    refreshConvs,
+    refreshLeases,
+    leases
   };
 };
 

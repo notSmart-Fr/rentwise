@@ -3,7 +3,7 @@ import { useTenantRequests } from '../hooks/useTenantRequests';
 import RequestRow from './RequestRow';
 import { PaymentReceipt, CheckoutOverlay } from '../../payments';
 
-const MyRequests = () => {
+const MyRequests = ({ hideHeader = false }) => {
   const {
     requests,
     loading,
@@ -36,27 +36,29 @@ const MyRequests = () => {
 
   return (
     <div className="animate-fade-in space-y-10">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div>
-          <h2 className="text-2xl font-black text-white">Lease Management</h2>
-          <p className="text-sm text-text-secondary">Track your active applications and residential agreements.</p>
-        </div>
+      {!hideHeader && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <h2 className="text-2xl font-black text-white">Lease Management</h2>
+            <p className="text-sm text-text-secondary">Track your active applications and residential agreements.</p>
+          </div>
 
-        <div className="flex gap-2 p-1.5 bg-white/5 border border-white/5 rounded-xl w-fit">
-          {['active', 'pending', 'all'].map((tab) => (
-            <button
-              key={tab}
-              className={`px-5 py-2 rounded-lg text-xs font-bold transition-all duration-300 capitalize whitespace-nowrap ${activeTab === tab
-                ? 'bg-accent text-white shadow-lg shadow-accent/20'
-                : 'text-text-secondary hover:text-white hover:bg-white/5'
-                }`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab === 'all' ? 'All History' : tab}
-            </button>
-          ))}
+          <div className="flex gap-2 p-1.5 bg-white/5 border border-white/5 rounded-xl w-fit">
+            {['active', 'pending', 'all'].map((tab) => (
+              <button
+                key={tab}
+                className={`px-5 py-2 rounded-lg text-xs font-bold transition-all duration-300 capitalize whitespace-nowrap ${activeTab === tab
+                  ? 'bg-accent text-white shadow-lg shadow-accent/20'
+                  : 'text-text-secondary hover:text-white hover:bg-white/5'
+                  }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab === 'all' ? 'All History' : tab}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {error && (
         <div className="bg-danger/10 border border-danger/20 text-danger p-4 rounded-xl text-sm">
