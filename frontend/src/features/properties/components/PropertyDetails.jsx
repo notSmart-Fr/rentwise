@@ -87,7 +87,7 @@ const PropertyDetails = () => {
             <span className="opacity-20 shrink-0">/</span>
             <span className="text-white shrink-0">Active Listing</span>
           </nav>
-          
+
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
             <div className="max-w-4xl">
               <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black tracking-tightest leading-[0.9] text-white mb-6">
@@ -98,7 +98,7 @@ const PropertyDetails = () => {
                 {property.area}, {property.city}
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-8 md:gap-12 lg:border-l lg:border-outline-variant/10 lg:pl-10 h-fit">
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Quarters</p>
@@ -114,9 +114,9 @@ const PropertyDetails = () => {
 
         {/* Asymmetrical Gallery */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-20">
-          <div className="md:col-span-8 aspect-video md:aspect-[16/10] rounded-3xl md:rounded-[3rem] overflow-hidden bg-surface-container-low group relative shadow-2xl">
-            <img 
-              src={images[activeImage].url} 
+          <div className="md:col-span-8 aspect-video md:aspect-16/10 rounded-3xl md:rounded-[3rem] overflow-hidden bg-surface-container-low group relative shadow-2xl">
+            <img
+              src={images[activeImage].url}
               alt={property.title}
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
@@ -124,8 +124,8 @@ const PropertyDetails = () => {
           </div>
           <div className="md:col-span-4 grid grid-cols-2 md:flex md:flex-col gap-4 md:gap-6">
             {images.slice(1, 3).map((img, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="aspect-square md:flex-1 rounded-3xl md:rounded-[3rem] overflow-hidden bg-surface-container-low group relative shadow-xl cursor-pointer"
                 onClick={() => setActiveImage(i + 1)}
               >
