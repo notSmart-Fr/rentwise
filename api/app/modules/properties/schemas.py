@@ -13,6 +13,7 @@ class PropertyCreateRequest(BaseModel):
     rent_amount: int = Field(ge=0)
     bedrooms: int | None = Field(default=None, ge=0)
     bathrooms: int | None = Field(default=None, ge=0)
+    property_type: str | None = Field(default=None, max_length=50)
     image_urls: list[str] = Field(default_factory=list)
 
 class PropertyUpdateRequest(BaseModel):
@@ -24,6 +25,7 @@ class PropertyUpdateRequest(BaseModel):
     rent_amount: int | None = Field(default=None, ge=0)
     bedrooms: int | None = Field(default=None, ge=0)
     bathrooms: int | None = Field(default=None, ge=0)
+    property_type: str | None = Field(default=None, max_length=50)
     image_urls: list[str] | None = None
 
 class AvailabilityRequest(BaseModel):
@@ -41,5 +43,6 @@ class PropertyResponse(BaseModel):
     rent_amount: int
     bedrooms: int | None
     bathrooms: int | None
+    property_type: str | None
     is_available: bool
     images: list[PropertyImageResponse] = Field(default_factory=list)

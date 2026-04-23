@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { leasesApi } from '../../../shared/services/api';
 
-export const useLeases = () => {
+export const useLeases = (isOwner = false) => {
   const [leases, setLeases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,7 +9,9 @@ export const useLeases = () => {
   const fetchLeases = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await leasesApi.getMy();
+      const data = isOwner 
+        ? await leasesApi.getOwnerList()
+        : await leasesApi.getMy();
       setLeases(data);
       setError(null);
     } catch (err) {

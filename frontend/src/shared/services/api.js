@@ -130,5 +130,6 @@ export const paymentsApi = {
 
 export const leasesApi = {
   getMy: () => apiRequest('/leases/my', { method: 'GET' }),
+  getOwnerList: () => apiRequest('/leases/owner/list', { method: 'GET' }),
   getById: (id) => apiRequest(`/leases/${id}`, { method: 'GET' }),
 };

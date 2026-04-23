@@ -42,6 +42,9 @@ class LeaseService(BaseService[Lease]):
         
         return self.repo.create(db, lease)
 
+    def get_by_owner(self, db: Session, owner_id: uuid.UUID) -> list[Lease]:
+        return self.repo.list_for_owner(db, owner_id)
+
     def get_by_tenant(self, db: Session, tenant_id: uuid.UUID) -> list[Lease]:
         return self.repo.list_for_tenant(db, tenant_id)
 

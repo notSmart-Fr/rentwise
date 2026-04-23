@@ -60,19 +60,36 @@ const Home = () => {
                 />
               </div>
               <div className="px-8 py-4 flex flex-col justify-center">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Property Type</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Architectural Type</span>
                 <select
                   className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
-                  onChange={(e) => handleFilterChange('type', e.target.value)}
+                  value={searchParams.property_type || ''}
+                  onChange={(e) => handleFilterChange('property_type', e.target.value)}
                 >
-                  <option className="bg-[#0b1326]">Penthouse</option>
-                  <option className="bg-[#0b1326]">Modern Villa</option>
-                  <option className="bg-[#0b1326]">Townhouse</option>
+                  <option value="" className="bg-[#0b1326]">Any Type</option>
+                  <option value="Apartment" className="bg-[#0b1326]">Apartment</option>
+                  <option value="Penthouse" className="bg-[#0b1326]">Penthouse</option>
+                  <option value="Villa" className="bg-[#0b1326]">Villa</option>
+                  <option value="Townhouse" className="bg-[#0b1326]">Townhouse</option>
+                  <option value="Studio" className="bg-[#0b1326]">Studio</option>
                 </select>
               </div>
               <div className="px-8 py-4 flex flex-col justify-center">
                 <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Price Range</span>
-                <div className="text-white text-lg font-bold">৳50k - ৳250k</div>
+                <select
+                  className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
+                  onChange={(e) => {
+                    const [min, max] = e.target.value.split('-').map(v => v === 'null' ? null : parseInt(v));
+                    handleFilterChange('min_rent', min);
+                    handleFilterChange('max_rent', max);
+                  }}
+                >
+                  <option value="null-null" className="bg-[#0b1326]">Any Price</option>
+                  <option value="0-50000" className="bg-[#0b1326]">Under ৳50k</option>
+                  <option value="50000-100000" className="bg-[#0b1326]">৳50k - ৳100k</option>
+                  <option value="100000-250000" className="bg-[#0b1326]">৳100k - ৳250k</option>
+                  <option value="250000-null" className="bg-[#0b1326]">৳250k+</option>
+                </select>
               </div>
             </div>
             <button
@@ -83,18 +100,7 @@ const Home = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-8 pt-8">
-            <div className="flex -space-x-4">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="w-12 h-12 rounded-full border-4 border-[#0b1326] bg-slate-800 overflow-hidden">
-                  <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
-                </div>
-              ))}
-            </div>
-            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-              <span className="text-white">500+</span> Residents found their home this month
-            </p>
-          </div>
+          {/* Placeholder for future verified activity stats */}
         </div>
       </section>
 

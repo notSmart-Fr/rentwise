@@ -21,6 +21,15 @@
   --color-danger: #EF4444;
   --color-success: #10B981;
 
+  /* Sovereign Palette */
+  --color-primary-sovereign: #c0c1ff;
+  --color-secondary-sovereign: #d0bcff;
+  --color-tertiary-sovereign: #ffb783;
+  --color-surface-sovereign: #131b2e;
+  --color-on-surface-sovereign: #dae2fd;
+  --color-surface-container-high: #222a3d;
+  --color-surface-container-highest: #2d3449;
+
   --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.3);
 
   --radius-lg: 1.25rem;
@@ -55,11 +64,11 @@
 
 @layer utilities {
   .glass-panel {
-    background: rgba(20, 20, 22, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(34, 42, 61, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
 
   /* Legacy App.css styles merged for simplification */

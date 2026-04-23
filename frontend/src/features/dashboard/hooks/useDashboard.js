@@ -5,6 +5,7 @@ import { useOwnerRequests } from '../../requests';
 import { useOwnerPayments } from '../../payments';
 import { useConversations } from '../../messaging';
 import { useChat } from '../../messaging';
+import { useLeases } from '../../leases';
 import { paymentsService } from '../../payments';
 
 export const useDashboard = () => {
@@ -37,6 +38,12 @@ export const useDashboard = () => {
     markAsRead,
     refresh: refreshConvs
   } = useConversations();
+  
+  const {
+    leases,
+    loading: leasesLoading,
+    refresh: refreshLeases
+  } = useLeases(true);
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,14 +91,14 @@ export const useDashboard = () => {
   }, [payments]);
 
   const activeLeasesCount = useMemo(() => {
-    return requests.filter(r => r.status === 'APPROVED').length;
-  }, [requests]);
+    return leases.filter(l => l.status === 'ACTIVE').length;
+  }, [leases]);
 
   const pendingRequestsCount = useMemo(() => {
     return requests.filter(r => r.status === 'PENDING').length;
   }, [requests]);
 
-  const isLoading = propsLoading || reqsLoading || paymentsLoading || convsLoading || analyticsLoading;
+  const isLoading = propsLoading || reqsLoading || paymentsLoading || convsLoading || analyticsLoading || leasesLoading;
 
   // Handlers
   const handleOpenConversation = async (conv) => {
@@ -138,6 +145,7 @@ export const useDashboard = () => {
     properties,
     requests,
     payments,
+    leases,
     conversations,
     totalUnread,
     totalRevenue,
@@ -164,6 +172,7 @@ export const useDashboard = () => {
     refreshPayments,
     refreshProps,
     refreshReqs,
-    refreshConvs
+    refreshConvs,
+    refreshLeases
   };
 };

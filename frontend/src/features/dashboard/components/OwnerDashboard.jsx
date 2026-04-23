@@ -67,7 +67,7 @@ const OwnerDashboard = () => {
           <p className="text-slate-400 text-xl font-medium max-w-2xl">Manage your architectural portfolio. Your assets are performing at <span className="text-emerald-400 font-black">92% efficiency</span> today.</p>
         </div>
 
-        <div className="flex gap-2 p-2 bg-[#131b2e] rounded-4xl w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
+        <div className="flex gap-2 p-2 bg-surface-sovereign rounded-4xl w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
           {[
             { id: 'overview', label: 'Overview' },
             { id: 'properties', label: 'Portfolio' },
@@ -103,48 +103,48 @@ const OwnerDashboard = () => {
         {activeTab === 'overview' && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-16">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              <StatsCard 
-                title="Portfolio Assets" 
-                value={properties.length} 
-                icon="🏠" 
-                color="blue" 
-                trend="+1 this month" 
+              <StatsCard
+                title="Portfolio Assets"
+                value={properties.length}
+                icon="🏠"
+                color="blue"
+                trend="+1 this month"
                 onClick={() => setActiveTab('properties')}
               />
-              <StatsCard 
-                title="Active Contracts" 
-                value={activeLeasesCount} 
-                icon="📜" 
-                color="green" 
+              <StatsCard
+                title="Active Contracts"
+                value={activeLeasesCount}
+                icon="📜"
+                color="green"
                 onClick={() => setActiveTab('requests')}
               />
-              <StatsCard 
-                title="Gross Revenue" 
-                value={`৳ ${totalRevenue.toLocaleString()}`} 
-                icon="💰" 
-                color="purple" 
-                trend="Stabilized" 
+              <StatsCard
+                title="Gross Revenue"
+                value={`৳ ${totalRevenue.toLocaleString()}`}
+                icon="💰"
+                color="purple"
+                trend="Stabilized"
                 onClick={() => setActiveTab('revenue')}
               />
-              <StatsCard 
-                title="Pending Verification" 
-                value={pendingRequestsCount} 
-                icon="⏳" 
-                color="orange" 
+              <StatsCard
+                title="Pending Verification"
+                value={pendingRequestsCount}
+                icon="⏳"
+                color="orange"
                 onClick={() => setActiveTab('requests')}
               />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-              <div className="lg:col-span-2 bg-[#131b2e] rounded-[2.5rem] p-4 border border-white/5">
+              <div className="lg:col-span-2 bg-surface-sovereign rounded-[2.5rem] p-4 border border-white/5">
                 <RevenueChart data={analytics.revenue} />
               </div>
-              <div className="lg:col-span-1 bg-[#131b2e] rounded-[2.5rem] p-4 border border-white/5">
+              <div className="lg:col-span-1 bg-surface-sovereign rounded-[2.5rem] p-4 border border-white/5">
                 <OccupancyChart data={analytics.occupancy} />
               </div>
             </div>
 
-            <div className="bg-[#131b2e] p-12 flex flex-col sm:flex-row items-center justify-between gap-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden group border border-white/5">
+            <div className="bg-surface-sovereign p-12 flex flex-col sm:flex-row items-center justify-between gap-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden group border border-white/5">
               <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
               <div className="flex items-center gap-8 relative z-10">
                 <div className="w-20 h-20 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-4xl shadow-inner grayscale group-hover:grayscale-0 transition-all duration-700">✓</div>
@@ -199,7 +199,7 @@ const OwnerDashboard = () => {
                   <RequestRow key={req.id} request={req} isOwner={true} onManagePayment={handleManagePayment} />
                 ))
               ) : (
-                <div className="bg-[#131b2e] py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
+                <div className="bg-surface-sovereign py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
                   <div className="text-7xl mb-10 grayscale opacity-20">📜</div>
                   <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">Pipeline Clear</h3>
                   <p className="text-slate-500 font-medium max-w-sm mx-auto">No pending property inquiries or verification requests at this time.</p>
@@ -212,7 +212,7 @@ const OwnerDashboard = () => {
         {/* Revenue Tab */}
         {activeTab === 'revenue' && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <OwnerPayments />
+            <OwnerPayments leases={leases} initialPayments={payments} />
           </div>
         )}
 
@@ -235,7 +235,7 @@ const OwnerDashboard = () => {
                     <InboxRow key={conv.id} conversation={conv} onClick={handleOpenConversation} />
                   ))
               ) : (
-                <div className="bg-[#131b2e] py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
+                <div className="bg-surface-sovereign py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
                   <div className="text-7xl mb-10 grayscale opacity-20">💬</div>
                   <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">No Active Sessions</h3>
                   <p className="text-slate-500 font-medium max-w-sm mx-auto">Communication logs will manifest here once tenants initiate contact regarding your assets.</p>

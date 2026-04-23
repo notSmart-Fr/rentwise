@@ -29,7 +29,8 @@ from app.modules.notifications.model import *
 config = context.config
 
 # Set the sqlalchemy.url from our application settings
-config.set_main_option("sqlalchemy.url", settings.database_url)
+# Note: % must be escaped as %% for Alembic's ConfigParser to avoid interpolation errors
+config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -24,6 +24,7 @@ class Property(Base):
     city: Mapped[str] = mapped_column(String(80), nullable=False)
     area: Mapped[str] = mapped_column(String(80), nullable=False)
     address_text: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    property_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     rent_amount: Mapped[int] = mapped_column(Integer, nullable=False)
     bedrooms: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -38,6 +39,7 @@ class Property(Base):
     images: Mapped[list["PropertyImage"]] = relationship(
         "PropertyImage", back_populates="property", cascade="all, delete-orphan", lazy="selectin"
     )
+    leases: Mapped[list["Lease"]] = relationship("Lease", back_populates="property")
 
 
 class PropertyImage(Base):

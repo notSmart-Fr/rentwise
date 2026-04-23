@@ -1,10 +1,10 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, DateTime, Integer
+from sqlalchemy import String, DateTime, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import String, DateTime, Integer, ForeignKey
 from app.persistence.base import Base
+
 class Lease(Base):
     __tablename__ = "leases"
 
@@ -26,4 +26,5 @@ class Lease(Base):
 
     # Relationships
     tenant: Mapped["User"] = relationship("User")
-    property: Mapped["Property"] = relationship("Property")
+    property: Mapped["Property"] = relationship("Property", back_populates="leases")
+    payments: Mapped[list["Payment"]] = relationship("Payment", back_populates="lease", order_by="Payment.created_at.desc()")

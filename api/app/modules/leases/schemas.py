@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
+from app.modules.payments.schemas import PaymentResponse
 
 class LeaseBase(BaseModel):
     tenant_id: uuid.UUID
@@ -30,5 +31,8 @@ class LeaseResponse(LeaseBase):
     property_title: str | None = None
     property_image: str | None = None
     tenant_name: str | None = None
+    
+    # Financial Ledger
+    payments: list[PaymentResponse] = []
     
     model_config = ConfigDict(from_attributes=True)

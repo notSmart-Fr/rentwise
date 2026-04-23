@@ -11,6 +11,17 @@ from app.modules.leases.schemas import LeaseResponse
 router = APIRouter(prefix="/leases", tags=["leases"])
 service = LeaseService()
 
+@router.get("/owner/list", response_model=list[LeaseResponse])
+def list_owner_leases(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Returns all leases for properties owned by the current user.
+    """
+    leases = service.get_by_owner(db, user.id)
+    return service.to_response_list(leases)
+
 @router.get("/my", response_model=list[LeaseResponse])
 def list_my_leases(
     db: Session = Depends(get_db),

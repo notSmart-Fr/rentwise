@@ -20,6 +20,7 @@ class PropertyService(BaseService[Property]):
             rent_amount=data.rent_amount,
             bedrooms=data.bedrooms,
             bathrooms=data.bathrooms,
+            property_type=data.property_type,
             is_available=True,
         )
         

@@ -65,13 +65,14 @@ class PaymentService(BaseService[Payment]):
             )
             
             # PHASE 2: Create Lease automatically
-            self.lease_service.create_lease_from_request(
+            lease = self.lease_service.create_lease_from_request(
                 db=db,
                 request_id=request_id,
                 tenant_id=tenant_id,
                 property_id=req.property_id,
                 monthly_rent=amount
             )
+            payment.lease_id = lease.id
             
         return self.repo.create(db, payment)
 
@@ -159,13 +160,14 @@ class PaymentService(BaseService[Payment]):
             )
             
             # PHASE 2: Create Lease automatically
-            self.lease_service.create_lease_from_request(
+            lease = self.lease_service.create_lease_from_request(
                 db=db,
                 request_id=payment.request_id,
                 tenant_id=payment.tenant_id,
                 property_id=req.property_id,
                 monthly_rent=payment.amount
             )
+            payment.lease_id = lease.id
         
         return self.repo.create(db, payment)
 

@@ -9,6 +9,7 @@ export const usePropertyForm = (initialData = null, onSuccess) => {
     rent_amount: initialData?.rent_amount || '',
     bedrooms: initialData?.bedrooms || '',
     bathrooms: initialData?.bathrooms || '',
+    property_type: initialData?.property_type || 'Apartment',
     address_text: initialData?.address_text || '',
     description: initialData?.description || '',
     image_urls: initialData?.images?.map(img => img.url).join('\n') || ''

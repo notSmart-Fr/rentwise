@@ -12,6 +12,11 @@ class LeaseRepository(BaseRepository[Lease]):
         stmt = select(Lease).where(Lease.tenant_id == tenant_id)
         return list(db.execute(stmt).scalars().all())
 
+    def list_for_owner(self, db: Session, owner_id: uuid.UUID) -> list[Lease]:
+        from app.modules.properties.model import Property
+        stmt = select(Lease).join(Property).where(Property.owner_id == owner_id)
+        return list(db.execute(stmt).scalars().all())
+
     def get_active_for_property(self, db: Session, property_id: uuid.UUID) -> Lease | None:
         stmt = select(Lease).where(
             Lease.property_id == property_id,

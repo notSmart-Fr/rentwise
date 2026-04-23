@@ -20,9 +20,13 @@ class PropertyRepository(BaseRepository[Property]):
         min_rent: int | None = None,
         max_rent: int | None = None,
         beds: int | None = None,
+        property_type: str | None = None,
         search: str | None = None,
     ) -> list[Property]:
         stmt = select(Property).where(Property.is_available == True)  # noqa: E712
+
+        if property_type:
+            stmt = stmt.where(Property.property_type == property_type)
 
         if search:
             search_filter = f"%{search}%"

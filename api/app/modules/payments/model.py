@@ -34,8 +34,11 @@ class Payment(Base):
     reference:          Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     status: Mapped[str] = mapped_column(String(15), default="INITIATED", nullable=False)  # INITIATED/SUCCESS/FAILED/CANCELLED
+    
+    lease_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("leases.id"), nullable=True)
 
-    # Relationship
+    # Relationships
     request: Mapped["RentalRequest"] = relationship("RentalRequest", back_populates="payment")
+    lease: Mapped["Lease"] = relationship("Lease", back_populates="payments")
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
