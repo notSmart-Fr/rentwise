@@ -30,30 +30,40 @@ class ValidationException(AppException):
 async def app_exception_handler(request: Request, exc: AppException):
     """Handles all custom AppException subclasses."""
     logger.warning(f"App Error: {exc.message} at {request.url} [Status {exc.status_code}]")
-    return JSONResponse(
+    response = JSONResponse(
         status_code=exc.status_code,
         content={
             "detail": exc.message,
             "error_type": exc.__class__.__name__
         },
     )
+    # Force CORS headers on error responses
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin") or "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 async def value_error_handler(request: Request, exc: ValueError):
     """Catches standard Python ValueErrors and returns a 400."""
     logger.warning(f"Value Error: {str(exc)} at {request.url}")
-    return JSONResponse(
+    response = JSONResponse(
         status_code=400,
         content={"detail": str(exc), "error_type": "ValueError"},
     )
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin") or "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 async def generic_exception_handler(request: Request, exc: Exception):
     """Catch-all for unhandled exceptions (500)."""
     logger.error(f"Internal Server Error: {str(exc)} at {request.url}", exc_info=True)
-    return JSONResponse(
+    response = JSONResponse(
         status_code=500,
         content={
-            "detail": "An unexpected internal error occurred.",
+            "detail": f"Server Error: {str(exc)}",
             "error_type": "InternalServerError"
         },
     )
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin") or "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
