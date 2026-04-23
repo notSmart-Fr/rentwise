@@ -5,7 +5,7 @@ import {
   Cell,
   Tooltip,
 } from 'recharts';
-import { useChartDimensions } from '../../../../../shared/hooks/useChartDimensions';
+import { useChartDimensions } from '../../../../shared/hooks/useChartDimensions';
 
 const OccupancyChart = ({ data }) => {
   const [containerRef, dimensions] = useChartDimensions();

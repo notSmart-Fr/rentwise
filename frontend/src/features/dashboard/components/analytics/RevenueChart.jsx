@@ -8,7 +8,7 @@ import {
   Tooltip,
   Cell,
 } from 'recharts';
-import { useChartDimensions } from '../../../../../shared/hooks/useChartDimensions';
+import { useChartDimensions } from '../../../../shared/hooks/useChartDimensions';
 
 const RevenueChart = ({ data }) => {
   const [containerRef, dimensions] = useChartDimensions();
