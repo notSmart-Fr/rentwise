@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -11,6 +11,12 @@ import {
 } from 'recharts';
 
 const RevenueChart = ({ data }) => {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   if (!data || data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl">
@@ -35,10 +41,10 @@ const RevenueChart = ({ data }) => {
            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Gross Income</span>
         </div>
       </div>
-      {console.log("📊 RevenueChart: Rendering with aspect ratio fix")}
-      <div className="flex-1 min-h-0">
-        <ResponsiveContainer width="100%" height="100%" debounce={50} minWidth={0} minHeight={0}>
-          <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+      <div className="flex-1 min-h-0 w-full overflow-hidden">
+        {isMounted ? (
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
             <XAxis 
               dataKey="month" 
@@ -86,6 +92,9 @@ const RevenueChart = ({ data }) => {
             </defs>
           </BarChart>
         </ResponsiveContainer>
+        ) : (
+          <div className="h-full w-full" />
+        )}
       </div>
     </div>
   );
