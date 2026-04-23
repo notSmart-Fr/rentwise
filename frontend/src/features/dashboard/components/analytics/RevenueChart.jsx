@@ -6,11 +6,13 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
   Cell,
 } from 'recharts';
+import { useChartDimensions } from '../../../../../shared/hooks/useChartDimensions';
 
 const RevenueChart = ({ data }) => {
+  const [containerRef, dimensions] = useChartDimensions();
+
   if (!data || data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl">
@@ -35,9 +37,9 @@ const RevenueChart = ({ data }) => {
            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Gross Income</span>
         </div>
       </div>
-      <div className="relative w-full h-64 mt-auto">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+      <div className="relative w-full h-64 mt-auto" ref={containerRef}>
+        {dimensions.width > 0 && dimensions.height > 0 && (
+          <BarChart width={dimensions.width} height={dimensions.height} data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
             <XAxis 
               dataKey="month" 
@@ -84,7 +86,7 @@ const RevenueChart = ({ data }) => {
               </linearGradient>
             </defs>
           </BarChart>
-        </ResponsiveContainer>
+        )}
       </div>
     </div>
   );

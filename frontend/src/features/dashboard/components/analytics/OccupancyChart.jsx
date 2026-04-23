@@ -3,11 +3,13 @@ import {
   PieChart,
   Pie,
   Cell,
-  ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import { useChartDimensions } from '../../../../../shared/hooks/useChartDimensions';
 
 const OccupancyChart = ({ data }) => {
+  const [containerRef, dimensions] = useChartDimensions();
+
   if (!data || data.length === 0) return null;
 
   const COLORS = ['#7C3AED', '#334155']; // Primary and Slate-700
@@ -24,9 +26,9 @@ const OccupancyChart = ({ data }) => {
         <p className="text-[10px] text-slate-500 font-bold uppercase mt-1">Portfolio Status</p>
       </div>
 
-      <div className="relative w-full h-56">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+      <div className="relative w-full h-56" ref={containerRef}>
+        {dimensions.width > 0 && dimensions.height > 0 && (
+          <PieChart width={dimensions.width} height={dimensions.height}>
             <Pie
               data={data}
               cx="50%"
@@ -57,7 +59,7 @@ const OccupancyChart = ({ data }) => {
               itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}
             />
           </PieChart>
-        </ResponsiveContainer>
+        )}
         {/* Center Text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-3xl font-black text-white leading-none">{rentedPercentage}%</span>
