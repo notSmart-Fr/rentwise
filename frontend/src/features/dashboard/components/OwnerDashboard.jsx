@@ -128,10 +128,10 @@ const OwnerDashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 min-w-0">
                 <RevenueChart data={analytics.revenue} />
               </div>
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 min-w-0">
                 <OccupancyChart data={analytics.occupancy} />
               </div>
             </div>

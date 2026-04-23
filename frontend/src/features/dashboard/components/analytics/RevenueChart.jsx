@@ -22,7 +22,7 @@ const RevenueChart = ({ data }) => {
   }
 
   return (
-    <div className="w-full h-80 p-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl shadow-2xl overflow-hidden relative group">
+    <div className="w-full h-80 p-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl shadow-2xl overflow-hidden relative group flex flex-col">
       <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary to-accent opacity-50"></div>
       
       <div className="flex items-center justify-between mb-8">
@@ -36,55 +36,57 @@ const RevenueChart = ({ data }) => {
         </div>
       </div>
       {console.log("📊 RevenueChart: Rendering with aspect ratio fix")}
-      <ResponsiveContainer width="100%" minWidth={0} minHeight={0} debounce={50} aspect={2}>
-        <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-          <XAxis 
-            dataKey="month" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }}
-            dy={10}
-          />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }}
-          />
-          <Tooltip 
-            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-            contentStyle={{ 
-              backgroundColor: 'rgba(15, 23, 42, 0.9)', 
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '16px',
-              backdropFilter: 'blur(16px)',
-              padding: '12px'
-            }}
-            itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}
-            labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'black' }}
-            formatter={(value) => [`৳${value.toLocaleString()}`, 'Revenue']}
-          />
-          <Bar 
-            dataKey="amount" 
-            radius={[6, 6, 0, 0]}
-            animationDuration={1500}
-          >
-            {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={index === data.length - 1 ? 'url(#barGradPrimary)' : 'rgba(255,255,255,0.1)'} 
-                className="transition-all duration-300 hover:opacity-80"
-              />
-            ))}
-          </Bar>
-          <defs>
-            <linearGradient id="barGradPrimary" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#7C3AED" />
-              <stop offset="100%" stopColor="#38BDF8" />
-            </linearGradient>
-          </defs>
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="flex-1 min-h-0">
+        <ResponsiveContainer width="100%" height="100%" debounce={50} minWidth={0} minHeight={0}>
+          <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <XAxis 
+              dataKey="month" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }}
+              dy={10}
+            />
+            <YAxis 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }}
+            />
+            <Tooltip 
+              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              contentStyle={{ 
+                backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '16px',
+                backdropFilter: 'blur(16px)',
+                padding: '12px'
+              }}
+              itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}
+              labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'black' }}
+              formatter={(value) => [`৳${value.toLocaleString()}`, 'Revenue']}
+            />
+            <Bar 
+              dataKey="amount" 
+              radius={[6, 6, 0, 0]}
+              animationDuration={1500}
+            >
+              {data.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={index === data.length - 1 ? 'url(#barGradPrimary)' : 'rgba(255,255,255,0.1)'} 
+                  className="transition-all duration-300 hover:opacity-80"
+                />
+              ))}
+            </Bar>
+            <defs>
+              <linearGradient id="barGradPrimary" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#7C3AED" />
+                <stop offset="100%" stopColor="#38BDF8" />
+              </linearGradient>
+            </defs>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };
