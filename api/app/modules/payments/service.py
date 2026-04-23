@@ -169,29 +169,43 @@ class PaymentService(BaseService[Payment]):
         """
         Gathers both revenue and occupancy analytics for an owner.
         """
-        # 1. Revenue Analytics
-        revenue_data = self.repo.get_revenue_by_month(db, owner_id)
-        
-        # 2. Occupancy Analytics
-        my_properties = self.property_repo.list_by_owner(db, owner_id)
-        total = len(my_properties)
-        rented = len([p for p in my_properties if not p.is_available])
-        available = total - rented
-        
-        occupancy_data = [
-            {"name": "Rented", "value": rented},
-            {"name": "Available", "value": available}
-        ] if total > 0 else []
+        try:
+            # 1. Revenue Analytics
+            revenue_data = self.repo.get_revenue_by_month(db, owner_id)
+            
+            # 2. Occupancy Analytics
+            my_properties = self.property_repo.list_by_owner(db, owner_id)
+            total = len(my_properties)
+            rented = len([p for p in my_properties if not p.is_available])
+            available = total - rented
+            
+            occupancy_data = [
+                {"name": "Rented", "value": rented},
+                {"name": "Available", "value": available}
+            ] if total > 0 else [
+                {"name": "Rented", "value": 0},
+                {"name": "Available", "value": 0}
+            ]
 
-        return {
-            "revenue": revenue_data,
-            "occupancy": occupancy_data,
-            "summary": {
-                "total_properties": total,
-                "active_leases": rented,
-                "total_revenue": sum(d["amount"] for d in revenue_data)
+            return {
+                "revenue": revenue_data,
+                "occupancy": occupancy_data,
+                "summary": {
+                    "total_properties": int(total),
+                    "active_leases": int(rented),
+                    "total_revenue": int(sum(d["amount"] for d in revenue_data))
+                }
             }
-        }
+        except Exception as e:
+            # Log the full error but return a helpful message
+            import logging
+            logging.getLogger("app").error(f"Analytics Error: {str(e)}", exc_info=True)
+            return {
+                "revenue": [],
+                "occupancy": [{"name": "Error", "value": 1}],
+                "summary": {"error": str(e)},
+                "debug_info": "Check server logs for full traceback"
+            }
 
     def generate_receipt_pdf(self, db: Session, payment_id: uuid.UUID):
         """

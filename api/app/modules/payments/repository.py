@@ -24,15 +24,27 @@ class PaymentRepository(BaseRepository[Payment]):
         """
         Aggregates revenue by month for the last 6 months.
         """
+        from sqlalchemy import extract
         stmt = (
             select(
-                func.date_trunc('month', Payment.created_at).label('month'),
+                extract('month', Payment.created_at).label('month_num'),
+                extract('year', Payment.created_at).label('year_num'),
                 func.coalesce(func.sum(Payment.amount), 0).label('total')
             )
             .where(Payment.owner_id == owner_id, Payment.status == 'SUCCESS')
-            .group_by(func.date_trunc('month', Payment.created_at))
-            .order_by(func.date_trunc('month', Payment.created_at))
+            .group_by('year_num', 'month_num')
+            .order_by('year_num', 'month_num')
         )
         results = db.execute(stmt).all()
-        return [{"month": r.month.strftime('%b %Y') if r.month else "Unknown", "amount": int(r.total)} for r in results]
+        
+        # Format for frontend: "Jan 2024"
+        import calendar
+        formatted = []
+        for r in results:
+            m_name = calendar.month_name[int(r.month_num)][:3]
+            formatted.append({
+                "month": f"{m_name} {int(r.year_num)}",
+                "amount": int(r.total)
+            })
+        return formatted
 
