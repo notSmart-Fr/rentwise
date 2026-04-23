@@ -6,47 +6,49 @@ The Sovereign Ledger is a premium, fintech-inspired design system characterized 
 
 - **Background (Obsidian Slate):** `#0b1326`
   - The "Infinite" base. Use this for the main background of every page.
-- **Surface (Steel Container):** `#131b2e`
-  - Used for cards, dashboard panels, and dropdowns. 
-- **Surface Low (Deep Container):** `#0e1629`
-  - Used for background elements that need to feel "recessed" or "inset."
-- **Primary Accent:** `bg-linear-to-r from-[#7C3AED] to-[#38BDF8]` (Indigo to Sky Blue)
-  - Used for "Success" actions, brand highlights, and active states.
-- **Secondary Accent:** `bg-linear-to-br from-[#A855F7] to-[#EC4899]` (Violet to Pink)
-  - Used for secondary emphasis or "Creative" sections.
+- **Surface (Container Low):** `#131b2e`
+  - Used for large sectional panels and background wrappers.
+- **Surface (Container High):** `#222a3d`
+  - **The Standard for Cards.** Used for primary interaction modules and property cards.
+- **Surface (Container Highest):** `#2d3449`
+  - Used for active states, popovers, and elevated focus zones.
+- **Primary Accent:** `bg-linear-to-r from-[#c0c1ff] to-[#8083ff]` (Sovereign Indigo to Deep Violet)
+  - Used for primary CTAs, success actions, and active states.
 
 ## 2. Geometry & Spacing
 
-- **Primary Radius:** `rounded-[2.5rem]` (40px)
-  - Use this for all main dashboard cards, property cards, and auth panels.
-- **Secondary Radius:** `rounded-2xl` (16px)
-  - Use this for inputs, buttons, and smaller interface elements.
+- **Primary Radius:** `rounded-[3rem]` (48px / xl)
+  - Use this for all main dashboard cards, property cards, and primary containers.
+- **Secondary Radius:** `rounded-[2rem]` (32px)
+  - Use this for internal elements, image containers, and secondary blocks.
 - **The "No-Line" Rule:**
-  - Avoid 1px solid borders. Instead, use tonal shifts (e.g., `#131b2e` on a `#0b1326` background) and `shadow-2xl` to define edges.
-  - If a border is necessary, use `border-white/5` or a subtle gradient.
+  - **Prohibited:** 1px solid borders for sectioning content. 
+  - **Standard:** Define boundaries through background color shifts (e.g., `#222a3d` on a `#131b2e` background).
+  - **Fallback:** If a boundary is required for accessibility, use `outline-variant` (#464554) at 15% opacity.
 
 ## 3. Atmospherics (Cinematic UI)
 
 - **Ambient Orbs:** 
-  - Every page should have 1-2 large, blurred background gradients (`blur-[150px]`) at the corners to create depth.
+  - Every page must have 1-2 large, blurred background gradients (`blur-[150px]`) to create depth.
 - **Backdrop Blurs:** 
-  - Use `backdrop-blur-[40px]` for floating elements like Navbars or overlays to simulate frosted obsidian glass.
+  - Use `backdrop-blur-[20px]` for floating elements to simulate frosted obsidian glass.
 - **Shadows:**
-  - Use deep, diffused shadows: `shadow-[0_30px_60px_rgba(0,0,0,0.5)]`.
+  - Use deep, diffused ambient shadows (6% opacity tint of on-surface) instead of standard black drop shadows.
 
 ## 4. Typography
 
-- **Core Font:** `Manrope` (or `Inter` as fallback).
+- **Core Font:** `Manrope` (Geometric precision with modern warmth).
 - **Headings:** `font-black`, `tracking-tightest`. 
-  - High-impact, editorial style.
+  - High-impact, editorial magazine style.
 - **Labels:** `text-[10px]`, `uppercase`, `tracking-[0.3em]`, `font-black`.
-  - Used for metadata and section titles (e.g., "PORTFOLIO PRESENCE").
+  - Used for metadata tags and secondary section titles.
 
-## 5. Components Architecture
+## 5. CSS Architecture (Modular)
 
-- **Stats Cards:** Minimalist, no background, large numeric value, subtle icon.
-- **Property Cards:** Asymmetrical, high-quality images, floating price tags.
-- **Inputs:** Dark backgrounds (`bg-white/5`), subtle focus rings, no labels above—only inside or as "metadata labels."
+To maintain this system, all styles MUST be partitioned into the following modules:
+- `src/styles/theme.css`: Design tokens and `@theme` variables.
+- `src/styles/base.css`: Typography resets and base element defaults.
+- `src/styles/components.css`: Global UI classes (`glass-panel`, `btn`, `badge`).
 
 ---
-*Created with intent by Antigravity.*
+*Codified with intent by Antigravity.*

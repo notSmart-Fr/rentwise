@@ -9,7 +9,8 @@ This document is the **Single Source of Truth** for the RentWise platform. It de
 RentWise is a premium, full-stack rental ecosystem bridging property owners and tenants via a central hub for visual discovery, digital lease applications, and integrated financial ledgers.
 
 ### ✅ Completed Milestones
-- **Sovereign Ledger (v3.0)**: High-fidelity UI overhaul with obsidian palettes and 2.5rem corner radii.
+- **Sovereign Ledger (v3.0)**: High-fidelity UI overhaul with obsidian palettes and **3rem (xl)** corner radii.
+- **CSS Modularization**: Transitioned to a fragmented style architecture (`theme.css`, `base.css`, `components.css`) for design system maintainability.
 - **Robust Exception System**: Custom domain exceptions with global backend handlers.
 - **Unified Identity**: Dual-mode (Owner/Tenant) account architecture.
 - **Cloud Infrastructure**: CI/CD on Google Cloud Run with Supabase persistence.
@@ -146,9 +147,10 @@ Services and Hooks must primarily use **Named Exports**. This provides strict na
 ## 🎨 Design System: Sovereign Ledger
 RentWise adheres to the **Sovereign Ledger** design manifest (see `design_system.md`).
 - **Integrity Rule:** No UI element should be built or modified without first consulting the `design_system.md`. This is the "Visual Ground Truth" of the project.
-- **Core Aesthetic:** Obsidian Slate (#0b1326), frosted glass (40px blur), and 2.5rem corner radii.
-- **Editorial Typography:** Manrope font with high-contrast, black-weight headings.
-- **Atmospheric Depth:** Usage of ambient background orbs and tonal differentiation instead of rigid 1px borders.
+- **Core Aesthetic**: Obsidian Slate (#0b1326), frosted glass (40px blur), and **3rem (xl)** corner radii.
+- **Editorial Typography**: Manrope font with high-contrast, black-weight headings.
+- **The "No-Line" Rule**: Usage of ambient background orbs and tonal differentiation (Material Surface Tiers) instead of rigid 1px borders.
+- **CSS Architecture**: All styles MUST be partitioned into `src/styles/` (`theme.css`, `base.css`, `components.css`). `index.css` remains a clean import entry point.
 
 ## 🔒 Security & Identity
 - **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both **Tenant** and **Owner** capabilities.

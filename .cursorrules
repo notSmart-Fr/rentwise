@@ -25,7 +25,10 @@ Organize code by business domain in `src/features/` or `src/shared/`.
 - **Barrel Policy**: Every feature and shared folder MUST contain an `index.js` file acting as the Public API.
 - **Exports**: Use **Named Exports** for all Services and Hooks (e.g., `export const useAuth = ...`).
 - **Imports**: Import from the feature root (e.g., `@/features/auth`) rather than deep-nesting.
-- **Styling (Sovereign Ledger)**: You MUST follow the **`design_system.md`** manifest for all UI changes. Use Tailwind CSS v4 to implement the "No-Line" rule, obsidian palettes, and 2.5rem corner radii. Avoid default browser colors.
+- **Stitch Protocol**: If a Stitch generation or edit fails due to a service error, DO NOT retry automatically. Stop and ask the USER for the code or guidance.
+- **Tool Usage**: NEVER use the `browser_subagent` tool. All web-based data retrieval must be done via `read_url_content` or `curl` in the terminal.
+- **Styling (Sovereign Ledger)**: You MUST follow the **`design_system.md`** manifest for all UI changes. Use Tailwind CSS v4 to implement the "No-Line" rule (defining boundaries through tonal depth rather than borders), obsidian palettes, and **3rem (xl)** corner radii. Avoid default browser colors.
+- **CSS Architecture**: Adhere to the **Modular CSS** standard. Do not add ad-hoc styles to `index.css`. Use `src/styles/theme.css` for tokens, `base.css` for resets, and `components.css` for UI classes.
 
 ## 🔒 5. Identity & Security
 - **Dual-Mode Identity**: Every user is both an **Owner** and a **Tenant**.

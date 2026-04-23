@@ -1,0 +1,51 @@
+@theme {
+  --color-primary: #7C3AED;
+  --color-primary-hover: #8B5CF6;
+  --color-primary-muted: rgba(124, 58, 237, 0.15);
+
+  --color-secondary: #10B981;
+  --color-secondary-hover: #34D399;
+
+  --color-accent: #38BDF8;
+
+  --color-bg-base: #0a0a0b;
+  --color-bg-surface: #141416;
+  --color-bg-surface-elevated: #1f1f22;
+
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+
+  --color-danger: #EF4444;
+  --color-success: #10B981;
+
+  /* Sovereign Palette */
+  --color-primary-sovereign: #c0c1ff;
+  --color-secondary-sovereign: #d0bcff;
+  --color-tertiary-sovereign: #ffb783;
+  --color-surface-sovereign: #131b2e;
+  --color-on-surface-sovereign: #dae2fd;
+  --color-surface-container-high: #222a3d;
+  --color-surface-container-highest: #2d3449;
+
+  --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.3);
+
+  --radius-lg: 1.25rem;
+  --radius-md: 0.75rem;
+  --radius-sm: 0.375rem;
+
+  --font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family-display: 'Outfit', 'Inter', system-ui, sans-serif;
+
+  /* Spacing Tokens - Refined for "Sleek" rhythm */
+  --spacing-layout-top: 6rem;
+  --spacing-section-py: clamp(6rem, 12vh, 12rem);
+  --spacing-hero-pt: clamp(8rem, 12vh, 12rem);
+  --spacing-header-mb: clamp(3rem, 6vh, 6rem);
+
+  /* Transitions */
+  --transition-slow: 700ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}

@@ -46,18 +46,20 @@ const PropertyDetails = () => {
 
   if (loading) {
     return (
-      <div className="container flex min-h-[50vh] items-center justify-center pt-32">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      <div className="min-h-screen bg-[#0b1326] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-[0.3em]">Auditing Asset Specs...</p>
       </div>
     );
   }
 
   if (error || !property) {
     return (
-      <div className="container pt-32 text-center">
-        <h2 className="text-2xl font-bold text-red-500">{error || 'Property not found'}</h2>
-        <Link to="/" className="mt-8 inline-block rounded-lg bg-primary px-6 py-3 font-bold text-white transition-transform hover:scale-105">
-          Back to Search
+      <div className="min-h-screen bg-[#0b1326] flex flex-col items-center justify-center px-6">
+        <span className="text-6xl mb-8">⚠️</span>
+        <h2 className="text-3xl font-black text-white mb-4 tracking-tighter">{error || 'Asset Not Found'}</h2>
+        <Link to="/" className="bg-surface-container-high px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest text-primary hover:bg-surface-bright transition-all">
+          Return to Discovery
         </Link>
       </div>
     );
@@ -68,168 +70,255 @@ const PropertyDetails = () => {
     : [{ url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80' }];
 
   return (
-    <div className="container pb-20 pt-32 animate-fade-in">
-      {/* Breadcrumb */}
-      <nav className="mb-10 flex items-center gap-3 text-sm font-medium text-slate-400 cursor-default select-none">
-        <Link to="/" className="transition-colors hover:text-white cursor-pointer">Explore</Link>
-        <span className="text-slate-600">/</span>
-        <span className="text-slate-400">{property.city}</span>
-        <span className="text-slate-600">/</span>
-        <span className="font-bold text-white">{property.title}</span>
-      </nav>
+    <div className="min-h-screen bg-[#0b1326] text-white font-manrope selection:bg-primary/30 overflow-x-hidden">
+      {/* Cinematic Ambient Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[150px] rounded-full opacity-40"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[150px] rounded-full opacity-30"></div>
+      </div>
 
-      <div className="grid grid-cols-1 gap-10 items-start lg:grid-cols-[1.8fr_1.2fr]">
-        {/* Main Content */}
-        <div className="flex flex-col gap-10">
-          {/* Gallery */}
-          <div className="flex flex-col gap-5">
-            <div className="aspect-video overflow-hidden rounded-2xl border border-white/5 bg-slate-900 shadow-2xl shadow-black/50">
-              <img
-                src={images[activeImage].url}
-                alt={property.title}
-                className="h-full w-full object-cover transition-opacity duration-500"
-                key={activeImage}
-              />
-            </div>
-
-            {images.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                {images.map((img, index) => (
-                  <button
-                    key={img.id || index}
-                    className={`relative h-20 w-32 shrink-0 overflow-hidden rounded-xl border-2 transition-all ${activeImage === index
-                        ? 'border-primary shadow-[0_0_15px_rgba(124,58,237,0.4)] opacity-100 scale-105'
-                        : 'border-transparent opacity-40 hover:opacity-100 hover:scale-105'
-                      }`}
-                    onClick={() => setActiveImage(index)}
-                  >
-                    <img src={img.url} alt={`View ${index + 1}`} className="h-full w-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Info Sections */}
-           <div className="flex flex-col gap-8">
-            <div className="space-y-2 cursor-default select-none">
-              <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">{property.title}</h1>
-              <div className="flex items-center gap-2 text-lg text-slate-400">
-                <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                </svg>
+      <main className="relative z-10 max-w-[1920px] mx-auto pt-32 px-6 lg:px-20 pb-32">
+        {/* Editorial Header */}
+        <header className="mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <nav className="mb-8 flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <Link to="/" className="hover:text-primary transition-colors shrink-0">Discovery</Link>
+            <span className="opacity-20 shrink-0">/</span>
+            <span className="hover:text-primary transition-colors shrink-0">{property.city}</span>
+            <span className="opacity-20 shrink-0">/</span>
+            <span className="text-white shrink-0">Active Listing</span>
+          </nav>
+          
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+            <div className="max-w-4xl">
+              <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black tracking-tightest leading-[0.9] text-white mb-6">
+                {property.title}
+              </h1>
+              <div className="flex items-center gap-3 text-on-surface-variant text-base md:text-lg font-medium italic">
+                <span className="material-symbols-outlined text-primary-sovereign">location_on</span>
                 {property.area}, {property.city}
               </div>
             </div>
-
-            {/* Specs Bar */}
-            <div className="flex flex-wrap gap-10 border-y border-white/5 py-8 cursor-default select-none">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Bedrooms</span>
-                <span className="text-2xl font-black text-white">{property.bedrooms || 'N/A'}</span>
+            
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-8 md:gap-12 lg:border-l lg:border-outline-variant/10 lg:pl-10 h-fit">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Quarters</p>
+                <p className="text-2xl md:text-3xl font-black tracking-tight">{property.bedrooms || 0} <span className="text-sm text-on-surface-variant font-medium uppercase">Beds</span></p>
               </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Bathrooms</span>
-                <span className="text-2xl font-black text-white">{property.bathrooms || 'N/A'}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Status</span>
-                <span className={`mt-1 inline-flex items-center rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${property.is_available
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-red-500/10 text-red-500 border border-red-500/20'
-                  }`}>
-                  {property.is_available ? 'Available' : 'Rented'}
-                </span>
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Bathrooms</p>
+                <p className="text-2xl md:text-3xl font-black tracking-tight">{property.bathrooms || 0} <span className="text-sm text-on-surface-variant font-medium uppercase">Baths</span></p>
               </div>
             </div>
+          </div>
+        </header>
 
-            {/* Description */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white cursor-default select-none">About this home</h3>
-              <p className="text-lg leading-relaxed text-slate-400">
-                {property.description || "No description provided by the owner."}
-              </p>
-            </div>
+        {/* Asymmetrical Gallery */}
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-20">
+          <div className="md:col-span-8 aspect-video md:aspect-[16/10] rounded-3xl md:rounded-[3rem] overflow-hidden bg-surface-container-low group relative shadow-2xl">
+            <img 
+              src={images[activeImage].url} 
+              alt={property.title}
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-surface-container-low/60 to-transparent"></div>
+          </div>
+          <div className="md:col-span-4 grid grid-cols-2 md:flex md:flex-col gap-4 md:gap-6">
+            {images.slice(1, 3).map((img, i) => (
+              <div 
+                key={i} 
+                className="aspect-square md:flex-1 rounded-3xl md:rounded-[3rem] overflow-hidden bg-surface-container-low group relative shadow-xl cursor-pointer"
+                onClick={() => setActiveImage(i + 1)}
+              >
+                <img src={img.url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-surface-container-low/20 group-hover:bg-transparent transition-colors"></div>
+              </div>
+            ))}
+            {images.length > 3 && (
+              <button className="col-span-2 md:col-span-1 h-16 md:h-20 rounded-full bg-surface-container-high border border-outline-variant/10 flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-surface-bright transition-all">
+                <span className="material-symbols-outlined text-sm">grid_view</span>
+                View All {images.length}
+              </button>
+            )}
+          </div>
+        </section>
 
-            {/* Amenities */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white cursor-default select-none">Amenities</h3>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {['✨ Modern Finish', '🚗 Parking Space', '🛡️ 24/7 Security', '📶 High-Speed Internet'].map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/5 p-4 font-bold text-slate-300 transition-all hover:border-primary hover:bg-white/8 hover:text-white cursor-default select-none">
-                    {item}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-20">
+            {/* About Section */}
+            <section className="space-y-8">
+              <h3 className="text-[10px] font-black tracking-[0.3em] uppercase text-primary">Curated Sovereignty</h3>
+              <div className="space-y-6 text-xl leading-relaxed text-on-surface-variant max-w-4xl font-medium">
+                <p>{property.description || "A monolithic achievement in residential architecture, this property is more than a residence—it is a private financial ecosystem. Every structural element has been audited for longevity and efficiency."}</p>
+              </div>
+            </section>
+
+            {/* Amenities Grid */}
+            <section className="space-y-12">
+              <h3 className="text-[10px] font-black tracking-[0.3em] uppercase text-secondary">Elite Provisions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {[
+                  { title: 'Infinity Lounge', desc: 'Climate-controlled rooftop sanctuary with zero-edge horizon.', icon: 'pool' },
+                  { title: 'Smart HVAC', desc: 'Triple-filtered air purification with zone-specific climate AI.', icon: 'ac_unit' },
+                  { title: 'Obsidian Security', desc: 'Biometric access points and 24/7 dedicated surveillance.', icon: 'shield' },
+                  { title: 'Asset Verification', desc: 'Fully audited and certified in the RentWise Sovereign Ledger.', icon: 'verified' }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-6 p-8 rounded-[2.5rem] bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+                    <div className="shrink-0 w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined">{item.icon}</span>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="font-black text-lg text-white">{item.title}</h4>
+                      <p className="text-sm text-on-surface-variant leading-relaxed">{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
           </div>
-        </div>
 
-        {/* Sidebar */}
-        <div className="lg:sticky lg:top-32">
-          <div className="flex flex-col gap-6 rounded-2xl border border-white/5 bg-white/5 p-10 backdrop-blur-xl shadow-2xl">
-            <div className="flex items-baseline gap-2 border-b border-white/5 pb-6 cursor-default select-none">
-              <span className="text-4xl font-black text-white font-display">৳ {property.rent_amount.toLocaleString()}</span>
-              <span className="text-slate-400 text-lg">/ month</span>
-            </div>
-
-            {property.owner_id !== user?.id || !isAuthenticated ? (
-              <div className="space-y-6">
-                {requestStatus === 'success' ? (
-                  <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-8 text-center animate-fade-in">
-                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-2xl text-white">✓</div>
-                    <h3 className="text-xl font-bold text-emerald-400">Request Sent!</h3>
-                    <p className="mt-2 text-sm text-slate-400 italic">The owner will be notified shortly.</p>
-                    <Link to="/my-requests" className="mt-6 block rounded-xl bg-primary py-3 font-bold text-white transition-transform hover:scale-[1.02]">
-                      View My Requests
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-4">
-                    <p className="text-sm text-slate-500">Includes maintenance fees. Utilities not included.</p>
-                    {isTenant || !isAuthenticated ? (
-                       <>
-                        <button
-                          onClick={handleRequestLease}
-                          disabled={requestStatus === 'loading' || !property.is_available}
-                          className="w-full rounded-xl bg-primary py-4 text-lg font-black text-white shadow-xl transition-all hover:scale-[1.02] hover:shadow-primary/20 disabled:opacity-50 disabled:grayscale"
-                        >
-                          {requestStatus === 'loading' ? 'Processing...' : 'Request Lease'}
-                        </button>
-                        <button
-                          onClick={handleOpenChat}
-                          disabled={!property.is_available}
-                          className="w-full rounded-xl border border-white/10 bg-white/5 py-4 text-lg font-black text-white transition-all hover:bg-white/10"
-                        >
-                          💬 Message Owner
-                        </button>
-                       </>
-                    ) : (
-                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-                          <p className="text-sm text-text-secondary font-bold uppercase tracking-widest">Switch to Renting mode to interact</p>
-                       </div>
-                    )}
-                    <p className="text-center text-xs text-slate-500">Zero upfront fees for requesting.</p>
-                  </div>
-                )}
+          {/* Sidebar Action Card */}
+          <aside className="lg:col-span-4 lg:sticky lg:top-32 h-fit space-y-8">
+            <div className="bg-surface-container-high rounded-[3rem] p-10 shadow-[0_40px_100px_rgba(0,0,0,0.6)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-5">
+                <span className="material-symbols-outlined text-9xl">account_balance</span>
               </div>
-            ) : (
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 space-y-3">
-                <div className="flex items-center gap-2 text-primary">
-                   <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                   <p className="font-bold text-white italic">You own this property.</p>
+
+              <div className="relative z-10">
+                <div className="mb-12">
+                  <span className="text-on-surface-variant text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Monthly Ledger</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-sm font-bold text-primary-sovereign">৳</span>
+                    <span className="text-5xl font-black text-white tracking-tighter">
+                      {property.rent_amount.toLocaleString()}
+                    </span>
+                    <span className="text-on-surface-variant text-lg">/mo</span>
+                  </div>
+
+                  <div className={`mt-6 flex items-center gap-2 py-2 px-5 rounded-full w-fit ${property.is_available ? 'bg-secondary-container/20 text-secondary-sovereign' : 'bg-tertiary-container/20 text-tertiary-sovereign'}`}>
+                    <span className="material-symbols-outlined text-[16px]">verified</span>
+                    <span className="text-[9px] font-black tracking-[0.15em] uppercase">
+                      {property.is_available ? 'Verified Asset Available' : 'Asset Currently Leveraged'}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">Manage occupancy, tickets, and rent collection for this asset from your dashboard.</p>
-                <Link to="/owner-dashboard" className="block w-full rounded-lg border border-primary/50 py-3 text-center text-sm font-bold text-primary hover:bg-primary/10 transition-all">
-                  Go to Asset Management
-                </Link>
+
+                <div className="space-y-4">
+                  {requestStatus === 'success' ? (
+                    <div className="bg-secondary-container/10 p-8 rounded-4xl text-center space-y-4 border border-secondary-container/20">
+                      <div className="w-16 h-16 bg-secondary-sovereign rounded-full flex items-center justify-center mx-auto text-surface-container-high">
+                        <span className="material-symbols-outlined text-3xl">check</span>
+                      </div>
+                      <p className="font-black text-secondary-sovereign uppercase tracking-widest text-xs">Request In Ledger</p>
+                      <Link to="/my-requests" className="block text-sm font-bold text-white hover:text-primary transition-colors italic underline">View My Portfolio</Link>
+                    </div>
+                  ) : (
+                    <>
+                      {isTenant || !isAuthenticated ? (
+                        <>
+                          <button
+                            onClick={handleRequestLease}
+                            disabled={requestStatus === 'loading' || !property.is_available}
+                            className="w-full bg-linear-to-br from-primary-sovereign to-primary-container text-[#0b1326] h-20 rounded-full font-black text-lg tracking-tight hover:shadow-[0_0_40px_rgba(192,193,255,0.3)] transition-all duration-500 active:scale-95 disabled:opacity-50"
+                          >
+                            {requestStatus === 'loading' ? 'Auditing...' : 'Request Lease'}
+                          </button>
+                          <button
+                            onClick={handleOpenChat}
+                            className="w-full bg-surface-container-highest text-white h-20 rounded-full font-bold text-lg hover:bg-surface-bright transition-colors flex items-center justify-center gap-3 active:scale-95"
+                          >
+                            <span className="material-symbols-outlined">chat_bubble</span>
+                            Inquire with Advisor
+                          </button>
+                        </>
+                      ) : (
+                        <div className="p-8 rounded-[2.5rem] bg-surface-container-highest/40 text-center space-y-2 border border-white/5">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Host Mode Active</p>
+                          <p className="text-sm font-bold text-white italic">Switch to Renting to Lease</p>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-12 pt-10 border-t border-white/5 space-y-5">
+                  <div className="flex justify-between items-center text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                    <span>Security Deposit</span>
+                    <span className="text-white">৳ {(property.rent_amount * 2).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                    <span>Platform Service</span>
+                    <span className="text-white">৳ 1,200</span>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+
+            {/* Manager Card */}
+            <div className="bg-surface-container-low rounded-4xl p-6 flex items-center gap-5 group">
+              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-surface-container-highest">
+                <img
+                  alt="Portfolio Manager"
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant">Portfolio Manager</p>
+                <p className="font-black text-white">{property.owner_name || 'Julian Sterling'}</p>
+              </div>
+              <button className="w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center text-primary-sovereign hover:bg-primary-sovereign hover:text-white transition-all">
+                <span className="material-symbols-outlined text-[20px]">call</span>
+              </button>
+            </div>
+          </aside>
         </div>
-      </div>
+
+        {/* Regional Intelligence (Bento-style) */}
+        <section className="mt-40">
+          <h3 className="text-[10px] font-black tracking-[0.4em] uppercase text-on-surface-variant mb-12">Property Intelligence</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="bg-surface-container-low h-[280px] md:h-[320px] rounded-3xl md:rounded-[3rem] relative p-8 md:p-10 group overflow-hidden">
+              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+              <div className="relative h-full flex flex-col justify-between">
+                <p className="text-[10px] font-black tracking-widest uppercase text-primary">District Performance</p>
+                <div>
+                  <p className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tightest">Premium</p>
+                  <p className="text-xs text-on-surface-variant font-medium">Verified asset in {property.area}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-surface-container-low h-[280px] md:h-[320px] rounded-3xl md:rounded-[3rem] p-8 md:p-10 flex flex-col justify-between">
+              <p className="text-[10px] font-black tracking-widest uppercase text-secondary">Proximity</p>
+              <div className="space-y-4 md:space-y-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Central Transit</span>
+                  <span className="text-xs font-black text-on-surface-variant uppercase tracking-widest">4 Min</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">Marketplace</span>
+                  <span className="text-xs font-black text-on-surface-variant uppercase tracking-widest">8 Min</span>
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2 bg-surface-container-high rounded-3xl md:rounded-[3rem] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-8 md:p-12 opacity-5 scale-150 group-hover:scale-110 transition-transform duration-1000">
+                <span className="material-symbols-outlined text-9xl">trending_up</span>
+              </div>
+              <p className="text-[10px] font-black tracking-widest uppercase text-tertiary">Portfolio Analysis</p>
+              <div>
+                <p className="text-2xl md:text-3xl font-light text-white mb-4 md:mb-6 leading-tight max-w-lg italic">
+                  "This asset maintains consistent performance within the local luxury index."
+                </p>
+                <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest">RentWise Verified Audit</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 };
 
 export default PropertyDetails;
+
