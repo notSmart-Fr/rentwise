@@ -8,12 +8,6 @@ import {
 } from 'recharts';
 
 const OccupancyChart = ({ data }) => {
-  const [isMounted, setIsMounted] = useState(false);
-  
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   if (!data || data.length === 0) return null;
 
   const COLORS = ['#7C3AED', '#334155']; // Primary and Slate-700
@@ -30,9 +24,8 @@ const OccupancyChart = ({ data }) => {
         <p className="text-[10px] text-slate-500 font-bold uppercase mt-1">Portfolio Status</p>
       </div>
 
-      <div className="relative flex items-center justify-center h-56 min-w-0">
-        {isMounted ? (
-          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+      <div className="relative w-full h-56">
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
@@ -65,9 +58,6 @@ const OccupancyChart = ({ data }) => {
             />
           </PieChart>
         </ResponsiveContainer>
-        ) : (
-          <div className="h-full w-full" />
-        )}
         {/* Center Text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-3xl font-black text-white leading-none">{rentedPercentage}%</span>
