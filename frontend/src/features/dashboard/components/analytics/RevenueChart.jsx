@@ -35,8 +35,8 @@ const RevenueChart = ({ data }) => {
            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Gross Income</span>
         </div>
       </div>
-
-      <ResponsiveContainer width="100%" height="80%" minWidth={0} minHeight={0} debounce={50} aspect={2}>
+      {console.log("📊 RevenueChart: Rendering with aspect ratio fix")}
+      <ResponsiveContainer width="100%" minWidth={0} minHeight={0} debounce={50} aspect={2}>
         <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
           <XAxis 
