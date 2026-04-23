@@ -1,38 +1,40 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 /**
- * A custom hook to measure a container's dimensions using ResizeObserver.
- * This completely bypasses Recharts' ResponsiveContainer to avoid measurement 
- * bugs during CSS animations.
+ * A robust custom hook to measure a container's dimensions using ResizeObserver.
+ * Uses a callback ref to ensure the observer is correctly attached even if 
+ * the component mounts asynchronously or conditionally.
  */
 export const useChartDimensions = () => {
-  const ref = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [node, setNode] = useState(null);
+
+  // Callback ref that React will call whenever the DOM element is mounted or unmounted
+  const ref = useCallback(newNode => {
+    if (newNode !== null) {
+      setNode(newNode);
+    }
+  }, []);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!node) return;
 
-    const observeTarget = ref.current;
-    
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
-        // Only set dimensions if they are greater than 0
-        // This explicitly prevents the Recharts "-1" width/height error
+        // Update dimensions only if they are valid
         if (width > 0 && height > 0) {
           setDimensions({ width, height });
         }
       }
     });
 
-    resizeObserver.observe(observeTarget);
+    resizeObserver.observe(node);
 
     return () => {
-      if (observeTarget) {
-        resizeObserver.unobserve(observeTarget);
-      }
+      resizeObserver.disconnect();
     };
-  }, []);
+  }, [node]);
 
   return [ref, dimensions];
 };
