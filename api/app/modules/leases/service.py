@@ -9,8 +9,6 @@ class LeaseService(BaseService[Lease]):
     def __init__(self) -> None:
         super().__init__(Lease, LeaseRepository())
 
-        return self.repo.create(db, lease)
-
     def create_lease_from_request(
         self, 
         db: Session, 

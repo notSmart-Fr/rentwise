@@ -23,6 +23,8 @@ const OwnerDashboard = () => {
     activeLeasesCount,
     pendingRequestsCount,
     analytics,
+    payments,
+    leases,
     isModalOpen,
     setIsModalOpen,
     isEditModalOpen,

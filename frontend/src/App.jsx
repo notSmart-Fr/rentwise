@@ -47,6 +47,7 @@ const PublicOnlyRoute = ({ children }) => {
 };
 
 function AppInner() {
+  const { activeRole } = useAuth();
   const { chat, closeChat } = useChat();
   const location = useLocation();
   const isDedicatedMessagesPage = location.pathname === '/messages';
@@ -112,6 +113,12 @@ function AppInner() {
           <Route path="/messages" element={
             <ProtectedRoute>
               <Messages />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              {activeRole === 'OWNER' ? <Navigate to="/owner-dashboard" replace /> : <Navigate to="/tenant-dashboard" replace />}
             </ProtectedRoute>
           } />
 

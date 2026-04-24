@@ -276,12 +276,8 @@ const PropertyDetails = () => {
 
             {/* Manager Card */}
             <div className="bg-surface-container-low rounded-4xl p-6 flex items-center gap-5 group">
-              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-surface-container-highest">
-                <img
-                  alt="Portfolio Manager"
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80"
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                />
+              <div className="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-3xl">account_circle</span>
               </div>
               <div className="flex-1">
                 <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant">Portfolio Manager</p>

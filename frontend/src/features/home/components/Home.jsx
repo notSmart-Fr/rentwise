@@ -26,10 +26,10 @@ const Home = () => {
       </div>
 
       {/* Hero Section - The RentWise Entry */}
-      <section className="relative min-h-screen flex flex-col items-start justify-center pt-32 pb-20 px-6 lg:px-12 max-w-[1920px] mx-auto overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 lg:px-12 max-w-[1920px] mx-auto overflow-hidden text-center">
         {/* Background Image Overlay */}
-        <div className="absolute top-0 right-0 w-2/3 h-full opacity-20 -z-10 select-none pointer-events-none">
-          <div className="absolute inset-0 bg-linear-to-l from-[#0b1326] via-[#0b1326]/40 to-transparent"></div>
+        <div className="absolute inset-0 opacity-20 -z-10 select-none pointer-events-none">
+          <div className="absolute inset-0 bg-radial-[at_center_center] from-transparent via-[#0b1326]/60 to-[#0b1326]"></div>
           <img
             alt="Luxury property"
             className="w-full h-full object-cover grayscale opacity-50"
@@ -37,7 +37,7 @@ const Home = () => {
           />
         </div>
 
-        <div className="max-w-6xl space-y-12 relative z-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+        <div className="max-w-6xl space-y-12 relative z-10 animate-in fade-in slide-in-from-bottom-12 duration-1000 flex flex-col items-center">
           {isAuthenticated && isTenant ? (
             <div className="space-y-12">
               <div className="space-y-4">
@@ -48,7 +48,7 @@ const Home = () => {
                 </h1>
               </div>
               
-              <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex flex-col md:flex-row gap-6 justify-center">
                 <Link 
                   to="/dashboard"
                   className="bg-white text-slate-950 px-12 py-6 rounded-full font-black uppercase tracking-widest text-sm flex items-center gap-3 hover:scale-105 transition-all shadow-2xl"
