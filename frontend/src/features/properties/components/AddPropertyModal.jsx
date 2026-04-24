@@ -124,7 +124,7 @@ const AddPropertyModal = ({ isOpen, onClose, onSuccess }) => {
                   />
                 </div>
               </div>
-              
+
               <div className="flex flex-col gap-2 mt-6">
                 <label className="text-xs font-semibold text-text-secondary pl-1 flex items-center gap-1.5">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>

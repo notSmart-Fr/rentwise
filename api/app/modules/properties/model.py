@@ -25,6 +25,7 @@ class Property(Base):
     area: Mapped[str] = mapped_column(String(80), nullable=False)
     address_text: Mapped[str | None] = mapped_column(String(255), nullable=True)
     property_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    unit_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     rent_amount: Mapped[int] = mapped_column(Integer, nullable=False)
     bedrooms: Mapped[int | None] = mapped_column(Integer, nullable=True)

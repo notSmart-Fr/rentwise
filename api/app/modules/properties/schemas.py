@@ -44,5 +44,6 @@ class PropertyResponse(BaseModel):
     bedrooms: int | None
     bathrooms: int | None
     property_type: str | None
+    unit_number: str | None = None
     is_available: bool
     images: list[PropertyImageResponse] = Field(default_factory=list)
