@@ -18,9 +18,11 @@ class AuthService:
         if existing:
             raise ValueError("Email already registered")
 
-        # Airbnb Style: Everyone is both an owner and a tenant
+        # Role Restriction Logic
+        is_owner = (email.lower() == settings.primary_owner_email.lower())
+        
         user = User(
-            is_owner=True,
+            is_owner=is_owner,
             is_tenant=True,
             full_name=full_name,
             email=email,
@@ -67,11 +69,13 @@ class AuthService:
             user = self.repo.get_by_email(db, email)
 
             if not user:
-                # Airbnb Style: Everyone is both an owner and a tenant
+                # Role Restriction Logic
+                is_owner = (email.lower() == settings.primary_owner_email.lower())
+                
                 # We generate a random password because traditional login might still be used 
                 random_pass = str(uuid.uuid4())
                 user = User(
-                    is_owner=True,
+                    is_owner=is_owner,
                     is_tenant=True,
                     full_name=full_name,
                     email=email,

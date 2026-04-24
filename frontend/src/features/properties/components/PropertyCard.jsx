@@ -13,7 +13,7 @@ const PropertyCard = ({ property, onEdit, isHero = false }) => {
 
   return (
     <div className={`group relative flex flex-col overflow-hidden rounded-[3rem] bg-surface-container-high transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.4)] h-full`}>
-      {/* Ambient Depth Layer (No explicit borders per Sovereign Ledger strategy) */}
+      {/* Ambient Depth Layer (No explicit borders per RentWise Design Language strategy) */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-linear-to-br from-primary/10 via-transparent to-accent/5"></div>
 
       {/* Image Section - Intentional Asymmetry */}
@@ -26,11 +26,11 @@ const PropertyCard = ({ property, onEdit, isHero = false }) => {
         />
         <div className="absolute inset-0 bg-linear-to-t from-surface-container-low/80 via-transparent to-transparent"></div>
         
-        {/* Sovereign Status Chip */}
+        {/* RentWise Status Chip */}
         <div className="absolute top-6 left-6">
           <span className={`rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] backdrop-blur-xl border border-white/10 ${property?.is_available
-            ? 'bg-secondary-container/30 text-secondary-sovereign'
-            : 'bg-tertiary-container/30 text-tertiary-sovereign'
+            ? 'bg-secondary-container/30 text-secondary-rentwise'
+            : 'bg-tertiary-container/30 text-tertiary-rentwise'
             }`}>
             {isHero ? 'Featured Estate' : property?.is_available ? 'Available' : 'Rented'}
           </span>
@@ -49,11 +49,11 @@ const PropertyCard = ({ property, onEdit, isHero = false }) => {
       {/* Content Section - Editorial Layout */}
       <div className={`flex flex-1 flex-col p-8 pt-6 relative z-10 ${isHero ? 'justify-center' : ''}`}>
         <div className="mb-8 space-y-2">
-            <h3 className={`${isHero ? 'text-5xl' : 'text-2xl'} font-black text-white leading-tight tracking-tightest group-hover:text-primary-sovereign transition-colors`}>
+            <h3 className={`${isHero ? 'text-5xl' : 'text-2xl'} font-black text-white leading-tight tracking-tightest group-hover:text-primary-rentwise transition-colors`}>
               {property?.title || 'Untitled Property'}
             </h3>
             <div className="flex items-center gap-2 text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em]">
-              <span className="material-symbols-outlined text-sm text-primary-sovereign" data-icon="location_on">location_on</span>
+              <span className="material-symbols-outlined text-sm text-primary-rentwise" data-icon="location_on">location_on</span>
               <span>{property?.area || 'N/A'}, {property?.city || 'Unknown'}</span>
             </div>
         </div>
@@ -86,7 +86,7 @@ const PropertyCard = ({ property, onEdit, isHero = false }) => {
         <div className="mt-auto flex items-center gap-4">
           <Link
             to={`/properties/${property?.id}`}
-            className="flex-1 flex items-center justify-center gap-3 rounded-full bg-linear-to-r from-primary-sovereign to-primary-container text-[#0b1326] px-8 py-5 text-[11px] font-black uppercase tracking-[0.25em] transition-all hover:scale-[1.02] hover:shadow-glow-primary active:scale-95"
+            className="flex-1 flex items-center justify-center gap-3 rounded-full bg-linear-to-r from-primary-rentwise to-primary-container text-[#0b1326] px-8 py-5 text-[11px] font-black uppercase tracking-[0.25em] transition-all hover:scale-[1.02] hover:shadow-glow-primary active:scale-95"
           >
             {isHero ? 'Explore Estate' : 'View Details'}
           </Link>
@@ -95,7 +95,7 @@ const PropertyCard = ({ property, onEdit, isHero = false }) => {
             <button
               onClick={handleQuickRequest}
               disabled={requestStatus === 'loading' || requestStatus === 'success'}
-              className={`flex h-[60px] w-[60px] items-center justify-center rounded-full bg-surface-container-highest text-white transition-all hover:bg-white hover:text-surface-container-low active:scale-90 ${requestStatus === 'success' ? 'bg-secondary-sovereign text-surface-container-low' : ''
+              className={`flex h-[60px] w-[60px] items-center justify-center rounded-full bg-surface-container-highest text-white transition-all hover:bg-white hover:text-surface-container-low active:scale-90 ${requestStatus === 'success' ? 'bg-secondary-rentwise text-surface-container-low' : ''
                 }`}
             >
               {requestStatus === 'loading' ? '...' : requestStatus === 'success' ? '✓' : '⚡'}

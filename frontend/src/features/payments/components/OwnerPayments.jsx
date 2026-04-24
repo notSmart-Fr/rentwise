@@ -80,7 +80,7 @@ const OwnerPayments = ({ leases = [], initialPayments = [] }) => {
             />
           </div>
 
-          {/* Lease Selector (New for Sovereign Ledger) */}
+          {/* Lease Selector (New for RentWise Ledger) */}
           {leases.length > 0 && (
             <section className="space-y-6">
               <h3 className="text-xl font-black text-white uppercase tracking-tightest">Active Contracts</h3>
@@ -89,15 +89,15 @@ const OwnerPayments = ({ leases = [], initialPayments = [] }) => {
                   <button
                     key={lease.id}
                     onClick={() => setSelectedLeaseId(lease.id)}
-                    className="glass-panel p-6 text-left border border-white/5 hover:border-primary-sovereign/30 transition-all group overflow-hidden relative"
+                    className="glass-panel p-6 text-left border border-white/5 hover:border-primary-rentwise/30 transition-all group overflow-hidden relative"
                   >
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
                       <span className="material-symbols-outlined text-4xl">receipt_long</span>
                     </div>
                     <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{lease.tenant_name || 'Resident'}</p>
-                    <h4 className="text-lg font-bold text-white group-hover:text-primary-sovereign transition-colors truncate">{lease.property_title || 'Lease Record'}</h4>
+                    <h4 className="text-lg font-bold text-white group-hover:text-primary-rentwise transition-colors truncate">{lease.property_title || 'Lease Record'}</h4>
                     <div className="mt-4 flex items-center justify-between">
-                      <span className="text-sm font-black text-primary-sovereign italic">৳ {lease.monthly_rent?.toLocaleString()} / mo</span>
+                      <span className="text-sm font-black text-primary-rentwise italic">৳ {lease.monthly_rent?.toLocaleString()} / mo</span>
                       <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">View Ledger →</span>
                     </div>
                   </button>
@@ -109,7 +109,7 @@ const OwnerPayments = ({ leases = [], initialPayments = [] }) => {
           {/* Transaction Table */}
           <div className="space-y-6">
             <h3 className="text-xl font-black text-white uppercase tracking-tightest">Master Transaction Log</h3>
-            <div className="overflow-hidden rounded-3xl border border-white/5 bg-surface-sovereign shadow-2xl">
+            <div className="overflow-hidden rounded-3xl border border-white/5 bg-surface-rentwise shadow-2xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>

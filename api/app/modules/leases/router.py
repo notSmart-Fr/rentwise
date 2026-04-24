@@ -6,10 +6,37 @@ from app.persistence.deps import get_db
 from app.modules.auth.deps import get_current_user
 from app.modules.auth.model import User
 from app.modules.leases.service import LeaseService
-from app.modules.leases.schemas import LeaseResponse
+from app.modules.leases.schemas import LeaseResponse, LeaseOnboardRequest
 
 router = APIRouter(prefix="/leases", tags=["leases"])
 service = LeaseService()
+
+@router.post("/onboard", response_model=LeaseResponse)
+def onboard_tenant(
+    data: LeaseOnboardRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Directly onboards a tenant and creates a lease for an owner's property.
+    """
+    if not user.is_owner:
+        raise HTTPException(status_code=403, detail="Only owners can onboard tenants")
+    
+    try:
+        lease = service.create_managed_lease(
+            db=db,
+            owner_id=user.id,
+            property_id=data.property_id,
+            tenant_name=data.tenant_name,
+            tenant_email=data.tenant_email,
+            monthly_rent=data.monthly_rent,
+            start_date=data.start_date,
+            duration_months=data.duration_months
+        )
+        return service.to_response(lease)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/owner/list", response_model=list[LeaseResponse])
 def list_owner_leases(

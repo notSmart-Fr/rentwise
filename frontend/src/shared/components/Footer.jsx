@@ -27,7 +27,7 @@ const Footer = () => {
               <span className="text-3xl font-black tracking-tighter text-white uppercase">Rent<span className="text-primary italic">Wise</span></span>
             </Link>
             <p className="text-slate-400 text-base leading-relaxed font-medium">
-              Architectural Rental Intelligence. Connecting the city's most prestigious properties with elite residents through the Sovereign Ledger.
+              Architectural Rental Intelligence. Connecting the city's most prestigious properties with elite residents through the RentWise Design Language.
             </p>
             <div className="flex gap-4 mt-2">
               {[
@@ -48,7 +48,7 @@ const Footer = () => {
             <nav className="flex flex-col gap-4">
               {[
                 { name: 'Explore Portfolio', path: '/' },
-                { name: 'Sovereign Journey', path: '/how-it-works' },
+                { name: 'RentWise Journey', path: '/how-it-works' },
                 { name: 'Residency Insurance', path: '/' },
                 { name: 'Portfolio Management', path: '/' }
               ].map(item => (
@@ -78,7 +78,7 @@ const Footer = () => {
             <div className="flex flex-col gap-3">
               <input 
                 type="email" 
-                placeholder="Intelligence@sovereign.com"
+                placeholder="Intelligence@rentwise.com"
                 className="bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white w-full outline-none focus:border-primary focus:bg-white/10 transition-all duration-500"
               />
               <button className="bg-white text-slate-950 font-black uppercase tracking-[0.2em] text-[10px] py-5 rounded-2xl transition-all hover:bg-primary hover:text-white active:scale-95 shadow-2xl">

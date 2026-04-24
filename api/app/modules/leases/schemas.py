@@ -21,6 +21,14 @@ class LeaseUpdate(BaseModel):
     status: str | None = None
     next_payment_date: datetime | None = None
 
+class LeaseOnboardRequest(BaseModel):
+    property_id: uuid.UUID
+    tenant_name: str
+    tenant_email: str | None = None
+    monthly_rent: int | None = None
+    start_date: datetime | None = None
+    duration_months: int = 12
+
 class LeaseResponse(LeaseBase):
     id: uuid.UUID
     request_id: uuid.UUID | None = None

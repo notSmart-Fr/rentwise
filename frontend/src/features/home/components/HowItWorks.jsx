@@ -29,7 +29,7 @@ const HowItWorks = () => {
 
         <div className="container relative z-10 px-6 mx-auto flex flex-col items-center max-w-4xl">
           <h1 className="text-6xl sm:text-[8rem] font-black leading-[0.85] tracking-tightest text-white mb-10">
-            The <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Sovereign</span> Journey
+            The <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">RentWise</span> Journey
           </h1>
           <p className="text-xl sm:text-2xl text-slate-400 leading-relaxed font-medium max-w-3xl">
             We've redefined the rental lifecycle. Whether you're acquiring a residence or managing a portfolio,
@@ -53,7 +53,7 @@ const HowItWorks = () => {
                 icon: '🏦',
                 step: '02',
                 title: 'Ledger Integration',
-                desc: 'Apply through a high-fidelity digital process. Our Sovereign Ledger ensures transparent communication and secure financial transitions.'
+                desc: 'Apply through a high-fidelity digital process. Our RentWise Ledger ensures transparent communication and secure financial transitions.'
               },
               {
                 icon: '🔑',
@@ -62,7 +62,7 @@ const HowItWorks = () => {
                 desc: 'Finalize your agreement, access your digital keys, and enjoy premium support. We provide 24/7 maintenance for every unit in our portfolio.'
               }
             ].map((step, i) => (
-              <div key={i} className="bg-[#131b2e] rounded-[2.5rem] p-12 flex flex-col items-start text-left group transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] border border-white/5">
+              <div key={i} className="bg-surface-rentwise rounded-[2.5rem] p-12 flex flex-col items-start text-left group transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] border border-white/5">
                 <div className="flex justify-between items-center w-full mb-12">
                   <div className="text-6xl group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">{step.icon}</div>
                   <span className="text-5xl font-black text-white/5 group-hover:text-primary/10 transition-colors duration-700 tracking-tighter">{step.step}</span>
@@ -79,7 +79,7 @@ const HowItWorks = () => {
       <section className="py-40 bg-linear-to-b from-transparent to-primary/5 text-center">
         <div className="container px-6 mx-auto max-w-4xl">
           <h3 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tightest">Start Your Next Chapter.</h3>
-          <p className="text-xl text-slate-400 mb-16 font-medium">Join the elite network of residents and owners leveraging the Sovereign Ledger.</p>
+          <p className="text-xl text-slate-400 mb-16 font-medium">Join the elite network of residents and owners leveraging the RentWise Design Language.</p>
           <div className="flex flex-wrap justify-center gap-6">
             <button className="bg-primary text-on-primary px-16 py-6 text-xs font-black uppercase tracking-[0.3em] rounded-4xl shadow-2xl shadow-primary/30 hover:scale-105 transition-all" onClick={() => navigate('/')}>
               Explore Portfolio

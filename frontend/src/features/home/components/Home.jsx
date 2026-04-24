@@ -1,8 +1,10 @@
 import React from 'react';
 import { PropertyCard, useProperties } from '../../properties';
-import SearchBar from '../../../shared/components/SearchBar';
+import { useAuth } from '../../auth';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const { isAuthenticated, user, isTenant } = useAuth();
   const {
     properties,
     loading,
@@ -23,7 +25,7 @@ const Home = () => {
         <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-accent/10 blur-[150px] rounded-full opacity-60"></div>
       </div>
 
-      {/* Hero Section - The Sovereign Entry */}
+      {/* Hero Section - The RentWise Entry */}
       <section className="relative min-h-screen flex flex-col items-start justify-center pt-32 pb-20 px-6 lg:px-12 max-w-[1920px] mx-auto overflow-hidden">
         {/* Background Image Overlay */}
         <div className="absolute top-0 right-0 w-2/3 h-full opacity-20 -z-10 select-none pointer-events-none">
@@ -36,71 +38,104 @@ const Home = () => {
         </div>
 
         <div className="max-w-6xl space-y-12 relative z-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-          <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[0.85] text-white">
-            Find Your Next <br />
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Perfect Home.</span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-slate-400 max-w-2xl font-medium leading-relaxed">
-            The Sovereign Ledger of elite property management. High-performance acquisitions meet architectural living.
-          </p>
-
-          {/* Search Bar Sovereign Edition */}
-          <div className="w-full max-w-4xl bg-[#171f33]/60 backdrop-blur-3xl p-3 rounded-[2.5rem] shadow-2xl mt-12 flex flex-col md:flex-row items-center gap-2 border border-white/5 group hover:border-primary/20 transition-all duration-700">
-            <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-              <div className="px-8 py-4 flex flex-col justify-center">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Location</span>
-                <input
-                  className="bg-transparent border-none p-0 text-white placeholder:text-slate-600 focus:ring-0 text-lg font-bold"
-                  placeholder="Dhaka, BD"
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                />
+          {isAuthenticated && isTenant ? (
+            <div className="space-y-12">
+              <div className="space-y-4">
+                <p className="text-primary font-black uppercase tracking-[0.4em] text-xs">Resident Portfolio Active</p>
+                <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[0.85] text-white">
+                  Welcome Home, <br />
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">{user?.full_name?.split(' ')[0] || 'Resident'}.</span>
+                </h1>
               </div>
-              <div className="px-8 py-4 flex flex-col justify-center">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Architectural Type</span>
-                <select
-                  className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
-                  value={searchParams.property_type || ''}
-                  onChange={(e) => handleFilterChange('property_type', e.target.value)}
+              
+              <div className="flex flex-col md:flex-row gap-6">
+                <Link 
+                  to="/dashboard"
+                  className="bg-white text-slate-950 px-12 py-6 rounded-full font-black uppercase tracking-widest text-sm flex items-center gap-3 hover:scale-105 transition-all shadow-2xl"
                 >
-                  <option value="" className="bg-[#0b1326]">Any Type</option>
-                  <option value="Apartment" className="bg-[#0b1326]">Apartment</option>
-                  <option value="Penthouse" className="bg-[#0b1326]">Penthouse</option>
-                  <option value="Villa" className="bg-[#0b1326]">Villa</option>
-                  <option value="Townhouse" className="bg-[#0b1326]">Townhouse</option>
-                  <option value="Studio" className="bg-[#0b1326]">Studio</option>
-                </select>
-              </div>
-              <div className="px-8 py-4 flex flex-col justify-center">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Price Range</span>
-                <select
-                  className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
-                  onChange={(e) => {
-                    const [min, max] = e.target.value.split('-').map(v => v === 'null' ? null : parseInt(v));
-                    handleFilterChange('min_rent', min);
-                    handleFilterChange('max_rent', max);
-                  }}
-                >
-                  <option value="null-null" className="bg-[#0b1326]">Any Price</option>
-                  <option value="0-50000" className="bg-[#0b1326]">Under ৳50k</option>
-                  <option value="50000-100000" className="bg-[#0b1326]">৳50k - ৳100k</option>
-                  <option value="100000-250000" className="bg-[#0b1326]">৳100k - ৳250k</option>
-                  <option value="250000-null" className="bg-[#0b1326]">৳250k+</option>
-                </select>
+                  Access Resident Hub
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </Link>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 px-10 py-6 rounded-full flex items-center gap-8">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Next Payment</p>
+                    <p className="text-xl font-black text-white">৳ {properties[0]?.rent_amount?.toLocaleString() || '---'}</p>
+                  </div>
+                  <div className="h-10 w-px bg-white/10"></div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">Status</p>
+                    <p className="text-xl font-black text-white">Verified</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <button
-              onClick={() => handleSearch()}
-              className="w-full md:w-auto bg-primary text-on-primary px-12 py-5 rounded-4xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-105 hover:shadow-[0_0_30px_rgba(128,131,255,0.4)] transition-all active:scale-95"
-            >
-              Search
-            </button>
-          </div>
+          ) : (
+            <>
+              <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[0.85] text-white">
+                The RentWise <br />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-white italic">Asset Portfolio.</span>
+              </h1>
 
-          {/* Placeholder for future verified activity stats */}
+              <p className="text-xl md:text-2xl text-slate-400 max-w-2xl font-medium leading-relaxed">
+                Elite property management for the modern era. Secure your residency and manage your financial portfolio in one cinematic interface.
+              </p>
+
+              {/* Search Bar RentWise Edition */}
+              <div className="w-full max-w-4xl bg-[#171f33]/60 backdrop-blur-3xl p-3 rounded-[2.5rem] shadow-2xl mt-12 flex flex-col md:flex-row items-center gap-2 border border-white/5 group hover:border-primary/20 transition-all duration-700">
+                <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
+                  <div className="px-8 py-4 flex flex-col justify-center">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Location</span>
+                    <input
+                      className="bg-transparent border-none p-0 text-white placeholder:text-slate-600 focus:ring-0 text-lg font-bold"
+                      placeholder="Dhaka, BD"
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    />
+                  </div>
+                  <div className="px-8 py-4 flex flex-col justify-center">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Architectural Type</span>
+                    <select
+                      className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
+                      value={searchParams.property_type || ''}
+                      onChange={(e) => handleFilterChange('property_type', e.target.value)}
+                    >
+                      <option value="" className="bg-[#0b1326]">Any Type</option>
+                      <option value="Apartment" className="bg-[#0b1326]">Apartment</option>
+                      <option value="Penthouse" className="bg-[#0b1326]">Penthouse</option>
+                      <option value="Villa" className="bg-[#0b1326]">Villa</option>
+                      <option value="Townhouse" className="bg-[#0b1326]">Townhouse</option>
+                      <option value="Studio" className="bg-[#0b1326]">Studio</option>
+                    </select>
+                  </div>
+                  <div className="px-8 py-4 flex flex-col justify-center">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-1">Price Range</span>
+                    <select
+                      className="bg-transparent border-none p-0 text-white focus:ring-0 text-lg font-bold appearance-none cursor-pointer"
+                      onChange={(e) => {
+                        const [min, max] = e.target.value.split('-').map(v => v === 'null' ? null : parseInt(v));
+                        handleFilterChange('min_rent', min);
+                        handleFilterChange('max_rent', max);
+                      }}
+                    >
+                      <option value="null-null" className="bg-[#0b1326]">Any Price</option>
+                      <option value="0-50000" className="bg-[#0b1326]">Under ৳50k</option>
+                      <option value="50000-100000" className="bg-[#0b1326]">৳50k - ৳100k</option>
+                      <option value="100000-250000" className="bg-[#0b1326]">৳100k - ৳250k</option>
+                      <option value="250000-null" className="bg-[#0b1326]">৳250k+</option>
+                    </select>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleSearch()}
+                  className="w-full md:w-auto bg-primary text-on-primary px-12 py-5 rounded-4xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-105 hover:shadow-[0_0_30px_rgba(128,131,255,0.4)] transition-all active:scale-95"
+                >
+                  Search
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

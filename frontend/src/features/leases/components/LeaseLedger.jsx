@@ -13,30 +13,30 @@ const LeaseLedger = ({ lease }) => {
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
       {/* Editorial Header */}
       <section className="space-y-2">
-        <p className="text-primary-sovereign font-semibold tracking-[0.3em] uppercase text-[10px]">Financial Overview</p>
+        <p className="text-primary-rentwise font-semibold tracking-[0.3em] uppercase text-[10px]">Financial Overview</p>
         <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-none uppercase">
-          Residency <br /> <span className="text-primary-sovereign/40 italic">Ledger</span>
+          RentWise <br /> <span className="text-primary-rentwise/40 italic">Ledger</span>
         </h2>
       </section>
 
       {/* Bento Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-panel p-8 rounded-xl flex flex-col justify-between h-48 border border-white/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary-sovereign/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-primary-sovereign/10 transition-colors duration-700"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary-rentwise/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-primary-rentwise/10 transition-colors duration-700"></div>
           <div>
-            <span className="material-symbols-outlined text-primary-sovereign mb-4 opacity-50">account_balance</span>
+            <span className="material-symbols-outlined text-primary-rentwise mb-4 opacity-50">account_balance</span>
             <h3 className="text-slate-400 text-xs font-black uppercase tracking-widest">Total Committed</h3>
           </div>
           <div>
             <p className="text-3xl font-black tracking-tight text-white">৳ {totalPaid.toLocaleString()}</p>
-            <p className="text-primary-sovereign text-[10px] font-bold uppercase tracking-widest mt-1">Settled Revenue</p>
+            <p className="text-primary-rentwise text-[10px] font-bold uppercase tracking-widest mt-1">Settled Revenue</p>
           </div>
         </div>
 
         <div className="glass-panel p-8 rounded-xl flex flex-col justify-between h-48 border border-white/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary-sovereign/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-tertiary-sovereign/10 transition-colors duration-700"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary-rentwise/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-tertiary-rentwise/10 transition-colors duration-700"></div>
           <div>
-            <span className="material-symbols-outlined text-tertiary-sovereign mb-4 opacity-50">payments</span>
+            <span className="material-symbols-outlined text-tertiary-rentwise mb-4 opacity-50">payments</span>
             <h3 className="text-slate-400 text-xs font-black uppercase tracking-widest">Monthly Yield</h3>
           </div>
           <div>
@@ -45,7 +45,7 @@ const LeaseLedger = ({ lease }) => {
           </div>
         </div>
 
-        <div className="bg-linear-to-br from-primary-sovereign to-secondary-sovereign p-8 rounded-xl flex flex-col justify-between h-48 shadow-2xl shadow-primary-sovereign/10 group hover:scale-[1.02] transition-transform duration-700">
+        <div className="bg-linear-to-br from-primary-rentwise to-secondary-rentwise p-8 rounded-xl flex flex-col justify-between h-48 shadow-2xl shadow-primary-rentwise/10 group hover:scale-[1.02] transition-transform duration-700">
           <div>
             <span className="material-symbols-outlined text-indigo-900 mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
             <h3 className="text-indigo-900/60 text-xs font-black uppercase tracking-widest">Contract Status</h3>
@@ -82,7 +82,7 @@ const LeaseLedger = ({ lease }) => {
               payments.map((p, idx) => (
                 <div key={p.id} className={`grid grid-cols-12 px-8 py-8 items-center hover:bg-white/5 transition-colors group ${idx % 2 === 1 ? 'bg-white/1' : ''}`}>
                   <div className="col-span-5">
-                    <p className="font-bold text-lg text-white group-hover:text-primary-sovereign transition-colors tracking-tight">
+                    <p className="font-bold text-lg text-white group-hover:text-primary-rentwise transition-colors tracking-tight">
                       {p.method === 'CASH' ? 'Manual Remittance' : 'Automated Payment'}
                     </p>
                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">
@@ -116,7 +116,7 @@ const LeaseLedger = ({ lease }) => {
 
       {/* Projection Block */}
       <section className="relative h-48 rounded-3xl overflow-hidden bg-surface-container-lowest flex items-center justify-center p-12 text-center group border border-white/5 shadow-inner">
-        <div className="absolute inset-0 bg-linear-to-r from-primary-sovereign/5 via-transparent to-tertiary-sovereign/5 opacity-50"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-primary-rentwise/5 via-transparent to-tertiary-rentwise/5 opacity-50"></div>
         <div className="relative z-10 space-y-2">
           <h3 className="text-slate-500 uppercase tracking-[0.4em] text-[10px] font-black">Projected Lifetime Value</h3>
           <p className="text-5xl font-black text-white tracking-tighter group-hover:scale-105 transition-transform duration-700">

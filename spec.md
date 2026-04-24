@@ -9,7 +9,7 @@ This document is the **Single Source of Truth** for the RentWise platform. It de
 RentWise is a premium, full-stack rental ecosystem bridging property owners and tenants via a central hub for visual discovery, digital lease applications, and integrated financial ledgers.
 
 ### ✅ Completed Milestones
-- **Sovereign Ledger (v3.0)**: High-fidelity UI overhaul with obsidian palettes and **3rem (xl)** corner radii.
+- **RentWise Design System (v3.0)**: High-fidelity UI overhaul with obsidian palettes and **3rem (xl)** corner radii.
 - **CSS Modularization**: Transitioned to a fragmented style architecture (`theme.css`, `base.css`, `components.css`) for design system maintainability.
 - **Robust Exception System**: Custom domain exceptions with global backend handlers.
 - **Unified Identity**: Dual-mode (Owner/Tenant) account architecture.
@@ -25,7 +25,7 @@ RentWise is a premium, full-stack rental ecosystem bridging property owners and 
 
 ## 🎨 2. StitchMCP Operational Protocol
 
-To maintain visual fidelity and adhere to the **Sovereign Ledger** manifest, developers MUST follow this protocol before any UI implementation.
+To maintain visual fidelity and adhere to the **RentWise Design Language** manifest, developers MUST follow this protocol before any UI implementation.
 
 ### Source of Truth
 - **Stitch Project**: `projects/11449056074467872328`
@@ -144,8 +144,8 @@ Services and Hooks must primarily use **Named Exports**. This provides strict na
 
 - **Usage:** Developers/Agents should import from the feature root (e.g., `import { requestsService } from '@/features/requests'`) rather than deep-nesting.
 
-## 🎨 Design System: Sovereign Ledger
-RentWise adheres to the **Sovereign Ledger** design manifest (see `design_system.md`).
+## 🎨 Design System: RentWise Design Language
+RentWise adheres to the **RentWise Design Language** manifest (see `design_system.md`).
 - **Integrity Rule:** No UI element should be built or modified without first consulting the `design_system.md`. This is the "Visual Ground Truth" of the project.
 - **Core Aesthetic**: Obsidian Slate (#0b1326), frosted glass (40px blur), and **3rem (xl)** corner radii.
 - **Editorial Typography**: Manrope font with high-contrast, black-weight headings.
@@ -153,9 +153,8 @@ RentWise adheres to the **Sovereign Ledger** design manifest (see `design_system
 - **CSS Architecture**: All styles MUST be partitioned into `src/styles/` (`theme.css`, `base.css`, `components.css`). `index.css` remains a clean import entry point.
 
 ## 🔒 Security & Identity
-- **Dual-Mode Identity**: RentWise follows an Airbnb-style identity model. Every user account has both **Tenant** and **Owner** capabilities.
-- **Dynamic Modes**: The platform distinguishes between the **Role** (Owner/Tenant) and the active **Mode** (Hosting/Renting).
-- **Active Role State**: The frontend manages an `activeRole` (persisted in local storage) to toggle between **Hosting** and **Renting** dashboards instantly.
+- **Restricted Owner Identity**: To maintain portfolio integrity, the **Owner (Hosting)** role is restricted to a primary email address defined in the system configuration. All other new users are provisioned as **Tenants** by default.
+- **Active Role State**: The frontend manages an `activeRole` (persisted in local storage) to toggle between **Hosting** and **Renting** views for authorized accounts.
 - **How It Works**: A dedicated, public-facing discovery page explains the dual-mode lifecycle to users.
 - **Role-Based Access Control (RBAC)**: Backend endpoints verify permissions based on the user's boolean flags (`is_owner`/`is_tenant`).
 - **Social Integration (Google)**: 

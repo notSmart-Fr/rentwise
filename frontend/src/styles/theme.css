@@ -19,12 +19,12 @@
   --color-danger: #EF4444;
   --color-success: #10B981;
 
-  /* Sovereign Palette */
-  --color-primary-sovereign: #c0c1ff;
-  --color-secondary-sovereign: #d0bcff;
-  --color-tertiary-sovereign: #ffb783;
-  --color-surface-sovereign: #131b2e;
-  --color-on-surface-sovereign: #dae2fd;
+  /* RentWise Design Palette */
+  --color-primary-rentwise: #c0c1ff;
+  --color-secondary-rentwise: #d0bcff;
+  --color-tertiary-rentwise: #ffb783;
+  --color-surface-rentwise: #131b2e;
+  --color-on-surface-rentwise: #dae2fd;
   --color-surface-container-high: #222a3d;
   --color-surface-container-highest: #2d3449;
 

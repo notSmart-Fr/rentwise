@@ -73,7 +73,7 @@ const TenantPayments = ({ leases = [] }) => {
                     </div>
 
                     <div className="flex flex-col md:items-end gap-2">
-                      <span className="text-3xl font-black text-primary-sovereign tracking-tightest italic">
+                      <span className="text-3xl font-black text-primary-rentwise tracking-tightest italic">
                         ৳ {p.amount?.toLocaleString()}
                       </span>
                       <div className="flex items-center gap-3">
@@ -98,7 +98,7 @@ const TenantPayments = ({ leases = [] }) => {
                 </div>
               ))
             ) : (
-              <div className="py-32 text-center bg-surface-sovereign rounded-[2.5rem] border border-dashed border-white/10">
+              <div className="py-32 text-center bg-surface-rentwise rounded-[2.5rem] border border-dashed border-white/10">
                 <div className="text-8xl mb-8 grayscale opacity-20">🧾</div>
                 <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">No Manifests</h3>
                 <p className="text-slate-500 font-medium max-w-xs mx-auto">Once your residency manifest begins, your digital receipts will be verified and stored here.</p>

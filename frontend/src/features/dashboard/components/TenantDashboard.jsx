@@ -49,7 +49,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
           <p className="text-slate-400 text-xl font-medium max-w-xl">Welcome home. Manage your portfolio and residency in one architectural interface.</p>
         </div>
 
-        <div className="flex gap-2 p-2 bg-surface-sovereign rounded-4xl w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
+        <div className="flex gap-2 p-2 bg-surface-rentwise rounded-4xl w-full lg:w-auto overflow-x-auto shadow-2xl border border-white/5">
           {[
             { id: 'overview', label: 'Portfolio' },
             { id: 'leases', label: 'Agreements' },
@@ -107,7 +107,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-              <div className="lg:col-span-8 bg-surface-sovereign p-12 space-y-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden group border border-white/5">
+              <div className="lg:col-span-8 bg-surface-rentwise p-12 space-y-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden group border border-white/5">
                 <div className="flex items-center justify-between">
                   <h3 className="text-3xl font-black text-white uppercase tracking-tightest">
                     Recent Ledger Activity
@@ -144,10 +144,10 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
               <div className="lg:col-span-4 bg-linear-to-br from-primary/10 to-accent/5 p-12 space-y-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col justify-center border border-white/5">
                 <div className="absolute top-0 right-0 p-8 text-9xl opacity-5 group-hover:scale-110 transition-transform duration-1000">✨</div>
                 <h3 className="text-2xl font-black text-white uppercase tracking-widest">
-                  Intelligence Tip
+                  Resident Tip
                 </h3>
                 <p className="text-slate-300 text-xl leading-relaxed relative z-10 italic font-medium">
-                  "Ensure your Sovereign Ledger is synchronized. Verified payments accelerate your portfolio reputation."
+                  "Ensure your RentWise Ledger is synchronized. Verified payments accelerate your portfolio reputation."
                 </p>
                 <div className="pt-8">
                   <div className="h-1 w-20 bg-primary rounded-full"></div>
@@ -200,7 +200,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
         {/* Chats Tab - Direct interactive list */}
         {activeTab === 'chats' && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-12">
-            <h2 className="text-3xl font-black text-white uppercase tracking-tightest">Intelligence Concierge</h2>
+            <h2 className="text-3xl font-black text-white uppercase tracking-tightest">RentWise Concierge</h2>
             <div className="grid grid-cols-1 gap-6">
               {conversations.filter(c => c.user_role === 'TENANT').length > 0 ? (
                 conversations
@@ -209,7 +209,7 @@ const TenantDashboard = ({ initialTab = 'overview' }) => {
                     <InboxRow key={conv.id} conversation={conv} onClick={handleOpenConversation} />
                   ))
               ) : (
-                <div className="bg-surface-sovereign py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
+                <div className="bg-surface-rentwise py-32 rounded-[2.5rem] text-center border border-dashed border-white/10">
                   <div className="text-7xl mb-10 grayscale opacity-20">💬</div>
                   <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">No Active Sessions</h3>
                   <p className="text-slate-500 font-medium max-w-sm mx-auto">Concierge logs will manifest here once you initiate communication regarding your assets.</p>

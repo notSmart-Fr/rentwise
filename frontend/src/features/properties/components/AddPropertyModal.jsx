@@ -136,7 +136,7 @@ const AddPropertyModal = ({ isOpen, onClose, onSuccess }) => {
                   onChange={handleChange}
                   className="input-field py-3 appearance-none cursor-pointer"
                 >
-                  <option value="Apartment">Sovereign Apartment</option>
+                  <option value="Apartment">RentWise Apartment</option>
                   <option value="Penthouse">Luxury Penthouse</option>
                   <option value="Villa">Modern Villa</option>
                   <option value="Townhouse">Executive Townhouse</option>

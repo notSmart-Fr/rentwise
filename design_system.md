@@ -1,6 +1,6 @@
-# Sovereign Ledger: Design Manifest
+# RentWise Design Language: Manifest
 
-The Sovereign Ledger is a premium, fintech-inspired design system characterized by deep "Obsidian Slate" surfaces, cinematic ambient lighting, and high-contrast editorial typography.
+The RentWise Design Language is a premium, fintech-inspired system characterized by deep "Obsidian Slate" surfaces, cinematic ambient lighting, and high-contrast editorial typography.
 
 ## 1. Color Palette & Surfaces
 
@@ -12,7 +12,7 @@ The Sovereign Ledger is a premium, fintech-inspired design system characterized 
   - **The Standard for Cards.** Used for primary interaction modules and property cards.
 - **Surface (Container Highest):** `#2d3449`
   - Used for active states, popovers, and elevated focus zones.
-- **Primary Accent:** `bg-linear-to-r from-[#c0c1ff] to-[#8083ff]` (Sovereign Indigo to Deep Violet)
+- **Primary Accent:** `bg-linear-to-r from-[#c0c1ff] to-[#8083ff]` (RentWise Indigo to Deep Violet)
   - Used for primary CTAs, success actions, and active states.
 
 ## 2. Geometry & Spacing
@@ -51,4 +51,4 @@ To maintain this system, all styles MUST be partitioned into the following modul
 - `src/styles/components.css`: Global UI classes (`glass-panel`, `btn`, `badge`).
 
 ---
-*Codified with intent by Antigravity.*
+*Codified with intent by Antigravity for RentWise.*
