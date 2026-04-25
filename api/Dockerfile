@@ -29,9 +29,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy project
 COPY . .
 
-# Expose port
-EXPOSE 8080
+# Make start script executable
+RUN chmod +x scripts/start.sh
 
 # Command to run the application
-# Cloud Run provides the PORT environment variable
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+CMD ["./scripts/start.sh"]
