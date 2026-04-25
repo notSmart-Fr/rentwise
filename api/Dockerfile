@@ -4,7 +4,7 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV PORT 8000
+ENV PORT 8080
 
 # Set work directory
 WORKDIR /app
@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8080
 
 # Command to run the application
 # Cloud Run provides the PORT environment variable

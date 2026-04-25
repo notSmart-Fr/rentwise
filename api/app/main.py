@@ -59,8 +59,18 @@ app.add_middleware(
 )
 
 # Automatic table creation (useful for quick cloud setup)
-print(f"🚀 Connecting to Database: {settings.database_url.split('@')[-1]}") # Log host only for safety
-Base.metadata.create_all(bind=engine)
+print(f"🚀 Connecting to Database: {settings.database_url.split('@')[-1]}") 
+try:
+    # Quick check if database is reachable
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    print("✅ Database connection successful.")
+    Base.metadata.create_all(bind=engine)
+    print("✅ Database tables verified/created.")
+except Exception as e:
+    print(f"❌ Database connection failed: {str(e)}")
+    print("⚠️ Continuing startup, but database features will be unavailable.")
 
 
 app.include_router(auth_router)
