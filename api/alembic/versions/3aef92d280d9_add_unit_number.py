@@ -19,9 +19,13 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # We use IF NOT EXISTS logic because the user already added it manually
-    # But Alembic needs to know it's there for future syncs.
-    op.add_column('properties', sa.Column('unit_number', sa.String(length=50), nullable=True))
+    # Check if column exists before adding to avoid 'DuplicateColumn' error during Render deployment
+    conn = op.get_bind()
+    inspector = sa.inspect(conn)
+    columns = [c['name'] for c in inspector.get_columns('properties')]
+    
+    if 'unit_number' not in columns:
+        op.add_column('properties', sa.Column('unit_number', sa.String(length=50), nullable=True))
 
 
 def downgrade() -> None:
